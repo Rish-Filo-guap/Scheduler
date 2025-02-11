@@ -1,17 +1,19 @@
 package com.example.scheduler
 
 import android.content.Context
+import android.util.Log
 import android.widget.TextView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
+import org.jsoup.select.Evaluator
 import java.io.IOException
 import java.net.URL
 
 class GetInfoFromEther {
 
-    fun Download(url: String):String {
+    fun Download(url: String): ArrayList<String>? {
 
 
         //CoroutineScope(Dispatchers.IO).launch {
@@ -29,8 +31,8 @@ class GetInfoFromEther {
             } catch (e: Exception) {
                 // Обрабатываем ошибки сетевого запроса или парсинга
 
-                   return "Ошибка: ${e.message}"
-
+                Log.d("ew",  "Ошибка: ${e.message}")
+                return null
             }
 
        // }
@@ -41,38 +43,23 @@ class GetInfoFromEther {
     }
 
     // Функция для парсинга HTML страницы и извлечения нужной информации (пример с использованием Jsoup)
-    private fun parseHtml(htmlContent: String): String {
+    private fun parseHtml(htmlContent: String): ArrayList<String>? {
         try {
             // Используем Jsoup для парсинга HTML
             val doc = Jsoup.parse(htmlContent)
 
-            // Пример: Извлекаем текст из всех элементов <p>
-            //all subjects
-            //val paragraphs = doc.select("div.lead")
+            var text=doc.select("h4, div.lead, div.mt-3, div.fs-6, div.opacity-75,div.week2, div.week1")
+            var txt:ArrayList<String> = arrayListOf()
+            for (t in text){
+               txt.add(t.tagName()[0]+" "+t.text())
+            }
+            return txt
 
-            //class, prep, gr
-            //val paragraphs = doc.select("div.opacity-75")
-
-            //numb, timeStart, timeEnd
-            //val paragraphs = doc.select("div.mt-3")
-
-            //type subject
-            //val paragraphs = doc.select("div.fs-6")
-
-
-            val paragraphs = doc.select("h4")
-
-
-
-
-
-            val text = paragraphs.joinToString("\n \n") { it.text() }
-
-            return text
 
         } catch (e: IOException) {
             // Обрабатываем ошибки парсинга
-            return "Ошибка парсинга: ${e.message}"
+            Log.d("ew", "Ошибка парсинга: ${e.message}")
+            return null
         }
     }
 }

@@ -42,7 +42,9 @@ enum class Classroom(val classroom:String){
 enum class TypeOfSubject(val typeSub:String){
     Lab("Лабораторное занятие"),
     Lek("Лекция"),
-    Pra("Практическое занятие")
+    Pra("Практическое занятие"),
+    Kyr("Курсовая работа"),
+    No("Null")
 }
 enum class Times(val stTime:Array<String>){
     StartTimes(arrayOf("9:30", "11:10", "13:00", "15:00", "16:40", "18:30")),
@@ -51,4 +53,13 @@ enum class Times(val stTime:Array<String>){
 
 
 
+}
+enum class DaysOfWeek(val dayOfWeek: String){
+    Mon("Понедельник"),
+    Tue("Вторник"),
+    Wed("Среда"),
+    Thu("Четверг"),
+    Fri("Пятница"),
+    Sat("Суббота"),
+    Sun("Воскресенье")
 }
