@@ -5,6 +5,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -43,15 +44,16 @@ class MainActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
+
         val getInfoFromEther=GetInfoFromEther()
         val textView=TextView(this)
+
         CoroutineScope(Dispatchers.IO).launch{
 
             val parsedInfo= getInfoFromEther.Download("https://guap.ru/rasp/?gr=6431")
             withContext(Dispatchers.Main) {
                 textView.text = parsedInfo
             }
-
 
         }
         linearLayout.addView(textView)
@@ -98,7 +100,7 @@ class MainActivity : AppCompatActivity() {
             // Установите фон для LinearLayout
             linearLayoutParas.background = shape
             linearLayout.setPadding(20,0,20,0)
-            //linearLayout.clipToOutline = true; // Обязательно, если используете elevation
+
             linearLayout.addView(linearLayoutParas,layoutParams)
             // Переходим к следующему дню
                 currentDate = currentDate.plusDays(1)
@@ -117,12 +119,10 @@ class MainActivity : AppCompatActivity() {
         // Создаем TextView для номера урока
         val lessonNumberTextView = TextView(this)
         lessonNumberTextView.id = TextView.generateViewId()
-        lessonNumberTextView.text = para.numb.toString() // Пример: Номер урока 1
-        //lessonNumberTextView.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+        lessonNumberTextView.text = "${para.numb.toString()}" // Пример: Номер урока 1
         lessonNumberTextView.setTextColor(Color.argb(255,130, 130, 130))
         lessonNumberTextView.textSize=29f
-
-        //lessonNumberTextView.setPadding(0,0,0,0)
+        lessonNumberTextView.setPadding(20,0,0,0)
 
 
 
@@ -141,7 +141,6 @@ class MainActivity : AppCompatActivity() {
 
         timeEndTextView.text = para.GetEndTime() // Пример текста
         timeEndTextView.setTextColor(ContextCompat.getColor(this, android.R.color.white)) // Цвет текста
-        //timeEndTextView.setPadding(8) // Отступы
 
         // Создаем TextView для типа занятия
         val typeSubjectTextView = TextView(this)
@@ -152,14 +151,12 @@ class MainActivity : AppCompatActivity() {
             TypeOfSubject.Lek -> typeSubjectTextView.setTextColor(Color.argb(255,122, 66, 212))
             TypeOfSubject.Pra -> typeSubjectTextView.setTextColor(Color.argb(255,212, 163, 66))
         }
-       //typeSubjectTextView.setTextColor(ContextCompat.getColor(this, android.R.color.holo_purple))
 
         // Создаем TextView для названия предмета
         val subjectTextView = TextView(this)
 
         subjectTextView.text = para.sub.subject // Пример текста
         subjectTextView.setTextColor(ContextCompat.getColor(this, android.R.color.white))
-        //subjectTextView.setPadding(8)
 
 
         // Создаем TextView для имени преподавателя
@@ -167,7 +164,6 @@ class MainActivity : AppCompatActivity() {
 
         teacherTextView.text = para.prepod.prepod // Пример текста
         teacherTextView.setTextColor(Color.argb(255,97, 97, 97))
-        //teacherTextView.setPadding(8)
 
 
         // Создаем TextView для аудитории
@@ -175,7 +171,6 @@ class MainActivity : AppCompatActivity() {
 
         classroomTextView.text = para.classRoom.classroom // Пример текста
         classroomTextView.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray))
-       // classroomTextView.setPadding(8)
 
 
 
@@ -206,10 +201,6 @@ class MainActivity : AppCompatActivity() {
         linearLayout.orientation=LinearLayout.HORIZONTAL
         linearLayout.addView(linearLayoutLeft,layoutParams)
         linearLayout.addView(linearLayoutRight,layoutParams)
-
-
-
-        //linearLayout.setBackgroundColor(Color.GRAY)
 
 
 
