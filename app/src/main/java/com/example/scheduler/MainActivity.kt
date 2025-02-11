@@ -16,6 +16,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -39,6 +43,18 @@ class MainActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
+        val getInfoFromEther=GetInfoFromEther()
+        val textView=TextView(this)
+        CoroutineScope(Dispatchers.IO).launch{
+
+            val parsedInfo= getInfoFromEther.Download("https://guap.ru/rasp/?gr=6431")
+            withContext(Dispatchers.Main) {
+                textView.text = parsedInfo
+            }
+
+
+        }
+        linearLayout.addView(textView)
 
         // Получаем текущую дату
         var currentDate = LocalDate.now()
