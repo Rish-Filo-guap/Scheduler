@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
                 // Устанавливаем ScrollView как contentView
                 setContentView(scrollView)
-
+                //invalidateMenu()
 
             }
 
