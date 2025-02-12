@@ -13,16 +13,22 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
+import androidx.core.view.doOnPreDraw
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jsoup.helper.RequestAuthenticator.Context
 
 import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,52 +36,61 @@ class MainActivity : AppCompatActivity() {
 
         // Создаем ScrollView
         val scrollView = ScrollView(this)
-        var schedule=ScheduleList()
+        setContentView(scrollView)
+
 
         val linearLayout = LinearLayout(this)
         linearLayout.orientation = LinearLayout.VERTICAL
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.black)) //настройка цвета там, где у телефона часы, ну короч сверху
+
         linearLayout.setBackgroundColor(Color.BLACK) //настройка фона всей приложеньки
-
-
         scrollView.addView(linearLayout)
 
-        CoroutineScope(Dispatchers.IO).launch{
 
-            val parsedInfo= GetInfoFromEther().Download("https://guap.ru/rasp/?gr=6363")
-            val createScheduleFromParsed=CreateScheduleFromParsed()
+
+
+       // drawSchedule(ScheduleList(), linearLayout)
+        downloadSchedule(linearLayout)
+
+
+
+
+
+
+
+
+
+
+    }
+    private fun downloadSchedule(linearLayout: LinearLayout){
+        var schedule=ScheduleList()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(1000)
+            val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?gr=6363")
+
+            val createScheduleFromParsed = CreateScheduleFromParsed()
             try {
                 schedule = createScheduleFromParsed.CreateSchedule(parsedInfo!!)
 
-            }catch (e: Exception){
-                Log.d("ex",e.message.toString())
+            } catch (e: Exception) {
+                Log.d("exer", e.message.toString())
             }
             withContext(Dispatchers.Main) {
-
-                /*for(i in 0 until parsedInfo!!.size){
-
-                    Log.d("ew","$i) ${parsedInfo!![i]}")
-
-                }*/
-
-
                 drawSchedule(schedule, linearLayout)
+                linearLayout.invalidate()
 
-
-                // Устанавливаем ScrollView как contentView
-                setContentView(scrollView)
-
+                Log.d("ew","wwwwwwwww")
 
             }
-
         }
-
 
 
 
     }
     @SuppressLint("NewApi")
     private fun drawSchedule(schedule: ScheduleList, linearLayout: LinearLayout){
+        linearLayout.removeAllViews()
         val textView=TextView(this)
         // Создаем LinearLayout для содержимого ScrollView
         val layoutParams = LinearLayout.LayoutParams(

@@ -23,7 +23,7 @@ class GetInfoFromEther {
                 // Выполняем парсинг HTML
                 val parsedInfo = parseHtml(htmlContent)
 
-                // Обновляем UI в главном потоке
+
                 return parsedInfo
 
 
@@ -31,7 +31,7 @@ class GetInfoFromEther {
             } catch (e: Exception) {
                 // Обрабатываем ошибки сетевого запроса или парсинга
 
-                Log.d("ew",  "Ошибка: ${e.message}")
+                Log.d("ewerGet",  "Ошибка: ${e.message}")
                 return null
             }
 
