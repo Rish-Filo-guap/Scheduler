@@ -36,25 +36,13 @@ class MainActivity : AppCompatActivity() {
         linearLayout.orientation = LinearLayout.VERTICAL
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.black)) //настройка цвета там, где у телефона часы, ну короч сверху
         linearLayout.setBackgroundColor(Color.BLACK) //настройка фона всей приложеньки
-        // Параметры LinearLayout
-
-
-
-
-
-
 
 
         scrollView.addView(linearLayout)
 
-
-        val getInfoFromEther=GetInfoFromEther()
-                val textView=TextView(this)
-
-
         CoroutineScope(Dispatchers.IO).launch{
 
-            val parsedInfo= getInfoFromEther.Download("https://guap.ru/rasp/?gr=6363")
+            val parsedInfo= GetInfoFromEther().Download("https://guap.ru/rasp/?gr=6363")
             val createScheduleFromParsed=CreateScheduleFromParsed()
             try {
                 schedule = createScheduleFromParsed.CreateSchedule(parsedInfo!!)
@@ -63,20 +51,20 @@ class MainActivity : AppCompatActivity() {
                 Log.d("ex",e.message.toString())
             }
             withContext(Dispatchers.Main) {
-                var txt=""
-                for(i in 0 until parsedInfo!!.size){
+
+                /*for(i in 0 until parsedInfo!!.size){
 
                     Log.d("ew","$i) ${parsedInfo!![i]}")
-                        //txt+="$i) ${parsedInfo!![i]}\n\n"
-                }
-                textView.text=""
+
+                }*/
+
 
                 drawSchedule(schedule, linearLayout)
-                linearLayout.invalidate()
+
 
                 // Устанавливаем ScrollView как contentView
                 setContentView(scrollView)
-                //invalidateMenu()
+
 
             }
 
@@ -99,9 +87,9 @@ class MainActivity : AppCompatActivity() {
         linearLayout.addView(textView)
         // Получаем текущую дату
         var currentDate = now()
-
         // Форматируем дату
         val dateFormatter = DateTimeFormatter.ofPattern("dd.MM")
+
 
 
         // Добавляем дни недели в список (например, на 30 дней вперед)
@@ -115,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 
             val formattedDate = currentDate.format(dateFormatter)
 
-            val dayOfWeekNumb =((currentDate.minusDays(2)).format(DateTimeFormatter.ofPattern("F") )).toInt()-1// EEEE - полное название дня недели
+            val dayOfWeekNumb =((currentDate.minusDays(2)).format(DateTimeFormatter.ofPattern("F") )).toInt()-1
             val dayOfWeek=DaysOfWeek.values()[dayOfWeekNumb].dayOfWeek
             // Устанавливаем текст TextView
             textView.text = "$dayOfWeek $formattedDate"
@@ -127,9 +115,9 @@ class MainActivity : AppCompatActivity() {
             linearLayout.addView(textView, layoutParams)
             val linearLayoutParas=LinearLayout(this)
             linearLayoutParas.orientation=LinearLayout.VERTICAL
-            // Добавляем TextView в LinearLayout
-            for (j in 0..schedule.weeks[weekNumb].days[dayOfWeekNumb].paras.size-1){
 
+
+            for (j in 0..schedule.weeks[weekNumb].days[dayOfWeekNumb].paras.size-1){
                 linearLayoutParas.addView(GenParaSchedule(schedule.weeks[weekNumb].days[dayOfWeekNumb].paras[j]), layoutParams)
             }
             val shape = GradientDrawable()
@@ -150,8 +138,6 @@ class MainActivity : AppCompatActivity() {
     }
     private fun GenParaSchedule(para: Para): LinearLayout{
 
-
-
         // Создаем TextView для номера урока
         val lessonNumberTextView = TextView(this)
         lessonNumberTextView.id = TextView.generateViewId()
@@ -160,20 +146,14 @@ class MainActivity : AppCompatActivity() {
         lessonNumberTextView.textSize=29f
         lessonNumberTextView.setPadding(20,0,0,0)
 
-
-
-
         // Создаем TextView для времени начала занятия
         val timeStartTextView = TextView(this)
 
-
         timeStartTextView.text = para.getStartTime() // Пример текста
         timeStartTextView.setTextColor(ContextCompat.getColor(this, android.R.color.white)) // Цвет текста
-        //timeStartTextView.setPadding(8) // Отступы
 
         // Создаем TextView для времени  окончания занятия
         val timeEndTextView = TextView(this)
-
 
         timeEndTextView.text = para.getEndTime() // Пример текста
         timeEndTextView.setTextColor(ContextCompat.getColor(this, android.R.color.white)) // Цвет текста
@@ -208,8 +188,6 @@ class MainActivity : AppCompatActivity() {
         classroomTextView.text = para.classRoom // Пример текста
         classroomTextView.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray))
 
-
-
         val layoutParams = LinearLayout.LayoutParams(
 
             LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -237,8 +215,6 @@ class MainActivity : AppCompatActivity() {
         linearLayout.orientation=LinearLayout.HORIZONTAL
         linearLayout.addView(linearLayoutLeft,layoutParams)
         linearLayout.addView(linearLayoutRight,layoutParams)
-
-
 
         return linearLayout
     }

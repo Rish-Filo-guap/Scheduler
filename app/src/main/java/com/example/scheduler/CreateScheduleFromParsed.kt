@@ -14,11 +14,11 @@ class CreateScheduleFromParsed {
         i--
         while(i<list.size-1){
                 val selectedDay=getNumbDayFromString(list[i])
-            Log.d("ew","aaaaa "+i+" "+selectedDay)
+            //Log.d("ew","aaaaa "+i+" "+selectedDay)
             i++
             while (list[i][2].toInt()<='9'.toInt() && list[i][2].toInt()>='0'.toInt())
              {
-                //i++
+
                 var weekType = 0
                 if (list[i + 1][2] == '▼') weekType = 1
                 if (list[i + 1][2] == '▲') weekType = 2
@@ -28,7 +28,7 @@ class CreateScheduleFromParsed {
                 var paraListString = ArrayList<String>()
                 var para2ListString = ArrayList<String>()
 
-                Log.d("iii", i.toString()+"| "+selectedPara+"| "+selectedDay+"| "+weekType )
+                //Log.d("iii", i.toString()+"| "+selectedPara+"| "+selectedDay+"| "+weekType )
                 if (weekType == 0) {
                     paraListString.add(list[i + 1])
                     paraListString.add(list[i + 2])
@@ -56,7 +56,7 @@ class CreateScheduleFromParsed {
                     scheduleList.weeks[1].days[selectedDay].addPara(para2)
 
                     if ((i+5<list.size-1) && (list[i+5][2].toInt()>'9'.toInt() || list[i+5][2].toInt()<'0'.toInt() ) && getNumbDayFromString(list[i+5])==-1) {
-                        Log.d("ew","e "+(i+5))
+                        //Log.d("ew","e "+(i+5))
                         paraListString.add(list[i + 6])
                         paraListString.add(list[i + 7])
                         paraListString.add(list[i + 8])
@@ -69,14 +69,6 @@ class CreateScheduleFromParsed {
 
                     i += 5
                 }
-
-
-
-
-
-
-
-
 
 
             }
@@ -136,9 +128,7 @@ class CreateScheduleFromParsed {
            // Log.d("sub", str.substring(i,i+2))
         }
         if(prepStart!=0){
-            //parsedList.add("null")
-            //parsedList.add("null")
-            //parsedList.add("null")
+
             parsedList.add(str.substring(classStart+2,prepStart-4))
             parsedList.add(str.substring(prepStart+3,grStart-2))
             parsedList.add(str.substring(grStart+2,str.length-1))
@@ -148,8 +138,6 @@ class CreateScheduleFromParsed {
 
 
            parsedList.add(str.substring(classStart+2,grStart-2))
-           //parsedList.add("null")
-           //parsedList.add("null")
            parsedList.add("null")
            parsedList.add(str.substring(grStart+2,str.length-1))
 

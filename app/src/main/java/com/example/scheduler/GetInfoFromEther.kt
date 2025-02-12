@@ -16,7 +16,7 @@ class GetInfoFromEther {
     fun Download(url: String): ArrayList<String>? {
 
 
-        //CoroutineScope(Dispatchers.IO).launch {
+
             try {
                 val htmlContent = downloadHtml(url)
 
@@ -34,8 +34,6 @@ class GetInfoFromEther {
                 Log.d("ew",  "Ошибка: ${e.message}")
                 return null
             }
-
-       // }
 
     }
     private fun downloadHtml(url: String): String {
