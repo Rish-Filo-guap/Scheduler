@@ -1,11 +1,14 @@
 package com.example.scheduler
 
+import MyBottomSheetDialogFragment
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -14,9 +17,11 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.view.menu.MenuView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -36,8 +41,21 @@ class MainActivity : AppCompatActivity() {
 
         // Создаем ScrollView
         val scrollView = ScrollView(this)
-        setContentView(scrollView)
+        val mainLinearLayout=LinearLayout(this)
+        setContentView(mainLinearLayout)
 
+        val btn=Button(this)
+        btn.text="search"
+
+        mainLinearLayout.orientation = LinearLayout.VERTICAL
+        mainLinearLayout.addView(btn)
+        mainLinearLayout.addView(scrollView)
+
+        btn.setOnClickListener{
+            val bottomSheetDialogFragment = MyBottomSheetDialogFragment()
+
+            bottomSheetDialogFragment.show(supportFragmentManager, "BottomSheetDialog")
+        }
 
         val linearLayout = LinearLayout(this)
         linearLayout.orientation = LinearLayout.VERTICAL
