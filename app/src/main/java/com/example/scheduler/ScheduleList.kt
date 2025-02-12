@@ -30,14 +30,19 @@ var weeks= arrayListOf(
 class Week(val days:ArrayList<Day>){
 
 }
-class Day(){
+class Day{
     var paras=ArrayList<Para>(0)
-    constructor(paras:ArrayList<Para>) : this() {
-        this.paras=paras
+    var isEmpty=true
+    constructor(){
+        paras.add(Para("Выходной","","", "", "", 7) )
     }
     fun addPara(para: Para){
+        if(isEmpty)
+            paras.clear()
+        isEmpty=false
         paras.add(para)
     }
+
 }
 
 class Para (
@@ -48,11 +53,14 @@ class Para (
     public val groups: String,
     public val numb:Int) {
 
-    public fun GetStartTime():String{
+    public fun getStartTime():String{
         return Times.StartTimes.stTime[numb-1]
     }
-    public fun GetEndTime():String{
+    public fun getEndTime():String{
         return Times.EndTimes.stTime[numb-1]
     }
-
+    fun getNumbStr():String{
+        if(numb==7) return ""
+        else return numb.toString()
+    }
 }

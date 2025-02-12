@@ -55,8 +55,8 @@ class CreateScheduleFromParsed {
                     val para2 = getParaFromLines(para2ListString, selectedPara)
                     scheduleList.weeks[1].days[selectedDay].addPara(para2)
 
-                    if ((list[i+5][2].toInt()>'9'.toInt() || list[i+5][2].toInt()<'0'.toInt() ) && getNumbDayFromString(list[i+5])==-1) {
-                        Log.d("ew","e "+i)
+                    if ((i+5<list.size-1) && (list[i+5][2].toInt()>'9'.toInt() || list[i+5][2].toInt()<'0'.toInt() ) && getNumbDayFromString(list[i+5])==-1) {
+                        Log.d("ew","e "+(i+5))
                         paraListString.add(list[i + 6])
                         paraListString.add(list[i + 7])
                         paraListString.add(list[i + 8])

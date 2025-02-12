@@ -6,7 +6,6 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -14,17 +13,12 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import androidx.core.view.children
-import androidx.core.view.setPadding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-import java.time.LocalDate
 import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
@@ -60,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch{
 
-            val parsedInfo= getInfoFromEther.Download("https://guap.ru/rasp/?gr=6431")
+            val parsedInfo= getInfoFromEther.Download("https://guap.ru/rasp/?gr=6363")
             val createScheduleFromParsed=CreateScheduleFromParsed()
             try {
                 schedule = createScheduleFromParsed.CreateSchedule(parsedInfo!!)
@@ -71,7 +65,9 @@ class MainActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 var txt=""
                 for(i in 0 until parsedInfo!!.size){
-                    txt+="$i) ${parsedInfo!![i]}\n\n"
+
+                    Log.d("ew","$i) ${parsedInfo!![i]}")
+                        //txt+="$i) ${parsedInfo!![i]}\n\n"
                 }
                 textView.text=""
 
@@ -160,7 +156,7 @@ class MainActivity : AppCompatActivity() {
         // Создаем TextView для номера урока
         val lessonNumberTextView = TextView(this)
         lessonNumberTextView.id = TextView.generateViewId()
-        lessonNumberTextView.text = "${para.numb.toString()}" // Пример: Номер урока 1
+        lessonNumberTextView.text = "${para.getNumbStr()}" // Пример: Номер урока 1
         lessonNumberTextView.setTextColor(Color.argb(255,130, 130, 130))
         lessonNumberTextView.textSize=29f
         lessonNumberTextView.setPadding(20,0,0,0)
@@ -172,7 +168,7 @@ class MainActivity : AppCompatActivity() {
         val timeStartTextView = TextView(this)
 
 
-        timeStartTextView.text = para.GetStartTime() // Пример текста
+        timeStartTextView.text = para.getStartTime() // Пример текста
         timeStartTextView.setTextColor(ContextCompat.getColor(this, android.R.color.white)) // Цвет текста
         //timeStartTextView.setPadding(8) // Отступы
 
@@ -180,7 +176,7 @@ class MainActivity : AppCompatActivity() {
         val timeEndTextView = TextView(this)
 
 
-        timeEndTextView.text = para.GetEndTime() // Пример текста
+        timeEndTextView.text = para.getEndTime() // Пример текста
         timeEndTextView.setTextColor(ContextCompat.getColor(this, android.R.color.white)) // Цвет текста
 
         // Создаем TextView для типа занятия
