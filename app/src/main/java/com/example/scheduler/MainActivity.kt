@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
         // Форматируем дату
         val dateFormatter = DateTimeFormatter.ofPattern("dd.MM")
-        val dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEEE") // EEEE - полное название дня недели
+
 
         // Добавляем дни недели в список (например, на 30 дней вперед)
 
@@ -111,11 +111,10 @@ class MainActivity : AppCompatActivity() {
             val textView = TextView(this)
 
             // Получаем день недели и форматируем дату
-            //  val dayOfWeek = currentDate.dayOfWeek
             val weekNumb=((currentDate.minusDays(1)).format(DateTimeFormatter.ofPattern("w") ).toInt()+1)%2
 
             val formattedDate = currentDate.format(dateFormatter)
-            val formattedDayOfWeek = currentDate.format(dayOfWeekFormatter)
+
             val dayOfWeekNumb =((currentDate.minusDays(2)).format(DateTimeFormatter.ofPattern("F") )).toInt()-1// EEEE - полное название дня недели
             val dayOfWeek=DaysOfWeek.values()[dayOfWeekNumb].dayOfWeek
             // Устанавливаем текст TextView
