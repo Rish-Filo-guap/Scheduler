@@ -1,6 +1,7 @@
 package com.example.scheduler
 
 import MyBottomSheetDialogFragment
+import Postman
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
@@ -32,8 +33,10 @@ import org.jsoup.helper.RequestAuthenticator.Context
 import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Postman {
 
+    var group:String="6431"
+    lateinit var linearLayout:LinearLayout
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,35 +60,29 @@ class MainActivity : AppCompatActivity() {
             bottomSheetDialogFragment.show(supportFragmentManager, "BottomSheetDialog")
         }
 
-        val linearLayout = LinearLayout(this)
+        linearLayout= LinearLayout(this)
         linearLayout.orientation = LinearLayout.VERTICAL
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.black)) //настройка цвета там, где у телефона часы, ну короч сверху
 
         linearLayout.setBackgroundColor(Color.BLACK) //настройка фона всей приложеньки
         scrollView.addView(linearLayout)
 
-
-
-
-       // drawSchedule(ScheduleList(), linearLayout)
         downloadSchedule(linearLayout)
 
 
+    }
 
-
-
-
-
-
-
+    override fun fragmentMail(mail: String) {
+        group=Groups().groups.get(mail).toString()
+        downloadSchedule(linearLayout)
 
     }
     private fun downloadSchedule(linearLayout: LinearLayout){
         var schedule=ScheduleList()
 
         CoroutineScope(Dispatchers.IO).launch {
-            delay(1000)
-            val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?gr=6363")
+            //delay(1000)
+            val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?gr="+group)
 
             val createScheduleFromParsed = CreateScheduleFromParsed()
             try {
