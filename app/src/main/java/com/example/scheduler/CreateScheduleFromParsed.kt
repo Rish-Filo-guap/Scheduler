@@ -45,7 +45,6 @@ class CreateScheduleFromParsed {
                     val para = getParaFromLines(paraListString, selectedPara)
                     scheduleList.weeks[0].days[selectedDay].addPara(para)
 
-
                     i += 5
                 }
                 if (weekType == 2) {

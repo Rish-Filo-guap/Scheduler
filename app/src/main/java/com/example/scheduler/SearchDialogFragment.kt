@@ -1,23 +1,17 @@
+package com.example.scheduler
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.SearchView
 import android.widget.TextView
-import android.widget.Toast
-import com.example.scheduler.MainActivity
 import com.example.scheduler.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import Postman as Postman
 
-public interface Postman{
-    public fun fragmentMail(mail:String)
-}
-class MyBottomSheetDialogFragment : BottomSheetDialogFragment(), Postman {
+
+class SearchDialogFragment : BottomSheetDialogFragment() {
     lateinit var textView: TextView
 
     override fun onCreateView(
@@ -37,7 +31,7 @@ class MyBottomSheetDialogFragment : BottomSheetDialogFragment(), Postman {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // Вызывается при отправке запроса (нажатии Enter)
                 textView.text="Вы искали: $query"
-                (context as Postman).fragmentMail(query!!)
+                (context as SelectGroup).groupChanged(query!!)
                 dismiss()
                 //Toast.makeText(this@MyBottomSheetDialogFragment, "Вы искали: $query", Toast.LENGTH_SHORT).show()
                 // Здесь можно выполнить поиск данных
@@ -56,9 +50,7 @@ class MyBottomSheetDialogFragment : BottomSheetDialogFragment(), Postman {
 
     }
 
-    override fun fragmentMail(mail: String) {
-        TODO("Not yet implemented")
-    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), theme)
     }
