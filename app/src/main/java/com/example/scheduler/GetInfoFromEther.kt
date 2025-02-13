@@ -15,18 +15,12 @@ class GetInfoFromEther {
 
     fun Download(url: String): ArrayList<String>? {
 
-
-
             try {
                 val htmlContent = downloadHtml(url)
 
                 // Выполняем парсинг HTML
                 val parsedInfo = parseHtml(htmlContent)
-
-
                 return parsedInfo
-
-
 
             } catch (e: Exception) {
                 // Обрабатываем ошибки сетевого запроса или парсинга

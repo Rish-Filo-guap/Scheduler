@@ -16,9 +16,13 @@ import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
 class ScheduleLayout(context: Context) : LinearLayout(context) {
+    val layoutParams = LayoutParams(
+        LayoutParams.MATCH_PARENT,
+        LayoutParams.WRAP_CONTENT
+    )
     
     init {
-        orientation = LinearLayout.VERTICAL
+        orientation = VERTICAL
         setBackgroundColor(Color.BLACK)
     }
     fun downloadSchedule(group:String){
@@ -50,10 +54,7 @@ class ScheduleLayout(context: Context) : LinearLayout(context) {
         removeAllViews()
         val textView= TextView(context)
         // Создаем LinearLayout для содержимого ScrollView
-        val layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+
 
 
         addView(textView)
@@ -86,7 +87,7 @@ class ScheduleLayout(context: Context) : LinearLayout(context) {
 
             addView(textView, layoutParams)
             val linearLayoutParas=LinearLayout(context)
-            linearLayoutParas.orientation=LinearLayout.VERTICAL
+            linearLayoutParas.orientation=VERTICAL
 
 
             for (j in 0..schedule.weeks[weekNumb].days[dayOfWeekNumb].paras.size-1){
@@ -160,22 +161,22 @@ class ScheduleLayout(context: Context) : LinearLayout(context) {
         classroomTextView.text = para.classRoom // Пример текста
         classroomTextView.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
 
-        val layoutParams = LinearLayout.LayoutParams(
+        val layoutParams = LayoutParams(
 
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT,
 
             )
         val linearLayout=LinearLayout(context)
         val linearLayoutLeft=LinearLayout(context)
         val linearLayoutRight=LinearLayout(context)
 
-        linearLayoutLeft.orientation=LinearLayout.VERTICAL
+        linearLayoutLeft.orientation=VERTICAL
         linearLayoutLeft.addView(timeStartTextView)
         linearLayoutLeft.addView(lessonNumberTextView)
         linearLayoutLeft.addView(timeEndTextView)
 
-        linearLayoutRight.orientation=LinearLayout.VERTICAL
+        linearLayoutRight.orientation=VERTICAL
         linearLayoutRight.addView(typeSubjectTextView)
         linearLayoutRight.addView(subjectTextView)
         linearLayoutRight.addView(classroomTextView)
@@ -184,7 +185,7 @@ class ScheduleLayout(context: Context) : LinearLayout(context) {
 
         linearLayoutLeft.setPadding(50,20,100,20,)
         linearLayoutRight.setPadding(0,20,0,20,)
-        linearLayout.orientation=LinearLayout.HORIZONTAL
+        linearLayout.orientation=HORIZONTAL
         linearLayout.addView(linearLayoutLeft,layoutParams)
         linearLayout.addView(linearLayoutRight,layoutParams)
 
