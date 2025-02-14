@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity(), SelectGroup {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.black)) //настройка цвета там, где у телефона часы, ну короч сверху
+        scheduleLayout= ScheduleLayout(this)
+        scheduleLayout.downloadSchedule(group)
 
         // Создаем ScrollView
         val scrollView = ScrollView(this)
@@ -34,14 +36,12 @@ class MainActivity : AppCompatActivity(), SelectGroup {
         mainLinearLayout.addView(scrollView)
 
         btn.setOnClickListener{
-            val searchDialogFragment = SearchDialogFragment()
+            val searchDialogFragment = SearchActivity()
 
-            searchDialogFragment.show(supportFragmentManager, "BottomSheetDialog")
+            searchDialogFragment.show(supportFragmentManager, "searchActivity")
         }
 
-        scheduleLayout= ScheduleLayout(this)
         scrollView.addView(scheduleLayout)
-        scheduleLayout.downloadSchedule(group)
 
     }
 
