@@ -1,22 +1,19 @@
 package com.example.scheduler
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.scheduler.ScheduleProcessing.Groups
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 
-class SearchActivity : BottomSheetDialogFragment() {
+class SearchActivity(var parent: ShowBottomFragmentDialog) : BottomSheetDialogFragment() {
 
-   // private lateinit var searchEditText: EditText
     private lateinit var searchView: SearchView
     private lateinit var suggestionsRecyclerView: RecyclerView
     private lateinit var suggestionAdapter: SuggestionAdapter
@@ -35,9 +32,8 @@ class SearchActivity : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_search)
 
-        //searchEditText = view.findViewById(R.id.search_edit_text)
+
         searchView=view.findViewById(R.id.search_view)
         suggestionsRecyclerView = view.findViewById(R.id.suggestions_recycler_view)
 
@@ -45,9 +41,9 @@ class SearchActivity : BottomSheetDialogFragment() {
         suggestionsRecyclerView.layoutManager = LinearLayoutManager(view.context)
         suggestionAdapter = SuggestionAdapter(emptyList()) { selectedSuggestion ->
             // Обработка выбора подсказки. Например, заполнение EditText
-           // searchEditText.setText(selectedSuggestion)
+
             suggestionsRecyclerView.visibility = View.GONE
-            (context as SelectGroup).groupChanged(selectedSuggestion)
+            parent.groupChanged(selectedSuggestion)
             dismiss()
         }
         suggestionsRecyclerView.adapter = suggestionAdapter
@@ -69,18 +65,11 @@ class SearchActivity : BottomSheetDialogFragment() {
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                (context as SelectGroup).groupChanged(query.toString())
+                parent.groupChanged(query.toString())
                 dismiss()
                 return true
             }
-
-
-
-
         })
-
-
-
     }
 
     // Функция для фильтрации списка подсказок на основе введенного текста

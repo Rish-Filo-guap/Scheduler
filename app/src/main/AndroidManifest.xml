@@ -14,13 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Scheduler"
         tools:targetApi="35">
+
         <activity
             android:name=".MainActivity"
-            android:exported="false"
-            android:label="qazY"
-            android:theme="@style/Theme.Scheduler.NoActionBar" />
-        <activity
-            android:name=".MainActivity2"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

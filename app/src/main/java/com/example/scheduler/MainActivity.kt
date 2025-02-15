@@ -1,56 +1,42 @@
 package com.example.scheduler
 
-import android.os.Build
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-
-
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.viewpager2.widget.ViewPager2
+import com.example.scheduler.ui.main.ViewPagerAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
-class MainActivity : AppCompatActivity(), SelectGroup {
+class MainActivity : AppCompatActivity() {
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
+    private lateinit var viewPager: ViewPager2
+    private lateinit var tabLayout: TabLayout
 
-    var group:String="6431"
-    lateinit var scheduleLayout:ScheduleLayout
-
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.black)) //настройка цвета там, где у телефона часы, ну короч сверху
-        scheduleLayout= ScheduleLayout(this)
-        scheduleLayout.downloadSchedule(group)
 
-        // Создаем ScrollView
-        val scrollView = ScrollView(this)
-        val mainLinearLayout=LinearLayout(this)
-        setContentView(mainLinearLayout)
+        setContentView(R.layout.activity_main)
 
-        val btn=Button(this)
-        btn.text="search"
+        viewPager = findViewById(R.id.viewpager)
+        tabLayout = findViewById(R.id.tab_layout)
 
-        mainLinearLayout.orientation = LinearLayout.VERTICAL
-        mainLinearLayout.addView(btn)
-        mainLinearLayout.addView(scrollView)
+        // Set up the adapter
+        viewPagerAdapter = ViewPagerAdapter(this)
 
-        btn.setOnClickListener{
-            val searchDialogFragment = SearchActivity()
+        // Add the fragments
+        viewPagerAdapter.addFragment(MainSchedulePageFragment(), "Мое расписание")
+        //viewPagerAdapter.addFragment(MainSchedulePageFragment(), "Page 2")
+       // viewPagerAdapter.addFragment(FirstPageFragment(), "Page 2")
+       // viewPagerAdapter.addFragment(FirstPageFragment(), "Page 3")
 
-            searchDialogFragment.show(supportFragmentManager, "searchActivity")
-        }
+        // Set the adapter to the ViewPager2
+        viewPager.adapter = viewPagerAdapter
 
-        scrollView.addView(scheduleLayout)
-
+        // Link the TabLayout and ViewPager2 using TabLayoutMediator
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = viewPagerAdapter.getPageTitle(position)
+        }.attach()
     }
-
-    override fun groupChanged(newGroup: String) {
-
-        group=Groups().groups.get(newGroup).toString()
-        scheduleLayout.downloadSchedule(group)
-
-    }
-
 }
-

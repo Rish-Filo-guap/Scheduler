@@ -1,13 +1,7 @@
-package com.example.scheduler
+package com.example.scheduler.ScheduleProcessing
 
-import android.content.Context
 import android.util.Log
-import android.widget.TextView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
-import org.jsoup.select.Evaluator
 import java.io.IOException
 import java.net.URL
 

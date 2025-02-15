@@ -4,10 +4,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.util.Log
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import com.example.scheduler.ScheduleProcessing.CreateScheduleFromParsed
+import com.example.scheduler.ScheduleProcessing.DaysOfWeek
+import com.example.scheduler.ScheduleProcessing.GetInfoFromEther
+import com.example.scheduler.ScheduleProcessing.Para
+import com.example.scheduler.ScheduleProcessing.ScheduleList
+import com.example.scheduler.ScheduleProcessing.TypeOfSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,7 +24,7 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
-class ScheduleLayout(context: Context) : LinearLayout(context) {
+class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : LinearLayout(context) {
     val layoutParams = LayoutParams(
         LayoutParams.MATCH_PARENT,
         LayoutParams.WRAP_CONTENT
@@ -26,7 +35,7 @@ class ScheduleLayout(context: Context) : LinearLayout(context) {
         setBackgroundColor(Color.BLACK)
     }
     fun downloadSchedule(group:String){
-        var schedule=ScheduleList()
+        var schedule= ScheduleList()
 
         CoroutineScope(Dispatchers.IO).launch {
             //delay(1000)
@@ -77,7 +86,7 @@ class ScheduleLayout(context: Context) : LinearLayout(context) {
             val formattedDate = currentDate.format(dateFormatter)
 
             val dayOfWeekNumb =((currentDate.minusDays(2)).format(DateTimeFormatter.ofPattern("F") )).toInt()-1
-            val dayOfWeek=DaysOfWeek.values()[dayOfWeekNumb].dayOfWeek
+            val dayOfWeek= DaysOfWeek.values()[dayOfWeekNumb].dayOfWeek
             // Устанавливаем текст TextView
             textView.text = "$dayOfWeek $formattedDate"
             textView.textSize=20f
@@ -109,7 +118,10 @@ class ScheduleLayout(context: Context) : LinearLayout(context) {
 
 
     }
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("ResourceAsColor")
     private fun GenParaSchedule(para: Para): LinearLayout{
+
 
         // Создаем TextView для номера урока
         val lessonNumberTextView = TextView(context)
@@ -152,8 +164,19 @@ class ScheduleLayout(context: Context) : LinearLayout(context) {
         val teacherTextView = TextView(context)
 
         teacherTextView.text = para.prepod // Пример текста
-        teacherTextView.setTextColor(Color.argb(255,97, 97, 97))
+        teacherTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrepClass))
 
+        val groupsTextView = TextView(context)
+
+        groupsTextView.text = para.groups+" "+para.groups.length.toString() // Пример текста
+        groupsTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrepClass))
+
+        val shape = GradientDrawable()
+        shape.cornerRadius = 40f // радиус в dp
+        shape.setColor(Color.argb(255,15,15,255)) // устанавливаем цвет фона
+
+        //groupsTextView.background=shape
+        //groupsTextView.width=100
 
         // Создаем TextView для аудитории
         val classroomTextView = TextView(context)
@@ -168,6 +191,10 @@ class ScheduleLayout(context: Context) : LinearLayout(context) {
 
             )
         val linearLayout=LinearLayout(context)
+        linearLayout.setOnClickListener {
+            parent.showParaInfo(para)
+            Log.d("ew", para.sub)
+        }
         val linearLayoutLeft=LinearLayout(context)
         val linearLayoutRight=LinearLayout(context)
 
@@ -181,6 +208,7 @@ class ScheduleLayout(context: Context) : LinearLayout(context) {
         linearLayoutRight.addView(subjectTextView)
         linearLayoutRight.addView(classroomTextView)
         linearLayoutRight.addView(teacherTextView)
+        linearLayoutRight.addView(groupsTextView)
 
 
         linearLayoutLeft.setPadding(50,20,100,20,)

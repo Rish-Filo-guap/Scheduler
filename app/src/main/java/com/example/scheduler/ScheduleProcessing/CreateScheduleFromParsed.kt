@@ -1,10 +1,8 @@
-package com.example.scheduler
-
-import android.util.Log
+package com.example.scheduler.ScheduleProcessing
 
 class CreateScheduleFromParsed {
-    fun CreateSchedule(list: ArrayList<String>):ScheduleList{
-        var scheduleList=ScheduleList()
+    fun CreateSchedule(list: ArrayList<String>): ScheduleList {
+        var scheduleList= ScheduleList()
         var hCounter=0
         var i=0;
         while (hCounter<2){
@@ -78,7 +76,7 @@ class CreateScheduleFromParsed {
 
 
     }
-    fun getParaFromLines(list: ArrayList<String>,selectedPara:Int):Para{
+    fun getParaFromLines(list: ArrayList<String>,selectedPara:Int): Para {
 
         var classPrepGr=parseClassPrepGr(list[2])
         var subject=list[1].substring(2,list[1].length)
@@ -90,13 +88,13 @@ class CreateScheduleFromParsed {
     }
     fun getNumbDayFromString(str:String):Int{
         when(str){
-            "h "+DaysOfWeek.Mon.dayOfWeek -> return 0
-            "h "+DaysOfWeek.Tue.dayOfWeek -> return 1
-            "h "+DaysOfWeek.Wed.dayOfWeek -> return 2
-            "h "+DaysOfWeek.Thu.dayOfWeek -> return 3
-            "h "+DaysOfWeek.Fri.dayOfWeek -> return 4
-            "h "+DaysOfWeek.Sat.dayOfWeek -> return 5
-            "h "+DaysOfWeek.Sun.dayOfWeek -> return 6
+            "h "+ DaysOfWeek.Mon.dayOfWeek -> return 0
+            "h "+ DaysOfWeek.Tue.dayOfWeek -> return 1
+            "h "+ DaysOfWeek.Wed.dayOfWeek -> return 2
+            "h "+ DaysOfWeek.Thu.dayOfWeek -> return 3
+            "h "+ DaysOfWeek.Fri.dayOfWeek -> return 4
+            "h "+ DaysOfWeek.Sat.dayOfWeek -> return 5
+            "h "+ DaysOfWeek.Sun.dayOfWeek -> return 6
         }
         return -1
     }
@@ -130,7 +128,7 @@ class CreateScheduleFromParsed {
 
             parsedList.add(str.substring(classStart+2,prepStart-4))
             parsedList.add(str.substring(prepStart+3,grStart-2))
-            parsedList.add(str.substring(grStart+2,str.length-1))
+            parsedList.add(str.substring(grStart+3,str.length))
 
 
         }else{
@@ -138,7 +136,7 @@ class CreateScheduleFromParsed {
 
            parsedList.add(str.substring(classStart+2,grStart-2))
            parsedList.add("null")
-           parsedList.add(str.substring(grStart+2,str.length-1))
+           parsedList.add(str.substring(grStart+3,str.length))
 
 
         }

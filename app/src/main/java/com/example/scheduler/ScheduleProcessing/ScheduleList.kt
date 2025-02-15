@@ -1,4 +1,4 @@
-package com.example.scheduler
+package com.example.scheduler.ScheduleProcessing
 
 class ScheduleList {
 var weeks= arrayListOf(
