@@ -80,7 +80,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
             val textView = TextView(context)
 
             // Получаем день недели и форматируем дату
-            val weekNumb=((currentDate.minusDays(1)).format(DateTimeFormatter.ofPattern("w") ).toInt()+1)%2
+            val weekNumb=((currentDate.minusDays(0)).format(DateTimeFormatter.ofPattern("w") ).toInt()+1)%2
 
             val formattedDate = currentDate.format(dateFormatter)
 
@@ -237,8 +237,8 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
 
         linearLayout.addView(linearLayoutRight,layoutParams)
             when(weekNumb){
-                0->linearLayout.setBackgroundResource(R.drawable.background_for_up_para)
-                1->linearLayout.setBackgroundResource(R.drawable.background_for_down_para)
+                0->linearLayout.setBackgroundResource(R.drawable.background_for_down_para)
+                1->linearLayout.setBackgroundResource(R.drawable.background_for_up_para)
             }
 
 
