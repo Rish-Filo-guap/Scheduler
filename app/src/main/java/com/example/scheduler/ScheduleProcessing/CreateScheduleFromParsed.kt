@@ -1,13 +1,23 @@
 package com.example.scheduler.ScheduleProcessing
 
+import android.util.Log
+
 class CreateScheduleFromParsed {
     fun CreateSchedule(list: ArrayList<String>): ScheduleList {
         var scheduleList= ScheduleList()
         var hCounter=0
         var i=0;
         while (hCounter<2){
-            if(list[i][0]=='h') hCounter++
+            if(list[i][0]=='h'){
+                hCounter++
+                if(list[i][3]!='н'){
+                    i++
+                    break
+                }
+            }
+
             i++
+
         }
         i--
         while(i<list.size-1){
