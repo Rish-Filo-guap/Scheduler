@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.Gravity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
@@ -16,6 +17,8 @@ import android.widget.LinearLayout.LayoutParams
 import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginEnd
+import androidx.core.view.marginStart
 import com.example.scheduler.ScheduleProcessing.Para
 import com.example.scheduler.ScheduleProcessing.TypeOfSubject
 
@@ -46,10 +49,15 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
     }
     @SuppressLint("ResourceAsColor")
     private fun GenParaSchedule(para: Para): LinearLayout{
-
+        val params1 = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params1.setMargins(0, 20, 0, 20) // Отступ 8dp со всех сторон
 
         // Создаем TextView для номера урока
         val lessonNumberTextView = TextView(context)
+
 
         lessonNumberTextView.id = TextView.generateViewId()
         lessonNumberTextView.text = "${para.getNumbStr()}" // Пример: Номер урока 1
@@ -76,6 +84,7 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
         val typeSubjectTextView = TextView(context)
 
         typeSubjectTextView.text = para.typeOfSubject // Пример текста
+        typeSubjectTextView.layoutParams=params1
         when(para.typeOfSubject){
             TypeOfSubject.Lab.typeSub -> typeSubjectTextView.setTextColor(Color.argb(255,66, 151, 212))
             TypeOfSubject.Lek.typeSub -> typeSubjectTextView.setTextColor(Color.argb(255,122, 66, 212))
@@ -86,6 +95,7 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
         val subjectTextView = TextView(context)
 
         subjectTextView.text = para.sub // Пример текста
+        subjectTextView.layoutParams=params1 // Пример текста
         subjectTextView.setTextColor(Color.WHITE)
 
 
@@ -93,13 +103,14 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
         val teacherTextView = TextView(context)
 
         teacherTextView.text = para.prepod // Пример текста
+        teacherTextView.layoutParams=params1 // Пример текста
         teacherTextView.setTextColor(Color.WHITE)
-        teacherTextView.maxLines=1
-        teacherTextView.ellipsize= TextUtils.TruncateAt.END
+
 
         val groupsTextView = TextView(context)
 
         groupsTextView.text = para.groups // Пример текста
+        groupsTextView.layoutParams=params1
         groupsTextView.setTextColor(Color.WHITE)
 
 
@@ -111,6 +122,7 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
         val classroomTextView = TextView(context)
 
         classroomTextView.text = para.classRoom // Пример текста
+        classroomTextView.layoutParams=params1
         classroomTextView.setTextColor(Color.WHITE)
 
         val layoutParams = LayoutParams(
