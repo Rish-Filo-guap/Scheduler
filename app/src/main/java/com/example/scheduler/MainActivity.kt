@@ -3,6 +3,7 @@ package com.example.scheduler
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
@@ -11,11 +12,16 @@ import com.example.scheduler.ui.main.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MainActivity : AppCompatActivity(),GroupSaving {
+class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
+    private lateinit var searchBTN: ImageButton
     private lateinit var prefs: SharedPreferences
+    private lateinit var mainSchedulePageFragment:MainSchedulePageFragment
+    private lateinit var secSchedulePageFragment:MainSchedulePageFragment
+    private val tabsNames=arrayOf("Мое расписание ", "Чужое расписание ")
+    private lateinit var groupNames:Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,12 +36,21 @@ class MainActivity : AppCompatActivity(),GroupSaving {
         viewPagerAdapter = ViewPagerAdapter(this)
         prefs = getSharedPreferences("info", Context.MODE_PRIVATE)
 
-        // Add the fragments
+        searchBTN=findViewById(R.id.main_search_button)
+        searchBTN.setOnClickListener {
+            val searchDialogFragment = SearchActivity(this)
+            searchDialogFragment.show(supportFragmentManager, "searchActivity")
+        }
 
-        viewPagerAdapter.addFragment(MainSchedulePageFragment(loadGroup(),this), "Мое расписание")
-        //viewPagerAdapter.addFragment(MainSchedulePageFragment(), "Page 2")
-       // viewPagerAdapter.addFragment(FirstPageFragment(), "Page 2")
-       // viewPagerAdapter.addFragment(FirstPageFragment(), "Page 3")
+        // Add the fragments
+        mainSchedulePageFragment=MainSchedulePageFragment(prefs.getString("maingroup",null))
+        secSchedulePageFragment=MainSchedulePageFragment(prefs.getString("secgroup",null))
+
+
+        groupNames= arrayOf(prefs.getString("maingroup",":(")!!, prefs.getString("secgroup",":(")!! )
+        viewPagerAdapter.addFragment(mainSchedulePageFragment, tabsNames[0]+groupNames[0])
+        viewPagerAdapter.addFragment(secSchedulePageFragment, tabsNames[1]+groupNames[1])
+
 
         // Set the adapter to the ViewPager2
         viewPager.adapter = viewPagerAdapter
@@ -45,12 +60,30 @@ class MainActivity : AppCompatActivity(),GroupSaving {
             tab.text = viewPagerAdapter.getPageTitle(position)
         }.attach()
     }
-override fun saveGroup(group:String){//сохраняем все данные
-    val editor = prefs.edit()
-    editor.putString("group", group).apply()
-}
-private fun loadGroup(): String? {//загружаем все данные
 
-   return prefs.getString("group",null)
-}
+
+
+    override fun groupChanged(newGroup: String) {
+        val editor = prefs.edit()
+        when(viewPager.currentItem){
+            0->{
+                mainSchedulePageFragment.groupChanged(newGroup)
+                editor.putString("maingroup", newGroup).apply()
+            }
+            1->{
+                secSchedulePageFragment.groupChanged(newGroup)
+                editor.putString("secgroup", newGroup).apply()
+
+            }
+        }
+
+        groupNames[viewPager.currentItem]=newGroup
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tabsNames[position]+groupNames[position]
+        }.attach()
+
+
+
+    }
+
 }

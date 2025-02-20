@@ -15,7 +15,7 @@ import android.widget.ScrollView
 import com.example.scheduler.ScheduleProcessing.Groups
 import com.example.scheduler.ScheduleProcessing.Para
 
-class MainSchedulePageFragment(var group:String?, val parent:GroupSaving) : Fragment(), ShowBottomFragmentDialog {
+class MainSchedulePageFragment(var group:String?) : Fragment(), ShowBottomFragmentDialogParaInfo {
     
     lateinit var scheduleLayout:ScheduleLayout
 
@@ -47,24 +47,16 @@ class MainSchedulePageFragment(var group:String?, val parent:GroupSaving) : Frag
 
         var mainLinearLayout:LinearLayout= view.findViewById(R.id.main_schedule_page_linearLayout)
 
-        val btn= Button(view.context)
-        btn.text="search"
 
-        mainLinearLayout.addView(btn)
+
+       // mainLinearLayout.addView(btn)
         mainLinearLayout.addView(scrollView)
-        btn.setOnClickListener{
 
-            val searchDialogFragment = SearchActivity(this)
-            searchDialogFragment.show(childFragmentManager, "searchActivity")
-        }
         scrollView.addView(scheduleLayout)
     }
-    override fun groupChanged(newGroup: String) {
+    fun groupChanged(newGroup: String) {
 
-        group= Groups().groups.get(newGroup).toString()
-        scheduleLayout.downloadSchedule(group!!)
-        parent.saveGroup(group!!)
-
+        scheduleLayout.downloadSchedule(newGroup)
     }
 
     override fun showParaInfo(para: Para) {

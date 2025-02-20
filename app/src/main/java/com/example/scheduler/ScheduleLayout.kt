@@ -9,10 +9,12 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import com.example.scheduler.ScheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.ScheduleProcessing.DaysOfWeek
 import com.example.scheduler.ScheduleProcessing.GetInfoFromEther
+import com.example.scheduler.ScheduleProcessing.Groups
 import com.example.scheduler.ScheduleProcessing.Para
 import com.example.scheduler.ScheduleProcessing.ScheduleList
 import com.example.scheduler.ScheduleProcessing.TypeOfSubject
@@ -23,7 +25,7 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
-class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : LinearLayout(context) {
+class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaInfo) : LinearLayout(context) {
     val layoutParams = LayoutParams(
         LayoutParams.MATCH_PARENT,
         LayoutParams.WRAP_CONTENT
@@ -38,7 +40,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
 
         CoroutineScope(Dispatchers.IO).launch {
             //delay(1000)
-            val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?gr="+group)
+            val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?gr="+ Groups().groups.get(group))
 
             val createScheduleFromParsed = CreateScheduleFromParsed()
             try {

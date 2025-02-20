@@ -12,7 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 
-class SearchActivity(var parent: ShowBottomFragmentDialog) : BottomSheetDialogFragment() {
+class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDialogFragment() {
 
     private lateinit var searchView: SearchView
     private lateinit var suggestionsRecyclerView: RecyclerView
