@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="groupPrepClass">#616161</color>
+    <color name="paraBackGroundColor">#101010</color>
+    <color name="test">#333</color>
 </resources>

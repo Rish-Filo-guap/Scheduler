@@ -26,39 +26,32 @@ class CreateScheduleFromParsed {
                 var paraListString = ArrayList<String>()
                 var para2ListString = ArrayList<String>()
 
-                //Log.d("iii", i.toString()+"| "+selectedPara+"| "+selectedDay+"| "+weekType )
-                if (weekType == 0) {
-                    paraListString.add(list[i + 1])
-                    paraListString.add(list[i + 2])
-                    paraListString.add(list[i + 3])
-                    val para = getParaFromLines(paraListString, selectedPara)
-                    scheduleList.weeks[0].days[selectedDay].addPara(para)
-                    scheduleList.weeks[1].days[selectedDay].addPara(para)
-                    i += 4
+                if(weekType<2){
+                    paraListString.add(list[i + 1+weekType])
+                    paraListString.add(list[i + 2+weekType])
+                    paraListString.add(list[i + 3+weekType])
+                    val para = getParaFromLines(paraListString, selectedPara,weekType)
+                    scheduleList.days[selectedDay].addPara(para)
+                    i+=4+weekType
                 }
-                if (weekType == 1) {
-                    paraListString.add(list[i + 2])
-                    paraListString.add(list[i + 3])
-                    paraListString.add(list[i + 4])
-                    val para = getParaFromLines(paraListString, selectedPara)
-                    scheduleList.weeks[0].days[selectedDay].addPara(para)
-
-                    i += 5
-                }
-                if (weekType == 2) {
+                else
+                 {
                     para2ListString.add(list[i + 2])
                     para2ListString.add(list[i + 3])
                     para2ListString.add(list[i + 4])
-                    val para2 = getParaFromLines(para2ListString, selectedPara)
-                    scheduleList.weeks[1].days[selectedDay].addPara(para2)
+
+                    val para2 = getParaFromLines(para2ListString, selectedPara, weekType)
+                    scheduleList.days[selectedDay].addPara(para2)
+
 
                     if ((i+5<list.size-1) && (list[i+5][2].toInt()>'9'.toInt() || list[i+5][2].toInt()<'0'.toInt() ) && getNumbDayFromString(list[i+5])==-1) {
                         //Log.d("ew","e "+(i+5))
                         paraListString.add(list[i + 6])
                         paraListString.add(list[i + 7])
                         paraListString.add(list[i + 8])
-                        val para = getParaFromLines(paraListString, selectedPara)
-                        scheduleList.weeks[0].days[selectedDay].addPara(para)
+                        val para = getParaFromLines(paraListString, selectedPara,1)
+                        scheduleList.days[selectedDay].addPara(para)
+
                         i += 4
                     }
 
@@ -76,7 +69,7 @@ class CreateScheduleFromParsed {
 
 
     }
-    fun getParaFromLines(list: ArrayList<String>,selectedPara:Int): Para {
+    fun getParaFromLines(list: ArrayList<String>,selectedPara:Int, weekType:Int): Para {
 
         var classPrepGr=parseClassPrepGr(list[2])
         var subject=list[1].substring(2,list[1].length)
@@ -84,7 +77,7 @@ class CreateScheduleFromParsed {
         var typeOfSub=parseTypeSub(list[0])
 
         //Log.d("ew",selectedPara.toString())
-        return Para(subject, classPrepGr[1], classPrepGr[0], typeOfSub, classPrepGr[2], selectedPara.toString().toInt())
+        return Para(subject, classPrepGr[1], classPrepGr[0], typeOfSub, classPrepGr[2],weekType, selectedPara.toString().toInt())
     }
     fun getNumbDayFromString(str:String):Int{
         when(str){

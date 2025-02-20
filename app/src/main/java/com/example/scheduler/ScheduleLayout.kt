@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
+import android.text.TextUtils
 import android.util.Log
+import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import com.example.scheduler.ScheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.ScheduleProcessing.DaysOfWeek
 import com.example.scheduler.ScheduleProcessing.GetInfoFromEther
@@ -99,15 +98,20 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
             linearLayoutParas.orientation=VERTICAL
 
 
-            for (j in 0..schedule.weeks[weekNumb].days[dayOfWeekNumb].paras.size-1){
+            /*for (j in 0..schedule.weeks[weekNumb].days[dayOfWeekNumb].paras.size-1){
                 linearLayoutParas.addView(GenParaSchedule(schedule.weeks[weekNumb].days[dayOfWeekNumb].paras[j]), layoutParams)
+            }*/
+            for (j in 0..schedule.days[dayOfWeekNumb].paras.size-1){
+                val paraLinearLayout=GenParaSchedule(schedule.days[dayOfWeekNumb].paras[j], weekNumb)
+                if(paraLinearLayout!=null)
+                    linearLayoutParas.addView(paraLinearLayout, layoutParams)
             }
             val shape = GradientDrawable()
             shape.cornerRadius = 40f // радиус в dp
-            shape.setColor(Color.argb(255,15,15,15)) // устанавливаем цвет фона
+            shape.setColor(ContextCompat.getColor(context, R.color.test)) // устанавливаем цвет фона
 
             // Установите фон для LinearLayout
-            linearLayoutParas.background = shape
+            //linearLayoutParas.background = shape
             setPadding(20,0,20,0)
 
             addView(linearLayoutParas,layoutParams)
@@ -118,9 +122,12 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
 
 
     }
-    @RequiresApi(Build.VERSION_CODES.O)
+
     @SuppressLint("ResourceAsColor")
-    private fun GenParaSchedule(para: Para): LinearLayout{
+    private fun GenParaSchedule(para: Para, weekNumb:Int): LinearLayout?{
+        if(para.weekType!=weekNumb+1 && para.weekType!=0) return null
+        else{
+
 
 
         // Создаем TextView для номера урока
@@ -129,20 +136,20 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
         lessonNumberTextView.text = "${para.getNumbStr()}" // Пример: Номер урока 1
         lessonNumberTextView.setTextColor(Color.argb(255,130, 130, 130))
         lessonNumberTextView.textSize=29f
-        lessonNumberTextView.setPadding(20,0,0,0)
+        lessonNumberTextView.gravity=Gravity.CENTER
 
         // Создаем TextView для времени начала занятия
         val timeStartTextView = TextView(context)
 
         timeStartTextView.text = para.getStartTime() // Пример текста
         timeStartTextView.setTextColor(ContextCompat.getColor(context, android.R.color.white)) // Цвет текста
-
+        timeStartTextView.gravity=Gravity.CENTER
         // Создаем TextView для времени  окончания занятия
         val timeEndTextView = TextView(context)
 
         timeEndTextView.text = para.getEndTime() // Пример текста
         timeEndTextView.setTextColor(ContextCompat.getColor(context, android.R.color.white)) // Цвет текста
-
+        timeEndTextView.gravity= Gravity.CENTER
         // Создаем TextView для типа занятия
         val typeSubjectTextView = TextView(context)
 
@@ -165,18 +172,18 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
 
         teacherTextView.text = para.prepod // Пример текста
         teacherTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrepClass))
+        teacherTextView.maxLines=1
+        teacherTextView.ellipsize=TextUtils.TruncateAt.END
 
         val groupsTextView = TextView(context)
 
-        groupsTextView.text = para.groups+" "+para.groups.length.toString() // Пример текста
+        groupsTextView.text = para.groups // Пример текста
         groupsTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrepClass))
 
-        val shape = GradientDrawable()
-        shape.cornerRadius = 40f // радиус в dp
-        shape.setColor(Color.argb(255,15,15,255)) // устанавливаем цвет фона
 
-        //groupsTextView.background=shape
-        //groupsTextView.width=100
+
+
+
 
         // Создаем TextView для аудитории
         val classroomTextView = TextView(context)
@@ -187,7 +194,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
         val layoutParams = LayoutParams(
 
             LayoutParams.WRAP_CONTENT,
-            LayoutParams.WRAP_CONTENT,
+            LayoutParams.MATCH_PARENT,
 
             )
         val linearLayout=LinearLayout(context)
@@ -195,6 +202,12 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
             parent.showParaInfo(para)
             Log.d("ew", para.sub)
         }
+
+
+
+
+
+
         val linearLayoutLeft=LinearLayout(context)
         val linearLayoutRight=LinearLayout(context)
 
@@ -202,6 +215,8 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
         linearLayoutLeft.addView(timeStartTextView)
         linearLayoutLeft.addView(lessonNumberTextView)
         linearLayoutLeft.addView(timeEndTextView)
+
+        linearLayoutLeft.gravity=Gravity.CENTER
 
         linearLayoutRight.orientation=VERTICAL
         linearLayoutRight.addView(typeSubjectTextView)
@@ -211,12 +226,25 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialog) : Li
         linearLayoutRight.addView(groupsTextView)
 
 
-        linearLayoutLeft.setPadding(50,20,100,20,)
-        linearLayoutRight.setPadding(0,20,0,20,)
+
+
+        linearLayoutLeft.setPadding(50,10,50,10)
+        linearLayoutRight.setPadding(50,10,0,10)
+
+
         linearLayout.orientation=HORIZONTAL
         linearLayout.addView(linearLayoutLeft,layoutParams)
+
         linearLayout.addView(linearLayoutRight,layoutParams)
+            when(weekNumb){
+                0->linearLayout.setBackgroundResource(R.drawable.background_for_up_para)
+                1->linearLayout.setBackgroundResource(R.drawable.background_for_down_para)
+            }
+
+
+
 
         return linearLayout
+        }
     }
 }

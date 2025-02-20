@@ -1,40 +1,23 @@
 package com.example.scheduler.ScheduleProcessing
 
 class ScheduleList {
-var weeks= arrayListOf(
-     Week(
-        arrayListOf(
-            Day(),
-            Day(),
-            Day(),
-            Day(),
-            Day(),
-            Day(),
-            Day(),
-        )
-     ),
-     Week(
-         arrayListOf(
-             Day(),
-             Day(),
-             Day(),
-             Day(),
-             Day(),
-             Day(),
-             Day(),
-         )
-     ),
-     )
+    var days= arrayListOf(
+        Day(),
+        Day(),
+        Day(),
+        Day(),
+        Day(),
+        Day(),
+        Day(),
+    )
 
-}
-class Week(val days:ArrayList<Day>){
 
 }
 class Day{
     var paras=ArrayList<Para>(0)
     var isEmpty=true
     constructor(){
-        paras.add(Para("Выходной","","", "", "", 7) )
+        paras.add(Para("","","Выходной", "", "",0 ,7) )
     }
     fun addPara(para: Para){
         if(isEmpty)
@@ -42,7 +25,6 @@ class Day{
         isEmpty=false
         paras.add(para)
     }
-
 }
 
 class Para (
@@ -51,6 +33,7 @@ class Para (
     public val classRoom:String,
     public val typeOfSubject: String,
     public val groups: String,
+    public val weekType:Int=0,
     public val numb:Int) {
 
     public fun getStartTime():String{
