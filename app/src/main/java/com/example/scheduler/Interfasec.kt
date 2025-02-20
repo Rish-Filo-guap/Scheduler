@@ -6,3 +6,6 @@ public interface ShowBottomFragmentDialog{
     public fun groupChanged(newGroup:String)
     public fun showParaInfo(para:Para)
 }
+public interface GroupSaving{
+    public fun saveGroup(group:String)
+}

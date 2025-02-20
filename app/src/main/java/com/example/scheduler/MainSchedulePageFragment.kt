@@ -2,6 +2,8 @@ package com.example.scheduler
 
 //import androidx.fragment.app.viewModels
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,19 +15,17 @@ import android.widget.ScrollView
 import com.example.scheduler.ScheduleProcessing.Groups
 import com.example.scheduler.ScheduleProcessing.Para
 
-class MainSchedulePageFragment : Fragment(), ShowBottomFragmentDialog {
-    var group:String="6431"
+class MainSchedulePageFragment(var group:String?, val parent:GroupSaving) : Fragment(), ShowBottomFragmentDialog {
+    
     lateinit var scheduleLayout:ScheduleLayout
 
-    companion object {
-        fun newInstance() = MainSchedulePageFragment()
-    }
 
     //private val viewModel: FirstPageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // TODO: Use the ViewModel
+        
     }
 
 
@@ -41,7 +41,9 @@ class MainSchedulePageFragment : Fragment(), ShowBottomFragmentDialog {
 
         val scrollView = ScrollView(view.context)
         scheduleLayout= ScheduleLayout(view.context, this)
-        scheduleLayout.downloadSchedule(group)
+        if(group!=null){
+            scheduleLayout.downloadSchedule(group!!)
+        }
 
         var mainLinearLayout:LinearLayout= view.findViewById(R.id.main_schedule_page_linearLayout)
 
@@ -60,7 +62,8 @@ class MainSchedulePageFragment : Fragment(), ShowBottomFragmentDialog {
     override fun groupChanged(newGroup: String) {
 
         group= Groups().groups.get(newGroup).toString()
-        scheduleLayout.downloadSchedule(group)
+        scheduleLayout.downloadSchedule(group!!)
+        parent.saveGroup(group!!)
 
     }
 
