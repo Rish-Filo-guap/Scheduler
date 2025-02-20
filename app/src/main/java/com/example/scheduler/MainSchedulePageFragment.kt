@@ -5,6 +5,7 @@ package com.example.scheduler
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +15,10 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import com.example.scheduler.ScheduleProcessing.Groups
 import com.example.scheduler.ScheduleProcessing.Para
+import com.example.scheduler.ScheduleProcessing.ScheduleList
 
-class MainSchedulePageFragment(var group:String?) : Fragment(), ShowBottomFragmentDialogParaInfo {
+class MainSchedulePageFragment(var group:String?, var scheduleList: ScheduleList?) : Fragment(), ShowBottomFragmentDialogParaInfo {
+
     
     lateinit var scheduleLayout:ScheduleLayout
 
@@ -42,7 +45,13 @@ class MainSchedulePageFragment(var group:String?) : Fragment(), ShowBottomFragme
         val scrollView = ScrollView(view.context)
         scheduleLayout= ScheduleLayout(view.context, this)
         if(group!=null){
+
+        if(scheduleList==null){
             scheduleLayout.downloadSchedule(group!!)
+            Log.d("ew", "sssssss")
+        }else{
+            scheduleLayout.downloadSchedule(scheduleList,group!!)
+        }
         }
 
         var mainLinearLayout:LinearLayout= view.findViewById(R.id.main_schedule_page_linearLayout)

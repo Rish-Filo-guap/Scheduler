@@ -3,6 +3,7 @@ package com.example.scheduler
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Color.BLUE
 import android.graphics.drawable.GradientDrawable
 import android.text.TextUtils
 import android.util.Log
@@ -26,6 +27,7 @@ import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
 class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaInfo) : LinearLayout(context) {
+    lateinit var schedule:ScheduleList
     val layoutParams = LayoutParams(
         LayoutParams.MATCH_PARENT,
         LayoutParams.WRAP_CONTENT
@@ -35,12 +37,28 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         orientation = VERTICAL
         setBackgroundColor(Color.BLACK)
     }
-    fun downloadSchedule(group:String){
-        var schedule= ScheduleList()
+    fun downloadSchedule(scheduleList: ScheduleList?, group: String){
+        if(scheduleList==null){
+            downloadSchedule(group)
+        }
+        else{
+            schedule=scheduleList
+            drawSchedule(schedule)
+            invalidate()
+
+        }
+
+        Log.d("ew","wwwwwwwww")
+    }
+    fun downloadSchedule(group:String?){
+        schedule= ScheduleList()
+        setBackgroundResource(R.color.paraBackGroundColor)
+        invalidate()
+        if(group==null){return}
 
         CoroutineScope(Dispatchers.IO).launch {
             //delay(1000)
-            val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?gr="+ Groups().groups.get(group))
+            val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?"+ Groups().groups.get(group))
 
             val createScheduleFromParsed = CreateScheduleFromParsed()
             try {
@@ -51,6 +69,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
             }
             withContext(Dispatchers.Main) {
                 drawSchedule(schedule)
+                setBackgroundColor(Color.BLACK)
                 invalidate()
 
                 Log.d("ew","wwwwwwwww")
@@ -172,7 +191,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         // Создаем TextView для имени преподавателя
         val teacherTextView = TextView(context)
 
-        teacherTextView.text = para.prepod // Пример текста
+        teacherTextView.text = para.prepod.substringBefore(",") // Пример текста
         teacherTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrepClass))
         teacherTextView.maxLines=1
         teacherTextView.ellipsize=TextUtils.TruncateAt.END
@@ -189,8 +208,16 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
 
         // Создаем TextView для аудитории
         val classroomTextView = TextView(context)
-
-        classroomTextView.text = para.classRoom // Пример текста
+        var cls=para.classRoom.substringAfter("(")
+        var temp=""
+        Log.d("ar",cls)
+        when(cls[0])
+        {
+            'Б'->temp="БМ"
+            'Г'->temp="Гаст"
+            'Л'->temp="Ленс"
+        }
+        classroomTextView.text = para.classRoom.substringBefore(" ")+" "+temp // Пример текста
         classroomTextView.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
 
         val layoutParams = LayoutParams(

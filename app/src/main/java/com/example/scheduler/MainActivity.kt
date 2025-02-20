@@ -3,14 +3,18 @@ package com.example.scheduler
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
+import com.example.scheduler.ScheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.ScheduleProcessing.Groups
 import com.example.scheduler.ui.main.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
     private lateinit var viewPagerAdapter: ViewPagerAdapter
@@ -20,7 +24,7 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
     private lateinit var prefs: SharedPreferences
     private lateinit var mainSchedulePageFragment:MainSchedulePageFragment
     private lateinit var secSchedulePageFragment:MainSchedulePageFragment
-    private val tabsNames=arrayOf("Мое расписание ", "Чужое расписание ")
+
     private lateinit var groupNames:Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +36,8 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
         viewPager = findViewById(R.id.viewpager)
         tabLayout = findViewById(R.id.tab_layout)
 
+
+
         // Set up the adapter
         viewPagerAdapter = ViewPagerAdapter(this)
         prefs = getSharedPreferences("info", Context.MODE_PRIVATE)
@@ -41,15 +47,23 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
             val searchDialogFragment = SearchActivity(this)
             searchDialogFragment.show(supportFragmentManager, "searchActivity")
         }
+        try {
+
+            val fileInputStream: FileInputStream = openFileInput("schedule.txt")
+            mainSchedulePageFragment=MainSchedulePageFragment(prefs.getString("maingroup",null),CreateScheduleFromParsed().ReadSchedule(fileInputStream))
+            Log.d("ew", "file finded")
+        }catch (e:Exception){
+            mainSchedulePageFragment=MainSchedulePageFragment(prefs.getString("maingroup",null),null)
+            Log.d("ew", "file not finded")
+        }
 
         // Add the fragments
-        mainSchedulePageFragment=MainSchedulePageFragment(prefs.getString("maingroup",null))
-        secSchedulePageFragment=MainSchedulePageFragment(prefs.getString("secgroup",null))
+        secSchedulePageFragment=MainSchedulePageFragment(prefs.getString("secgroup",null), null)
 
 
         groupNames= arrayOf(prefs.getString("maingroup",":(")!!, prefs.getString("secgroup",":(")!! )
-        viewPagerAdapter.addFragment(mainSchedulePageFragment, tabsNames[0]+groupNames[0])
-        viewPagerAdapter.addFragment(secSchedulePageFragment, tabsNames[1]+groupNames[1])
+        viewPagerAdapter.addFragment(mainSchedulePageFragment, groupNames[0].substringBefore(" "))
+        viewPagerAdapter.addFragment(secSchedulePageFragment, groupNames[1].substringBefore(" "))
 
 
         // Set the adapter to the ViewPager2
@@ -79,10 +93,17 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
 
         groupNames[viewPager.currentItem]=newGroup
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = tabsNames[position]+groupNames[position]
+            tab.text = groupNames[position]
         }.attach()
 
 
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val fileOutputStream: FileOutputStream = openFileOutput("schedule.txt", Context.MODE_PRIVATE)
+        CreateScheduleFromParsed().SaveSchedule(fileOutputStream,mainSchedulePageFragment.scheduleLayout.schedule)
 
     }
 
