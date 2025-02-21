@@ -3,19 +3,17 @@ package com.example.scheduler
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Color.BLUE
 import android.graphics.drawable.GradientDrawable
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import com.example.scheduler.ScheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.ScheduleProcessing.DaysOfWeek
 import com.example.scheduler.ScheduleProcessing.GetInfoFromEther
-import com.example.scheduler.ScheduleProcessing.Groups
+import com.example.scheduler.ScheduleProcessing.GrPrCl
 import com.example.scheduler.ScheduleProcessing.Para
 import com.example.scheduler.ScheduleProcessing.ScheduleList
 import com.example.scheduler.ScheduleProcessing.TypeOfSubject
@@ -57,8 +55,13 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         if(group==null){return}
 
         CoroutineScope(Dispatchers.IO).launch {
+            var newGroup:String
+            if(GrPrCl().groups.containsKey(group))
+                newGroup=GrPrCl().groups.get(group)!!
+            else
+                newGroup=GrPrCl().prepods.get(group)!!
             //delay(1000)
-            val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?"+ Groups().groups.get(group))
+            val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?"+ newGroup)
 
             val createScheduleFromParsed = CreateScheduleFromParsed()
             try {
@@ -228,7 +231,8 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
             )
         val linearLayout=LinearLayout(context)
         linearLayout.setOnClickListener {
-            parent.showParaInfo(para)
+            if(para.numb!=8)
+                parent.showParaInfo(para)
             Log.d("ew", para.sub)
         }
 

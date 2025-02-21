@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_shape"
 
     android:orientation="vertical"
     android:id="@+id/parainfo_linearLayout">
@@ -11,13 +12,76 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Изменить урок"
+            android:text="День недели"
             android:textSize="20sp"
             android:gravity="center"
-            android:layout_marginBottom="16dp"/>
+            />
+
+
+
+        <RadioGroup
+            android:id="@+id/radioGroupDayPara"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            >
+
+            <RadioButton
+                android:id="@+id/radioButtonDayPara1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="пн" />
+            <RadioButton
+                android:id="@+id/radioButtonDayPara2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="вт" />
+            <RadioButton
+                android:id="@+id/radioButtonDayPara3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ср" />
+            <RadioButton
+                android:id="@+id/radioButtonDayPara4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="чт" />
+            <RadioButton
+                android:id="@+id/radioButtonDayPara5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="пт" />
+            <RadioButton
+                android:id="@+id/radioButtonDayPara6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="сб" />
+
+
+
+
+        </RadioGroup>
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Номер пары"
+            android:textSize="20sp"
+            android:gravity="center"
+           />
 
 
 
@@ -26,8 +90,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-
-            android:layout_marginTop="8dp">
+            android:layout_marginBottom="16dp"
+            >
 
             <RadioButton
                 android:id="@+id/radioButtonPara1"
@@ -65,6 +129,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="6" />
+            <RadioButton
+                android:id="@+id/radioButtonPara7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="7" />
 
 
 
@@ -84,7 +154,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
-                android:buttonTint="#3DEF3D"
                 android:text="Каждая" />
 
 
@@ -93,8 +162,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:buttonTint="#3D60EF"
-                android:text="Четная" />
+                android:text="Четная"
+                android:textColor="#7CA8EF" />
 
             <RadioButton
                 android:id="@+id/radioButtonUpWeek"
@@ -103,44 +172,60 @@
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1"
 
-                android:buttonTint="#DB0014"
-                android:text="Нечетная" />
+                android:text="Нечетная"
+                android:textColor="#EF7C89" />
 
 
         </RadioGroup>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Аудитория:"
+            android:labelFor="@+id/searchViewTitle"
+            android:paddingBottom="4dp"/>
+
+        <SearchView
+            android:id="@+id/searchViewTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Преподаватель">
+            android:queryHint="Введите номер аудитории..."
+            android:iconifiedByDefault="false"
+            android:focusable="false"
+            />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextTeacher"
-                android:layout_width="match_parent"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/parainfo_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/buttonResetLesson"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Аудитория">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextAuditorium"
-                android:layout_width="match_parent"
+                android:text="Сбросить"
+                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:textColor="#E23232"
+                />
+            <Button
+                android:id="@+id/buttonSaveLesson"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:text="Сохранить"
+                android:layout_weight="1"
+                android:layout_marginTop="16dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/buttonSaveLesson"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Сохранить"
-            android:layout_marginTop="16dp"/>
+        </LinearLayout>
 
     </LinearLayout>
 

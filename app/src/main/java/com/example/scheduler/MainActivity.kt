@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.scheduler.ScheduleProcessing.CreateScheduleFromParsed
-import com.example.scheduler.ScheduleProcessing.Groups
 import com.example.scheduler.ui.main.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
 
         groupNames[viewPager.currentItem]=newGroup
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = groupNames[position]
+            tab.text = groupNames[position].substringBefore(" ")
         }.attach()
 
 

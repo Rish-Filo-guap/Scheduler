@@ -2,18 +2,14 @@ package com.example.scheduler
 
 //import androidx.fragment.app.viewModels
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
-import com.example.scheduler.ScheduleProcessing.Groups
 import com.example.scheduler.ScheduleProcessing.Para
 import com.example.scheduler.ScheduleProcessing.ScheduleList
 
@@ -69,6 +65,7 @@ class MainSchedulePageFragment(var group:String?, var scheduleList: ScheduleList
     }
 
     override fun showParaInfo(para: Para) {
+
         val paradialog=ParaInfo(para)
         paradialog.show(childFragmentManager, "ParaInfo")
     }

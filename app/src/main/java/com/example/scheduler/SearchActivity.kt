@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.scheduler.ScheduleProcessing.Groups
+import com.example.scheduler.ScheduleProcessing.GrPrCl
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
@@ -19,7 +19,7 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
     private lateinit var suggestionAdapter: SuggestionAdapter
 
     // Пример данных для поиска.  Замените его вашими данными
-    private val allSuggestions = Groups().groups.keys.toList()
+    private val allSuggestions = GrPrCl().groups.keys.toList()+GrPrCl().prepods.keys.toList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
