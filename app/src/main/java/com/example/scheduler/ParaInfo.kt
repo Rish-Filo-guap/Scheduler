@@ -1,34 +1,29 @@
 package com.example.scheduler
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
-import android.view.ViewGroup.MarginLayoutParams
-import android.view.Gravity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.LinearLayout.HORIZONTAL
-import android.widget.LinearLayout.LayoutParams
-import android.widget.LinearLayout.VERTICAL
 import android.widget.RadioGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.view.get
-import androidx.core.view.marginEnd
-import androidx.core.view.marginStart
+import android.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.scheduler.ScheduleProcessing.GrPrCl
 import com.example.scheduler.ScheduleProcessing.Para
-import com.example.scheduler.ScheduleProcessing.TypeOfSubject
 
 
 class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
 
- private lateinit var linearLayout: LinearLayout
+  private lateinit var linearLayout: LinearLayout
+  private lateinit var searchView: SearchView
+  private lateinit var suggestionsRecyclerView: RecyclerView
+  private lateinit var suggestionAdapter: SuggestionAdapter
 
+    private val allSuggestions = GrPrCl().classes.keys.toList()
 
 
     override fun onCreateView(
@@ -45,14 +40,14 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
         super.onCreate(savedInstanceState)
 
         linearLayout=view.findViewById(R.id.parainfo_linearLayout)
-        GenParaSchedule(para,view)
+        ChangeParaMenu(para,view)
         linearLayout.invalidate()
 
        // linearLayout.addView(GenParaSchedule(para))
 
     }
     @SuppressLint("ResourceAsColor")
-    private fun GenParaSchedule(para: Para, view: View){
+    private fun ChangeParaMenu(para: Para, view: View){
         val weekRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupWeekParity)
         val numbRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupNumbPara)
         val dayRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupDayPara)
@@ -79,13 +74,49 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
         numbRadioGroup.check(idesForNumb[para.numb-1])
         dayRadioGroup.check(idesForDays[para.dayOfWeek])
 
+        searchView=view.findViewById(R.id.searchViewClass)
+        searchView.setQuery(para.classRoom,false)
 
+        suggestionsRecyclerView = view.findViewById(R.id.parainfo_recycler_view)
+
+        suggestionsRecyclerView.layoutManager = LinearLayoutManager(view.context)
+        suggestionAdapter = SuggestionAdapter(emptyList()) { selectedSuggestion ->
+            // Обработка выбора подсказки. Например, заполнение EditText
+
+
+            // parent.groupChanged(selectedSuggestion)
+            searchView.setQuery(selectedSuggestion,true)
+            searchView.clearFocus();
+            suggestionsRecyclerView.visibility = View.GONE
+            //dismiss()
+        }
+        suggestionsRecyclerView.adapter = suggestionAdapter
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String?): Boolean {
+                suggestionsRecyclerView.visibility = View.VISIBLE
+                val filteredSuggestions = filterSuggestions(newText.toString())
+                suggestionAdapter.updateData(filteredSuggestions)
+
+                return true
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+
+                return false
+            }
+        })
 
     }
 
 
 
+    private fun filterSuggestions(searchText: String): List<String> {
+        val tmp=allSuggestions.filter { it.startsWith(searchText, ignoreCase = true) }
 
+        Log.d("ew",tmp.size.toString())
+        return tmp
+    }
 
 
 }

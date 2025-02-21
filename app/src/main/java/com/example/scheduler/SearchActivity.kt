@@ -8,6 +8,7 @@ import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scheduler.ScheduleProcessing.GrPrCl
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
@@ -26,6 +27,7 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.activity_search, container, false)
     }
 
@@ -46,6 +48,7 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
             parent.groupChanged(selectedSuggestion)
             dismiss()
         }
+
         suggestionsRecyclerView.adapter = suggestionAdapter
 
         searchView?.let {

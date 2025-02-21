@@ -29,7 +29,7 @@ class CreateScheduleFromParsed {
                 bufferedWriter.write("h "+DaysOfWeek.values().get(i).dayOfWeek)
                 bufferedWriter.newLine()
                 for (para in schedule.days[i].paras) {
-                    if(para.numb!=7){
+                    if(para.numb!=8){
 
                     bufferedWriter.write("d "+para.numb)
                     bufferedWriter.newLine()
@@ -221,17 +221,23 @@ class CreateScheduleFromParsed {
             }
            // Log.d("sub", str.substring(i,i+2))
         }
-        if(prepStart!=0){
 
-            parsedList.add(str.substring(classStart+2,prepStart-4))
+        if(prepStart!=0){
+            var tmp=str.substring(classStart+2,prepStart-4)
+            if(tmp.contains('—'))
+                tmp=tmp.substringBefore(" —")
+            parsedList.add(tmp)
             parsedList.add(str.substring(prepStart+3,grStart-2))
             parsedList.add(str.substring(grStart+3,str.length))
 
 
         }else{
+            var tmp=str.substring(classStart+2,grStart-2)
+           if(tmp.contains('—'))
+                tmp=tmp.substringBefore(" —")
+            parsedList.add(tmp)
 
-
-           parsedList.add(str.substring(classStart+2,grStart-2))
+           parsedList.add(tmp)
            parsedList.add("null")
            parsedList.add(str.substring(grStart+3,str.length))
 
