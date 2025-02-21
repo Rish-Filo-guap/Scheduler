@@ -69,4 +69,9 @@ class MainSchedulePageFragment(var group:String?, var scheduleList: ScheduleList
         val paradialog=ParaInfo(para)
         paradialog.show(childFragmentManager, "ParaInfo")
     }
+    override fun editParaInfo(para: Para) {
+
+        val paradialog=ParaEdit(para)
+        paradialog.show(childFragmentManager, "ParaEdit")
+    }
 }

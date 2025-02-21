@@ -7,6 +7,7 @@ public interface ShowBottomFragmentDialogSearch{
 }
 public interface ShowBottomFragmentDialogParaInfo{
     public fun showParaInfo(para:Para)
+    public fun editParaInfo(para:Para)
 
 }
 public interface GroupSaving{

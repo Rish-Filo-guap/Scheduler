@@ -235,6 +235,12 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
                 parent.showParaInfo(para)
             Log.d("ew", para.sub)
         }
+        linearLayout.setOnLongClickListener {
+            if(para.numb!=8)
+                parent.editParaInfo(para)
+            Log.d("ew", para.sub)
+            true
+        }
 
 
 

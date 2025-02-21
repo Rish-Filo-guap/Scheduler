@@ -1,29 +1,25 @@
 package com.example.scheduler
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
+import android.view.Gravity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.RadioGroup
-import android.widget.SearchView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.scheduler.ScheduleProcessing.GrPrCl
+import android.widget.LinearLayout.HORIZONTAL
+import android.widget.LinearLayout.LayoutParams
+import android.widget.LinearLayout.VERTICAL
+import android.widget.TextView
 import com.example.scheduler.ScheduleProcessing.Para
+import com.example.scheduler.ScheduleProcessing.TypeOfSubject
 
 
 class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
 
-  private lateinit var linearLayout: LinearLayout
-  private lateinit var searchView: SearchView
-  private lateinit var suggestionsRecyclerView: RecyclerView
-  private lateinit var suggestionAdapter: SuggestionAdapter
-
-    private val allSuggestions = GrPrCl().classes.keys.toList()
+    private lateinit var linearLayout: LinearLayout
 
 
     override fun onCreateView(
@@ -40,83 +36,130 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
         super.onCreate(savedInstanceState)
 
         linearLayout=view.findViewById(R.id.parainfo_linearLayout)
-        ChangeParaMenu(para,view)
-        linearLayout.invalidate()
 
-       // linearLayout.addView(GenParaSchedule(para))
+
+        linearLayout.addView(GenParaSchedule(para))
 
     }
     @SuppressLint("ResourceAsColor")
-    private fun ChangeParaMenu(para: Para, view: View){
-        val weekRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupWeekParity)
-        val numbRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupNumbPara)
-        val dayRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupDayPara)
-        val idesForWeek= arrayOf(R.id.radioButtonAllWeek, R.id.radioButtonDownWeek, R.id.radioButtonUpWeek)
-        val idesForNumb= arrayOf(
-            R.id.radioButtonPara1,
-            R.id.radioButtonPara2,
-            R.id.radioButtonPara3,
-            R.id.radioButtonPara4,
-            R.id.radioButtonPara5,
-            R.id.radioButtonPara6,
-            R.id.radioButtonPara7,
-            )
-        val idesForDays= arrayOf(
-            R.id.radioButtonDayPara1,
-            R.id.radioButtonDayPara2,
-            R.id.radioButtonDayPara3,
-            R.id.radioButtonDayPara4,
-            R.id.radioButtonDayPara5,
-            R.id.radioButtonDayPara6,
-
+    private fun GenParaSchedule(para: Para): LinearLayout{
+        val params1 = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        weekRadioGroup.check(idesForWeek[para.weekType])
-        numbRadioGroup.check(idesForNumb[para.numb-1])
-        dayRadioGroup.check(idesForDays[para.dayOfWeek])
+        params1.setMargins(0, 20, 0, 20) // Отступ 8dp со всех сторон
 
-        searchView=view.findViewById(R.id.searchViewClass)
-        searchView.setQuery(para.classRoom,false)
-
-        suggestionsRecyclerView = view.findViewById(R.id.parainfo_recycler_view)
-
-        suggestionsRecyclerView.layoutManager = LinearLayoutManager(view.context)
-        suggestionAdapter = SuggestionAdapter(emptyList()) { selectedSuggestion ->
-            // Обработка выбора подсказки. Например, заполнение EditText
+        // Создаем TextView для номера урока
+        val lessonNumberTextView = TextView(context)
 
 
-            // parent.groupChanged(selectedSuggestion)
-            searchView.setQuery(selectedSuggestion,true)
-            searchView.clearFocus();
-            suggestionsRecyclerView.visibility = View.GONE
-            //dismiss()
+        lessonNumberTextView.id = TextView.generateViewId()
+        lessonNumberTextView.text = "${para.getNumbStr()}" // Пример: Номер урока 1
+        lessonNumberTextView.setTextColor(Color.argb(255,130, 130, 130))
+        lessonNumberTextView.textSize=29f
+        lessonNumberTextView.gravity=Gravity.CENTER
+
+
+        // Создаем TextView для времени начала занятия
+        val timeStartTextView = TextView(context)
+
+        timeStartTextView.text = para.getStartTime() // Пример текста
+        timeStartTextView.setTextColor(Color.WHITE) // Цвет текста
+        timeStartTextView.gravity=Gravity.CENTER
+
+        // Создаем TextView для времени  окончания занятия
+        val timeEndTextView = TextView(context)
+
+        timeEndTextView.text = para.getEndTime() // Пример текста
+        timeEndTextView.setTextColor(Color.WHITE) // Цвет текста
+        timeEndTextView.gravity=Gravity.CENTER
+
+        // Создаем TextView для типа занятия
+        val typeSubjectTextView = TextView(context)
+
+        typeSubjectTextView.text = para.typeOfSubject // Пример текста
+        typeSubjectTextView.layoutParams=params1
+        when(para.typeOfSubject){
+            TypeOfSubject.Lab.typeSub -> typeSubjectTextView.setTextColor(Color.argb(255,66, 151, 212))
+            TypeOfSubject.Lek.typeSub -> typeSubjectTextView.setTextColor(Color.argb(255,122, 66, 212))
+            TypeOfSubject.Pra.typeSub -> typeSubjectTextView.setTextColor(Color.argb(255,212, 163, 66))
         }
-        suggestionsRecyclerView.adapter = suggestionAdapter
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(newText: String?): Boolean {
-                suggestionsRecyclerView.visibility = View.VISIBLE
-                val filteredSuggestions = filterSuggestions(newText.toString())
-                suggestionAdapter.updateData(filteredSuggestions)
+        // Создаем TextView для названия предмета
+        val subjectTextView = TextView(context)
 
-                return true
-            }
+        subjectTextView.text = para.sub // Пример текста
+        subjectTextView.layoutParams=params1 // Пример текста
+        subjectTextView.setTextColor(Color.WHITE)
 
-            override fun onQueryTextSubmit(query: String?): Boolean {
 
-                return false
-            }
-        })
+        // Создаем TextView для имени преподавателя
+        val teacherTextView = TextView(context)
 
+        teacherTextView.text = para.prepod // Пример текста
+        teacherTextView.layoutParams=params1 // Пример текста
+        teacherTextView.setTextColor(Color.WHITE)
+
+
+        val groupsTextView = TextView(context)
+
+        groupsTextView.text = para.groups // Пример текста
+        groupsTextView.layoutParams=params1
+        groupsTextView.setTextColor(Color.WHITE)
+
+
+
+
+
+
+        // Создаем TextView для аудитории
+        val classroomTextView = TextView(context)
+
+        classroomTextView.text = para.classRoom // Пример текста
+        classroomTextView.layoutParams=params1
+        classroomTextView.setTextColor(Color.WHITE)
+
+        val layoutParams = LayoutParams(
+
+            LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT,
+
+            )
+        val linearLayout=LinearLayout(context)
+
+        val linearLayoutLeft=LinearLayout(context)
+        val linearLayoutRight=LinearLayout(context)
+
+        linearLayoutLeft.orientation= VERTICAL
+        linearLayoutLeft.addView(timeStartTextView)
+        linearLayoutLeft.addView(lessonNumberTextView)
+        linearLayoutLeft.addView(timeEndTextView)
+
+        linearLayoutRight.orientation= VERTICAL
+        linearLayoutRight.addView(typeSubjectTextView)
+        linearLayoutRight.addView(subjectTextView)
+        linearLayoutRight.addView(classroomTextView)
+        linearLayoutRight.addView(teacherTextView)
+        linearLayoutRight.addView(groupsTextView)
+
+
+
+        linearLayoutLeft.setPadding(50,20,100,20,)
+        linearLayoutRight.setPadding(0,20,0,20,)
+        linearLayout.orientation= HORIZONTAL
+        linearLayout.addView(linearLayoutLeft,layoutParams)
+        linearLayout.addView(linearLayoutRight,layoutParams)
+        linearLayout.post{
+            linearLayoutLeft.gravity=Gravity.CENTER_HORIZONTAL
+
+        }
+
+        return linearLayout
     }
 
 
 
-    private fun filterSuggestions(searchText: String): List<String> {
-        val tmp=allSuggestions.filter { it.startsWith(searchText, ignoreCase = true) }
 
-        Log.d("ew",tmp.size.toString())
-        return tmp
-    }
 
 
 }
