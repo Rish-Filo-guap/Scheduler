@@ -4,8 +4,145 @@
     android:layout_height="300dp"
 
     android:orientation="vertical"
-    android:id="@+id/parainfo_linearLayout"
-    >
+    android:id="@+id/parainfo_linearLayout">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Изменить урок"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+
+
+        <RadioGroup
+            android:id="@+id/radioGroupNumbPara"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/radioButtonPara1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1" />
+            <RadioButton
+                android:id="@+id/radioButtonPara2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="2" />
+            <RadioButton
+                android:id="@+id/radioButtonPara3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="3" />
+            <RadioButton
+                android:id="@+id/radioButtonPara4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="4" />
+            <RadioButton
+                android:id="@+id/radioButtonPara5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="5" />
+            <RadioButton
+                android:id="@+id/radioButtonPara6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="6" />
+
+
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/radioGroupWeekParity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/radioButtonAllWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:buttonTint="#3DEF3D"
+                android:text="Каждая" />
+
+
+            <RadioButton
+                android:id="@+id/radioButtonDownWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="#3D60EF"
+                android:text="Четная" />
+
+            <RadioButton
+                android:id="@+id/radioButtonUpWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+
+                android:buttonTint="#DB0014"
+                android:text="Нечетная" />
+
+
+        </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Преподаватель">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextTeacher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Аудитория">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextAuditorium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/buttonSaveLesson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Сохранить"
+            android:layout_marginTop="16dp"/>
+
+    </LinearLayout>
 
 
 
