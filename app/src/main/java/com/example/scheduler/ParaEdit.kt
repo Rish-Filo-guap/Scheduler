@@ -7,6 +7,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.RadioGroup
 import android.widget.SearchView
@@ -52,6 +53,7 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
         val numbRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupNumbPara)
         val dayRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupDayPara)
         val idesForWeek= arrayOf(R.id.radioButtonAllWeek, R.id.radioButtonDownWeek, R.id.radioButtonUpWeek)
+        val checkBox:CheckBox=view.findViewById(R.id.para_edit_check_box)
         val idesForNumb= arrayOf(
             R.id.radioButtonPara1,
             R.id.radioButtonPara2,
@@ -72,7 +74,11 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
         )
         weekRadioGroup.check(idesForWeek[para.weekType])
         numbRadioGroup.check(idesForNumb[para.numb-1])
-        dayRadioGroup.check(idesForDays[para.dayOfWeek])
+        if (para.dayOfWeek!=7){
+            dayRadioGroup.check(idesForDays[para.dayOfWeek])
+        }else{
+            checkBox.isChecked=true
+        }
 
         searchView=view.findViewById(R.id.searchViewClass)
         searchView.setQuery(para.classRoom,false)

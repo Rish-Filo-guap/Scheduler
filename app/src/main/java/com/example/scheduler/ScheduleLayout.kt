@@ -272,6 +272,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
             'Б'->temp="БМ"
             'Г'->temp="Гаст"
             'Л'->temp="Ленс"
+
         }
         classroomTextView.text = para.classRoom.substringBefore(" ")+" "+temp // Пример текста
         classroomTextView.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))

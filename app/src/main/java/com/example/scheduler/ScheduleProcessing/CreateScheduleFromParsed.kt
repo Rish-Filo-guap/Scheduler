@@ -238,44 +238,84 @@ class CreateScheduleFromParsed {
         return TypeOfSubject.No.typeSub
     }
     fun parseClassPrepGr(str:String):ArrayList<String>{
+
+
         var parsedList=ArrayList<String>()
-        var classStart=0
-        var prepStart=0
-        var grStart=0
-        for (i in 0 until str.length-1){
-            if(str[i]=='.' && classStart==0){
-                   classStart=i
-            }
-            if(str.substring(i,i+2)=="п:"){
-               prepStart=i
-            }
-            if(str.substring(i,i+2)=="р:"){
-                grStart=i
-            }
-           // Log.d("sub", str.substring(i,i+2))
-        }
+        if(str.contains("ауд.")) {
+            var clasFtmp = str.substringAfter("ауд. ").substringBefore(" гр")
+            var clasStmp = str.substringAfter("ауд. ").substringBefore(" преп")
+            var classname = ""
 
-        if(prepStart!=0){
-            var tmp=str.substring(classStart+2,prepStart-4)
-            if(tmp.contains('—'))
-                tmp=tmp.substringBefore(" —")
-            parsedList.add(tmp)
-            parsedList.add(str.substring(prepStart+3,grStart-2))
-            parsedList.add(str.substring(grStart+3,str.length))
+            if (clasFtmp.length <= clasStmp.length)
+                classname = clasFtmp
+            else
+                classname = clasStmp
 
 
-        }else{
-            var tmp=str.substring(classStart+2,grStart-2)
-           if(tmp.contains('—'))
-                tmp=tmp.substringBefore(" —")
-            parsedList.add(tmp)
-
-           parsedList.add(tmp)
-           parsedList.add("null")
-           parsedList.add(str.substring(grStart+3,str.length))
+            parsedList.add(classname)
+        }else parsedList.add("null")
 
 
-        }
+
+        if(str.contains("преп")) {
+            var clasFtmp = str.substringAfter("преп: ").substringBefore(" гр")
+            var clasStmp = str.substringAfter("преп: ")
+            var classname = ""
+
+            if (clasFtmp.length <= clasStmp.length)
+                classname = clasFtmp
+            else
+                classname = clasStmp
+
+
+            parsedList.add(classname)
+        }else parsedList.add("null")
+
+        if(str.contains("гр:")) {
+
+
+            parsedList.add(str.substringAfter("гр: "))
+        }else parsedList.add("null")
+
+
+
+
+
+//        for (i in 0 until str.length-1){
+//
+//            if(str[i]=='.' && classStart==0){
+//                   classStart=i
+//            }
+//            if(str.substring(i,i+2)=="п:"){
+//               prepStart=i
+//            }
+//            if(str.substring(i,i+2)=="р:"){
+//                grStart=i
+//            }
+//           // Log.d("sub", str.substring(i,i+2))
+//        }
+//
+//        if(prepStart!=0){
+//            var tmp=str.substring(classStart+2,prepStart-4)
+//            if(tmp.contains('—'))
+//                tmp=tmp.substringBefore(" —")
+//            parsedList.add(tmp)
+//            parsedList.add(str.substring(prepStart+3,grStart-2))
+//            parsedList.add(str.substring(grStart+3,str.length))
+//
+//
+//        }else{
+//            var tmp=str.substring(classStart+2,grStart-2)
+//           if(tmp.contains('—'))
+//                tmp=tmp.substringBefore(" —")
+//            parsedList.add(tmp)
+//
+//           parsedList.add(tmp)
+//           parsedList.add("null")
+//           parsedList.add(str.substring(grStart+3,str.length))
+//
+//
+//        }
         return parsedList
     }
 }
