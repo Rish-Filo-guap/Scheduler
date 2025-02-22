@@ -114,7 +114,7 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
     private fun filterSuggestions(searchText: String): List<String> {
         val tmp=allSuggestions.filter { it.startsWith(searchText, ignoreCase = true) }
 
-        Log.d("ew",tmp.size.toString())
+
         return tmp
     }
 

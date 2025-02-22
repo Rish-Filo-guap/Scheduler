@@ -46,7 +46,8 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
 
         }
 
-        Log.d("ew","wwwwwwwww")
+
+
     }
     fun downloadSchedule(group:String?){
         schedule= ScheduleList()
@@ -75,7 +76,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
                 setBackgroundColor(Color.BLACK)
                 invalidate()
 
-                Log.d("ew","wwwwwwwww")
+
 
             }
         }
@@ -142,6 +143,58 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
             // Переходим к следующему дню
             currentDate = currentDate.plusDays(1)
         }
+
+
+
+
+
+
+
+        val textViewOutside = TextView(context)
+
+        // Получаем день недели и форматируем дату
+
+
+
+        textViewOutside.text = "outside"
+        textViewOutside.textSize=20f
+
+        // Устанавливаем отступы (опционально)
+        textViewOutside.setPadding(100, 40, 16, 16)
+
+        addView(textViewOutside, layoutParams)
+        val linearLayoutParas=LinearLayout(context)
+        linearLayoutParas.orientation=VERTICAL
+
+
+        /*for (j in 0..schedule.weeks[weekNumb].days[dayOfWeekNumb].paras.size-1){
+            linearLayoutParas.addView(GenParaSchedule(schedule.weeks[weekNumb].days[dayOfWeekNumb].paras[j]), layoutParams)
+        }*/
+        for (j in 0..schedule.days[7].paras.size-1){
+            val paraLinearLayout=GenParaSchedule(schedule.days[7].paras[j],0)
+            if(paraLinearLayout!=null)
+                linearLayoutParas.addView(paraLinearLayout, layoutParams)
+        }
+        val shape = GradientDrawable()
+        shape.cornerRadius = 40f // радиус в dp
+        shape.setColor(ContextCompat.getColor(context, R.color.test)) // устанавливаем цвет фона
+
+        // Установите фон для LinearLayout
+        //linearLayoutParas.background = shape
+        setPadding(20,0,20,0)
+
+        addView(linearLayoutParas,layoutParams)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -213,7 +266,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         val classroomTextView = TextView(context)
         var cls=para.classRoom.substringAfter("(")
         var temp=""
-        Log.d("ar",cls)
+
         when(cls[0])
         {
             'Б'->temp="БМ"
@@ -233,12 +286,12 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         linearLayout.setOnClickListener {
             if(para.numb!=8)
                 parent.showParaInfo(para)
-            Log.d("ew", para.sub)
+
         }
         linearLayout.setOnLongClickListener {
             if(para.numb!=8)
                 parent.editParaInfo(para)
-            Log.d("ew", para.sub)
+
             true
         }
 

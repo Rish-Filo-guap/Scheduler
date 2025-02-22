@@ -26,7 +26,8 @@ enum class DaysOfWeek(val dayOfWeek: String){
     Thu("Четверг"),
     Fri("Пятница"),
     Sat("Суббота"),
-    Sun("Воскресенье")
+    Sun("Воскресенье"),
+    Outside("Вне сетки расписания")
 }
 class GrPrCl(){
     public val classes= mapOf(

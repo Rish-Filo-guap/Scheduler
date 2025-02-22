@@ -25,6 +25,22 @@ class CreateScheduleFromParsed {
             //val fileOutputStream: FileOutputStream = openFileOutput(filename, Context.MODE_PRIVATE)
             val outputStreamWriter = OutputStreamWriter(fileOutputStream)
             val bufferedWriter = BufferedWriter(outputStreamWriter)
+
+            bufferedWriter.write("h Вне")
+            bufferedWriter.newLine()
+            for(para in schedule.days[7].paras){
+
+                bufferedWriter.write("d "+para.typeOfSubject)
+                bufferedWriter.newLine()
+
+                bufferedWriter.write("d "+para.sub)
+                bufferedWriter.newLine()
+
+                bufferedWriter.write("d ауд. "+para.classRoom)
+                bufferedWriter.write(" преп: "+para.prepod)
+                bufferedWriter.write(" гр: "+para.groups)
+                bufferedWriter.newLine()
+            }
             for (i in 0..schedule.days.size-1) {
                 bufferedWriter.write("h "+DaysOfWeek.values().get(i).dayOfWeek)
                 bufferedWriter.newLine()
@@ -100,8 +116,9 @@ class CreateScheduleFromParsed {
         var scheduleList= ScheduleList()
         var hCounter=0
         var i=0;
-        for(l in list) Log.d("ew", l)
+
         while (hCounter<2){
+            Log.d("ew",list[i])
             if(list[i][0]=='h'){
                 hCounter++
                 if(list[i][3]!='н'){
@@ -114,6 +131,22 @@ class CreateScheduleFromParsed {
 
         }
         i--
+        var j=1
+        if(hCounter==2) {
+
+            Log.d("ew","yes $i $j")
+            while (j<i){
+                var paraListString = ArrayList<String>()
+                paraListString.add(list[j])
+                paraListString.add(list[j+1])
+                paraListString.add(list[j+2])
+                Log.d("aa",list[j+2])
+                val para = getParaFromLines(paraListString, 1, 0)
+                scheduleList.days[7].addPara(para)
+                j+=3
+
+            }
+        }
         while(i<list.size-1){
                 val selectedDay=getNumbDayFromString(list[i])
             //Log.d("ew","aaaaa "+i+" "+selectedDay)
@@ -175,10 +208,10 @@ class CreateScheduleFromParsed {
     }
     fun getParaFromLines(list: ArrayList<String>,selectedPara:Int, weekType:Int): Para {
 
-        var classPrepGr=parseClassPrepGr(list[2])
-        var subject=list[1].substring(2,list[1].length)
-
         var typeOfSub=parseTypeSub(list[0])
+        var subject=list[1].substring(2,list[1].length)
+        var classPrepGr=parseClassPrepGr(list[2])
+
 
         //Log.d("ew",selectedPara.toString())
         return Para(subject, classPrepGr[1], classPrepGr[0], typeOfSub, classPrepGr[2],weekType, selectedPara.toString().toInt())
