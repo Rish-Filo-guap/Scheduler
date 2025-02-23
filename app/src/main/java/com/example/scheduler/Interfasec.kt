@@ -10,6 +10,8 @@ public interface ShowBottomFragmentDialogParaInfo{
     public fun editParaInfo(para:Para)
 
 }
-public interface GroupSaving{
-    public fun saveGroup(group:String)
+
+public interface EditSchedule{
+
+    public fun tryToSave(dayOfWeek: Int, weekType: Int, numb: Int, isOutside:Boolean,para: Para, classRoom:String):Pair<Boolean, String>
 }

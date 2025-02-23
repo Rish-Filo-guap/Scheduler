@@ -7,14 +7,17 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.RadioGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scheduler.ScheduleProcessing.GrPrCl
 import com.example.scheduler.ScheduleProcessing.Para
+import com.google.android.material.snackbar.Snackbar
 
 
 class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
@@ -44,11 +47,24 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
         ChangeParaMenu(para,view)
         linearLayout.invalidate()
 
+
        // linearLayout.addView(GenParaSchedule(para))
 
     }
     @SuppressLint("ResourceAsColor")
     private fun ChangeParaMenu(para: Para, view: View){
+        var selectedOutsude=false
+        
+        if(para.dayOfWeek==8) selectedOutsude=true
+
+        var selectedDay=para.dayOfWeek
+        var selectedWeek:Int=para.weekType
+        var selectedNumb:Int=para.numb
+        var selectedClass:String=para.classRoom
+        Log.d("es", selectedNumb.toString())
+        
+        
+        
         val weekRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupWeekParity)
         val numbRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupNumbPara)
         val dayRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupDayPara)
@@ -79,6 +95,42 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
         }else{
             checkBox.isChecked=true
         }
+        
+        weekRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId != -1) {
+                val checkedRadioButton = group.findViewById<View>(checkedId)
+                val index = group.indexOfChild(checkedRadioButton)
+                selectedWeek=index
+            }
+        }
+        numbRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId != -1) {
+                val checkedRadioButton = group.findViewById<View>(checkedId)
+                val index = group.indexOfChild(checkedRadioButton)
+                selectedNumb=index+1
+            }
+        }
+        dayRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId != -1) {
+                val checkedRadioButton = group.findViewById<View>(checkedId)
+                val index = group.indexOfChild(checkedRadioButton)
+                selectedDay=index
+            }
+        }
+        checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                // Функция включена
+                selectedOutsude=true
+                // Здесь можно выполнить код для включения функции
+            } else {
+                // Функция выключена
+                selectedOutsude=false
+            }
+        }
+        
+        
+        
+        
 
         searchView=view.findViewById(R.id.searchViewClass)
         searchView.setQuery(para.classRoom,false)
@@ -93,6 +145,7 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
             // parent.groupChanged(selectedSuggestion)
             searchView.setQuery(selectedSuggestion,true)
             searchView.clearFocus();
+            selectedClass=selectedSuggestion
             suggestionsRecyclerView.visibility = View.GONE
             //dismiss()
         }
@@ -112,6 +165,19 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
                 return false
             }
         })
+
+        val saveBtn:Button=view.findViewById(R.id.buttonSaveLesson)
+        saveBtn.setOnClickListener {
+               val res= para.SaveChanges(selectedDay, selectedWeek, selectedNumb, selectedOutsude, selectedClass)
+            Log.d("ew", "${res.first} !! ${res.second}")
+            val snackbar = Snackbar.make(it, "${res.first}  ${res.second}", Snackbar.LENGTH_INDEFINITE)
+                .setAction("закрыть") {
+                    // Код, выполняемый при нажатии на кнопку "Действие"
+                    println("Действие выполнено!")
+                }
+                .setTextMaxLines(10)
+            snackbar.show()
+        }
 
     }
 

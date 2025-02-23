@@ -156,7 +156,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
 
 
 
-        textViewOutside.text = "outside"
+        textViewOutside.text = DaysOfWeek.values()[7].dayOfWeek
         textViewOutside.textSize=20f
 
         // Устанавливаем отступы (опционально)
@@ -329,9 +329,11 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         linearLayout.addView(linearLayoutLeft,layoutParams)
 
         linearLayout.addView(linearLayoutRight,layoutParams)
-            when(weekNumb){
-                0->linearLayout.setBackgroundResource(R.drawable.background_for_down_para)
-                1->linearLayout.setBackgroundResource(R.drawable.background_for_up_para)
+            when(para.weekType){
+
+                0->linearLayout.setBackgroundResource(R.drawable.background_for_every_para)
+                1->linearLayout.setBackgroundResource(R.drawable.background_for_down_para)
+                2->linearLayout.setBackgroundResource(R.drawable.background_for_up_para)
             }
 
 
