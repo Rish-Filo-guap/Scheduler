@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
@@ -51,9 +52,13 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
             val fileInputStream: FileInputStream = openFileInput("schedule.txt")
             mainSchedulePageFragment=MainSchedulePageFragment(prefs.getString("maingroup",null),CreateScheduleFromParsed().ReadSchedule(fileInputStream))
             Log.d("ew", "file finded")
+            Toast.makeText(this, "загружена локальная версия расписания", Toast.LENGTH_LONG).show()
+            //mainSchedulePageFragment.showMessageTypeSchedule(true)
         }catch (e:Exception){
             mainSchedulePageFragment=MainSchedulePageFragment(prefs.getString("maingroup",null),null)
             Log.d("ew", "file not finded")
+            Toast.makeText(this, "загружено версия расписания с сайта", Toast.LENGTH_LONG).show()
+            //mainSchedulePageFragment.showMessageTypeSchedule(false)
         }
 
         // Add the fragments

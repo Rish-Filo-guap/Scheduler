@@ -35,45 +35,56 @@ class CreateScheduleFromParsed {
 
                 bufferedWriter.write("d "+para.sub)
                 bufferedWriter.newLine()
-
-                bufferedWriter.write("d ауд. "+para.classRoom)
-                bufferedWriter.write(" преп: "+para.prepod)
-                bufferedWriter.write(" гр: "+para.groups)
+                if (para.classRoom!="null")
+                    bufferedWriter.write("d ауд. "+para.classRoom)
+                if (para.prepod!="null")
+                    bufferedWriter.write(" преп: "+para.prepod)
+                if (para.groups!="null")
+                    bufferedWriter.write(" гр: "+para.groups)
                 bufferedWriter.newLine()
             }
-            for (i in 0..schedule.days.size-1) {
-                bufferedWriter.write("h "+DaysOfWeek.values().get(i).dayOfWeek)
-                bufferedWriter.newLine()
-                for (para in schedule.days[i].paras) {
-                    if(para.numb!=8){
+            for (i in 0..5) {
+                if(schedule.days[i].paras[0].numb!=8){
 
-                    bufferedWriter.write("d "+para.numb)
+
+                    bufferedWriter.write("h "+DaysOfWeek.values().get(i).dayOfWeek)
                     bufferedWriter.newLine()
-                    if(para.weekType==1){
-                        bufferedWriter.write("d "+'▼')
-                        bufferedWriter.newLine()
+                    var j=0
+                    for (para in schedule.days[i].paras) {
+
+                            if((j>0 && schedule.days[i].paras[j-1].numb!=para.numb) || j==0){
+
+                            bufferedWriter.write("d " + para.numb)
+                            bufferedWriter.newLine()
+                            }
+                            if (para.weekType == 1) {
+                                bufferedWriter.write("d " + '▼')
+                                bufferedWriter.newLine()
+                            }
+                            if (para.weekType == 2) {
+                                bufferedWriter.write("d " + '▲')
+                                bufferedWriter.newLine()
+                            }
+                            bufferedWriter.write("d " + para.typeOfSubject)
+                            bufferedWriter.newLine()
+
+                            bufferedWriter.write("d " + para.sub)
+                            bufferedWriter.newLine()
+
+                            if (para.classRoom!="null")
+                                bufferedWriter.write("d ауд. "+para.classRoom)
+                            if (para.prepod!="null")
+                                bufferedWriter.write(" преп: "+para.prepod)
+                            if (para.groups!="null")
+                                bufferedWriter.write(" гр: "+para.groups)
+                            bufferedWriter.newLine()
+                            j++
+
                     }
-                    if(para.weekType==2){
-                        bufferedWriter.write("d "+'▲')
-                        bufferedWriter.newLine()
-                    }
-                    bufferedWriter.write("d "+para.typeOfSubject)
-                    bufferedWriter.newLine()
-
-                    bufferedWriter.write("d "+para.sub)
-                    bufferedWriter.newLine()
-
-                    bufferedWriter.write("d ауд. "+para.classRoom)
-                    bufferedWriter.write(" преп: "+para.prepod)
-                    bufferedWriter.write(" гр: "+para.groups)
-                    bufferedWriter.newLine()
-                    }
-
-
                 }
             }
-            //bufferedWriter.write("d Показать расписание Очистить")
-           // bufferedWriter.newLine()
+            bufferedWriter.write("d Показать расписание Очистить")
+            bufferedWriter.newLine()
             bufferedWriter.close()
             outputStreamWriter.close()
             fileOutputStream.close()
@@ -99,6 +110,8 @@ class CreateScheduleFromParsed {
             inputStreamReader.close()
             fileInputStream.close()
 
+
+
             val res =CreateSchedule(list)
             Log.d("ew","Массив успешно загружен из файла")
            return res
@@ -113,12 +126,16 @@ class CreateScheduleFromParsed {
     }
     fun CreateSchedule(list: ArrayList<String>): ScheduleList {
 
+        for(item in list){
+            Log.d("li", item)
+        }
+
         var scheduleList= ScheduleList()
         var hCounter=0
         var i=0;
 
         while (hCounter<2){
-            Log.d("ew",list[i])
+            //Log.d("ew",list[i])
             if(list[i][0]=='h'){
                 hCounter++
                 if(list[i][3]!='н'){
@@ -134,13 +151,13 @@ class CreateScheduleFromParsed {
         var j=1
         if(hCounter==2) {
 
-            Log.d("ew","yes $i $j")
+           // Log.d("ew","yes $i $j")
             while (j<i){
                 var paraListString = ArrayList<String>()
                 paraListString.add(list[j])
                 paraListString.add(list[j+1])
                 paraListString.add(list[j+2])
-                Log.d("aa",list[j+2])
+               // Log.d("aa",list[j+2])
                 val para = getParaFromLines(paraListString, 1, 0)
                 scheduleList.days[7].addPara(para)
                 j+=3

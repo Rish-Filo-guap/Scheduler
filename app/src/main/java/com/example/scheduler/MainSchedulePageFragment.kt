@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import android.widget.Toast
 import com.example.scheduler.ScheduleProcessing.Para
 import com.example.scheduler.ScheduleProcessing.ScheduleList
 
@@ -63,6 +64,8 @@ class MainSchedulePageFragment(var group:String?, var scheduleList: ScheduleList
 
         scheduleLayout.downloadSchedule(newGroup)
     }
+
+
 
     override fun showParaInfo(para: Para) {
 
