@@ -1,19 +1,10 @@
 package com.example.scheduler.ScheduleProcessing
 
-import android.content.Context
 import android.util.Log
 import java.io.BufferedWriter
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStreamWriter
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import android.widget.FrameLayout
-import android.content.SharedPreferences
-import android.graphics.Color
-import android.view.Window
-import android.view.WindowManager
-import androidx.core.content.ContextCompat
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -22,7 +13,7 @@ import java.io.InputStreamReader
 class CreateScheduleFromParsed {
     fun SaveSchedule(fileOutputStream: FileOutputStream, schedule:ScheduleList){
         try {
-            //val fileOutputStream: FileOutputStream = openFileOutput(filename, Context.MODE_PRIVATE)
+
             val outputStreamWriter = OutputStreamWriter(fileOutputStream)
             val bufferedWriter = BufferedWriter(outputStreamWriter)
 
@@ -30,7 +21,7 @@ class CreateScheduleFromParsed {
             bufferedWriter.newLine()
             for(para in schedule.days[7].paras){
 
-                bufferedWriter.write("d "+para.typeOfSubject)
+                bufferedWriter.write("d ${para.typeOfSubject} ${para.weekType}${para.dayOfWeek}${para.numb}" )
                 bufferedWriter.newLine()
 
                 bufferedWriter.write("d "+para.sub)
@@ -126,16 +117,14 @@ class CreateScheduleFromParsed {
     }
     fun CreateSchedule(list: ArrayList<String>): ScheduleList {
 
-        for(item in list){
-            Log.d("li", item)
-        }
+
 
         var scheduleList= ScheduleList()
         var hCounter=0
         var i=0;
 
         while (hCounter<2){
-            //Log.d("ew",list[i])
+
             if(list[i][0]=='h'){
                 hCounter++
                 if(list[i][3]!='н'){
@@ -151,22 +140,35 @@ class CreateScheduleFromParsed {
         var j=1
         if(hCounter==2) {
 
-           // Log.d("ew","yes $i $j")
+            //вне сетки
             while (j<i){
                 var paraListString = ArrayList<String>()
                 paraListString.add(list[j])
                 paraListString.add(list[j+1])
                 paraListString.add(list[j+2])
-               // Log.d("aa",list[j+2])
-                val para = getParaFromLines(paraListString, 1, 0)
-                scheduleList.days[7].addPara(para)
+
+                if (list[j][list[j].length-1].isDigit()){
+
+
+                    val numb=list[j][list[j].length-1].digitToInt()
+                    val dayOfWeek=list[j][list[j].length-2].digitToInt()
+                    val weekType=list[j][list[j].length-3].digitToInt()
+                    val para = getParaFromLines(paraListString, numb, weekType)
+                    scheduleList.days[7].addPara(para,dayOfWeek)
+                }else{
+                    val para = getParaFromLines(paraListString, 1, 0)
+                    scheduleList.days[7].addPara(para,0)
+                }
+
+
                 j+=3
 
             }
         }
+        //в сетке
         while(i<list.size-1){
                 val selectedDay=getNumbDayFromString(list[i])
-            //Log.d("ew","aaaaa "+i+" "+selectedDay)
+
             i++
             while (list[i][2].toInt()<='9'.toInt() && list[i][2].toInt()>='0'.toInt())
              {
@@ -199,7 +201,7 @@ class CreateScheduleFromParsed {
 
 
                     if ((i+5<list.size-1) && (list[i+5][2].toInt()>'9'.toInt() || list[i+5][2].toInt()<'0'.toInt() ) && getNumbDayFromString(list[i+5])==-1) {
-                        //Log.d("ew","e "+(i+5))
+
                         paraListString.add(list[i + 6])
                         paraListString.add(list[i + 7])
                         paraListString.add(list[i + 8])
@@ -230,7 +232,7 @@ class CreateScheduleFromParsed {
         var classPrepGr=parseClassPrepGr(list[2])
 
 
-        //Log.d("ew",selectedPara.toString())
+
         return Para(subject, classPrepGr[1], classPrepGr[0], typeOfSub, classPrepGr[2],weekType, selectedPara.toString().toInt())
     }
     fun getNumbDayFromString(str:String):Int{
@@ -294,45 +296,6 @@ class CreateScheduleFromParsed {
             parsedList.add(str.substringAfter("гр: "))
         }else parsedList.add("null")
 
-
-
-
-
-//        for (i in 0 until str.length-1){
-//
-//            if(str[i]=='.' && classStart==0){
-//                   classStart=i
-//            }
-//            if(str.substring(i,i+2)=="п:"){
-//               prepStart=i
-//            }
-//            if(str.substring(i,i+2)=="р:"){
-//                grStart=i
-//            }
-//           // Log.d("sub", str.substring(i,i+2))
-//        }
-//
-//        if(prepStart!=0){
-//            var tmp=str.substring(classStart+2,prepStart-4)
-//            if(tmp.contains('—'))
-//                tmp=tmp.substringBefore(" —")
-//            parsedList.add(tmp)
-//            parsedList.add(str.substring(prepStart+3,grStart-2))
-//            parsedList.add(str.substring(grStart+3,str.length))
-//
-//
-//        }else{
-//            var tmp=str.substring(classStart+2,grStart-2)
-//           if(tmp.contains('—'))
-//                tmp=tmp.substringBefore(" —")
-//            parsedList.add(tmp)
-//
-//           parsedList.add(tmp)
-//           parsedList.add("null")
-//           parsedList.add(str.substring(grStart+3,str.length))
-//
-//
-//        }
         return parsedList
     }
 }

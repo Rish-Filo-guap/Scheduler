@@ -65,7 +65,7 @@ class ScheduleList: EditSchedule {
             if(days[dayOfWeek].paras[i].numb==numb) parasAtNumb.add(i)
         }
         when (parasAtNumb.size){
-            0->return Pair(true, "в этот день пусто, можно добавить ${para.sub}")
+            0->return Pair(true, "это место свободно, можно добавить ${para.sub}")
             1->{
                 if(para.numb==numb  && para.dayOfWeek==dayOfWeek) return Pair(true, "параметры пары: ${para.sub} изменены без перемещения")
                 else{
@@ -109,6 +109,14 @@ class Day(var dayOfWeek: Int, var schedule:EditSchedule){
         para.schedule=schedule
         paras.add(para)
     }
+    fun addPara(para: Para, dayOfWeek: Int){
+        if(isEmpty)
+            paras.clear()
+        isEmpty=false
+        para.dayOfWeek=dayOfWeek
+        para.schedule=schedule
+        paras.add(para)
+    }
 }
 
 class Para (
@@ -119,9 +127,11 @@ class Para (
     public val typeOfSubject: String,
     public val groups: String,
     public var weekType:Int=0,
-    public var numb:Int) {
-    public lateinit var schedule:EditSchedule
+    public var numb:Int)
+{
     public var dayOfWeek: Int=0
+
+    public lateinit var schedule:EditSchedule
 
     public fun getStartTime():String{
         return Times.StartTimes.stTime[numb-1]
@@ -139,21 +149,6 @@ class Para (
 
     }
 
-    override fun equals(other: Any?): Boolean {
 
-        if(other is Para){
-            if(weekType==other.weekType &&
-                sub==other.sub &&
-                prepod==other.prepod &&
-                classRoom==other.classRoom &&
-                typeOfSubject==other.typeOfSubject &&
-                groups==other.groups &&
-                numb==other.numb
-            )
-                return true
-            else return false
-
-        }else return false
-    }
 
 }

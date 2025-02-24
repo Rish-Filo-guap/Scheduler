@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
             val fileInputStream: FileInputStream = openFileInput("schedule.txt")
             mainSchedulePageFragment=MainSchedulePageFragment(prefs.getString("maingroup",null),CreateScheduleFromParsed().ReadSchedule(fileInputStream))
             Log.d("ew", "file finded")
-            Toast.makeText(this, "загружена локальная версия расписания", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "загружена локальная версия расписания", Toast.LENGTH_SHORT).show()
             //mainSchedulePageFragment.showMessageTypeSchedule(true)
         }catch (e:Exception){
             mainSchedulePageFragment=MainSchedulePageFragment(prefs.getString("maingroup",null),null)

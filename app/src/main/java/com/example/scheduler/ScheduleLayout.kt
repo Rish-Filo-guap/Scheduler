@@ -61,7 +61,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
                 newGroup=GrPrCl().groups.get(group)!!
             else
                 newGroup=GrPrCl().prepods.get(group)!!
-            //delay(1000)
+
             val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?"+ newGroup)
 
             val createScheduleFromParsed = CreateScheduleFromParsed()
@@ -86,7 +86,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
     private fun drawSchedule(schedule: ScheduleList){
         removeAllViews()
         val textView= TextView(context)
-        // Создаем LinearLayout для содержимого ScrollView
+
 
 
 
@@ -123,9 +123,6 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
             linearLayoutParas.orientation=VERTICAL
 
 
-            /*for (j in 0..schedule.weeks[weekNumb].days[dayOfWeekNumb].paras.size-1){
-                linearLayoutParas.addView(GenParaSchedule(schedule.weeks[weekNumb].days[dayOfWeekNumb].paras[j]), layoutParams)
-            }*/
             for (j in 0..schedule.days[dayOfWeekNumb].paras.size-1){
                 val paraLinearLayout=GenParaSchedule(schedule.days[dayOfWeekNumb].paras[j], weekNumb)
                 if(paraLinearLayout!=null)
@@ -166,10 +163,6 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         val linearLayoutParas=LinearLayout(context)
         linearLayoutParas.orientation=VERTICAL
 
-
-        /*for (j in 0..schedule.weeks[weekNumb].days[dayOfWeekNumb].paras.size-1){
-            linearLayoutParas.addView(GenParaSchedule(schedule.weeks[weekNumb].days[dayOfWeekNumb].paras[j]), layoutParams)
-        }*/
         for (j in 0..schedule.days[7].paras.size-1){
             val paraLinearLayout=GenParaSchedule(schedule.days[7].paras[j],0)
             if(paraLinearLayout!=null)
@@ -179,8 +172,6 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         shape.cornerRadius = 40f // радиус в dp
         shape.setColor(ContextCompat.getColor(context, R.color.test)) // устанавливаем цвет фона
 
-        // Установите фон для LinearLayout
-        //linearLayoutParas.background = shape
         setPadding(20,0,20,0)
 
         addView(linearLayoutParas,layoutParams)

@@ -20,8 +20,6 @@ class MainSchedulePageFragment(var group:String?, var scheduleList: ScheduleList
     lateinit var scheduleLayout:ScheduleLayout
 
 
-    //private val viewModel: FirstPageViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // TODO: Use the ViewModel
@@ -53,9 +51,6 @@ class MainSchedulePageFragment(var group:String?, var scheduleList: ScheduleList
 
         var mainLinearLayout:LinearLayout= view.findViewById(R.id.main_schedule_page_linearLayout)
 
-
-
-       // mainLinearLayout.addView(btn)
         mainLinearLayout.addView(scrollView)
 
         scrollView.addView(scheduleLayout)
