@@ -17,22 +17,25 @@ class CreateScheduleFromParsed {
             val outputStreamWriter = OutputStreamWriter(fileOutputStream)
             val bufferedWriter = BufferedWriter(outputStreamWriter)
 
-            bufferedWriter.write("h Вне")
-            bufferedWriter.newLine()
-            for(para in schedule.days[7].paras){
+            if(schedule.days[7].paras.size>=1 && schedule.days[7].paras[0].numb!=8){
 
-                bufferedWriter.write("d ${para.typeOfSubject} ${para.weekType}${para.dayOfWeek}${para.numb}" )
+                bufferedWriter.write("h Вне")
                 bufferedWriter.newLine()
+                for(para in schedule.days[7].paras){
 
-                bufferedWriter.write("d "+para.sub)
-                bufferedWriter.newLine()
-                if (para.classRoom!="null")
-                    bufferedWriter.write("d ауд. "+para.classRoom)
-                if (para.prepod!="null")
-                    bufferedWriter.write(" преп: "+para.prepod)
-                if (para.groups!="null")
-                    bufferedWriter.write(" гр: "+para.groups)
-                bufferedWriter.newLine()
+                    bufferedWriter.write("d ${para.typeOfSubject} ${para.weekType}${para.dayOfWeek}${para.numb}" )
+                    bufferedWriter.newLine()
+
+                    bufferedWriter.write("d "+para.sub)
+                    bufferedWriter.newLine()
+                    if (para.classRoom!="null")
+                        bufferedWriter.write("d ауд. "+para.classRoom)
+                    if (para.prepod!="null")
+                        bufferedWriter.write(" преп: "+para.prepod)
+                    if (para.groups!="null")
+                        bufferedWriter.write(" гр: "+para.groups)
+                    bufferedWriter.newLine()
+                }
             }
             for (i in 0..5) {
                 if(schedule.days[i].paras[0].numb!=8){
