@@ -10,6 +10,9 @@ public interface ShowBottomFragmentDialogParaInfo{
     public fun editParaInfo(para:Para)
 
 }
+public interface InvaludateSchedule{
+    public fun invalidateSchedule()
+}
 
 public interface EditSchedule{
 

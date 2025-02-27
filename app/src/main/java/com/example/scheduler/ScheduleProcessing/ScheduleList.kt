@@ -2,8 +2,10 @@ package com.example.scheduler.ScheduleProcessing
 
 import android.util.Log
 import com.example.scheduler.EditSchedule
+import kotlin.properties.Delegates
 
 class ScheduleList: EditSchedule {
+
     var days= arrayListOf(
         Day(0, this),
         Day(1, this),
@@ -14,6 +16,44 @@ class ScheduleList: EditSchedule {
         Day(6, this),
         Day(7, this),
     )
+    fun savePara( dayOfWeek: Int,
+                  weekType: Int,
+                  numb: Int,
+                  isOutside: Boolean,
+                  para: Para,
+                  classRoom: String){
+        if
+            (para.isOutside)days[7].paras.remove(para)
+        else
+            days[para.dayOfWeek].paras.remove(para)
+
+        if(days[para.dayOfWeek].paras.size==0) days[para.dayOfWeek].setEmty()
+
+
+        para.dayOfWeek=dayOfWeek
+        para.weekType=weekType
+        para.numb=numb
+        para.classRoom=classRoom
+
+
+
+        if(isOutside){
+            para.isOutside=true
+            days[7].paras.add(para)
+            days[7].paras.sortBy { it.sub }
+            Log.d("ew",days[7].paras.size.toString() )
+
+        }else{
+            para.isOutside=false
+
+            days[dayOfWeek].addPara(para)
+            Log.d("ew",days[dayOfWeek].paras.size.toString() )
+            days[dayOfWeek].paras.sortBy { it.numb }
+
+        }
+
+
+    }
 
 
     override fun tryToSave(
@@ -24,12 +64,13 @@ class ScheduleList: EditSchedule {
         para: Para,
         classRoom: String
     ): Pair<Boolean, String> {
-        var res=Pair(true, "test")
+        var res:Pair<Boolean,String>
 
         Log.d("ew", "попытка переместить в $dayOfWeek, $weekType, $numb ")
         if(para.dayOfWeek==7){
             if(isOutside){
                 res=Pair(true, "пара ${para.sub} изменена вне сетки")
+
 
 
 
@@ -39,11 +80,13 @@ class ScheduleList: EditSchedule {
 
 
 
+
             }
         }
         else{
             if(isOutside){
                 res=Pair(true, "пара ${para.sub} теперь вне сетки")
+
             } else {
                 res= isPossibleToSave(dayOfWeek, weekType, numb, para)
 
@@ -52,6 +95,8 @@ class ScheduleList: EditSchedule {
             }
         }
 
+        if (res.first)
+            savePara(dayOfWeek, weekType, numb, isOutside, para, classRoom)
 
         return res
     }
@@ -92,14 +137,16 @@ class ScheduleList: EditSchedule {
 
     }
 
+
 }
 class Day(var dayOfWeek: Int, var schedule:EditSchedule){
     var paras=ArrayList<Para>(0)
     var isEmpty=true
 
 
+
     init{
-        paras.add(Para("","","Выходной", "", "",0 ,8) )
+        setEmty()
     }
     fun addPara(para: Para){
         if(isEmpty)
@@ -107,29 +154,36 @@ class Day(var dayOfWeek: Int, var schedule:EditSchedule){
         isEmpty=false
         para.dayOfWeek=dayOfWeek
         para.schedule=schedule
+        if(dayOfWeek==7) para.isOutside=true
+
         paras.add(para)
+
     }
     fun addPara(para: Para, dayOfWeek: Int){
-        if(isEmpty)
-            paras.clear()
-        isEmpty=false
-        para.dayOfWeek=dayOfWeek
-        para.schedule=schedule
-        paras.add(para)
+        addPara(para)
+        paras.last().dayOfWeek=dayOfWeek
+
     }
+    public fun setEmty(){
+        paras.add(Para("","","Выходной", "", "",0 ,8) )
+        isEmpty=true
+    }
+
 }
 
 class Para (
 
     public val sub:String,
     public val prepod:String,
-    public val classRoom:String,
+    public var classRoom:String,
     public val typeOfSubject: String,
     public val groups: String,
     public var weekType:Int=0,
     public var numb:Int)
 {
+
     public var dayOfWeek: Int=0
+    public var isOutside=false
 
     public lateinit var schedule:EditSchedule
 

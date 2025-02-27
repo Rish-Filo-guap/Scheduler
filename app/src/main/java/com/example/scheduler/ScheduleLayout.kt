@@ -83,6 +83,9 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
     }
 
     @SuppressLint("NewApi")
+    public fun drawSchedule(){
+        drawSchedule(schedule)
+    }
     private fun drawSchedule(schedule: ScheduleList){
         removeAllViews()
         val textView= TextView(context)

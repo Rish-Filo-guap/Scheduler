@@ -1,6 +1,7 @@
 package com.example.scheduler
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -20,7 +21,7 @@ import com.example.scheduler.ScheduleProcessing.Para
 import com.google.android.material.snackbar.Snackbar
 
 
-class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
+class ParaEdit(val para: Para, val parent:InvaludateSchedule) : BottomSheetDialogFragment() {
 
   private lateinit var linearLayout: LinearLayout
   private lateinit var searchView: SearchView
@@ -61,7 +62,7 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
         var selectedWeek:Int=para.weekType
         var selectedNumb:Int=para.numb
         var selectedClass:String=para.classRoom
-        Log.d("es", selectedNumb.toString())
+
         
         
         
@@ -88,13 +89,15 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
             R.id.radioButtonDayPara6,
 
         )
+        searchView=view.findViewById(R.id.searchViewClass)
+
+
+        searchView.setQuery(para.classRoom,false)
         weekRadioGroup.check(idesForWeek[para.weekType])
         numbRadioGroup.check(idesForNumb[para.numb-1])
-        if (para.dayOfWeek!=7){
-            dayRadioGroup.check(idesForDays[para.dayOfWeek])
-        }else{
-            checkBox.isChecked=true
-        }
+        dayRadioGroup.check(idesForDays[para.dayOfWeek])
+        checkBox.isChecked=para.isOutside
+
         
         weekRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId != -1) {
@@ -132,8 +135,7 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
         
         
 
-        searchView=view.findViewById(R.id.searchViewClass)
-        searchView.setQuery(para.classRoom,false)
+
 
         suggestionsRecyclerView = view.findViewById(R.id.para_edit_recycler_view)
 
@@ -165,18 +167,34 @@ class ParaEdit(val para: Para) : BottomSheetDialogFragment() {
                 return false
             }
         })
+        val resetBtn:Button=view.findViewById(R.id.buttonResetLesson)
+        resetBtn.setOnClickListener {
+            searchView.setQuery(para.classRoom,false)
+            weekRadioGroup.check(idesForWeek[para.weekType])
+            numbRadioGroup.check(idesForNumb[para.numb-1])
+            dayRadioGroup.check(idesForDays[para.dayOfWeek])
+            checkBox.isChecked=para.isOutside
+
+        }
+
 
         val saveBtn:Button=view.findViewById(R.id.buttonSaveLesson)
         saveBtn.setOnClickListener {
                val res= para.SaveChanges(selectedDay, selectedWeek, selectedNumb, selectedOutsude, selectedClass)
+
             Log.d("ew", "${res.first} !! ${res.second}")
-            val snackbar = Snackbar.make(it, "${res.first}  ${res.second}", Snackbar.LENGTH_INDEFINITE)
+            val snackbar = Snackbar.make(it, res.second, if(res.first) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_INDEFINITE)
                 .setAction("закрыть") {
-                    // Код, выполняемый при нажатии на кнопку "Действие"
-                    println("Действие выполнено!")
+
+
                 }
                 .setTextMaxLines(10)
+                .setBackgroundTint(if(res.first) Color.argb(80,20, 20, 20) else Color.argb(255,36, 8, 8))
+                .setTextColor(Color.WHITE)
+                .setActionTextColor(Color.WHITE)
+
             snackbar.show()
+            if (res.first) parent.invalidateSchedule()
         }
 
     }
