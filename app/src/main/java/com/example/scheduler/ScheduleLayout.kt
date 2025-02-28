@@ -4,12 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
+import android.text.Layout
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import com.example.scheduler.ScheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.ScheduleProcessing.DaysOfWeek
 import com.example.scheduler.ScheduleProcessing.GetInfoFromEther
@@ -82,10 +87,11 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         }
     }
 
-    @SuppressLint("NewApi")
     public fun drawSchedule(){
         drawSchedule(schedule)
     }
+    @SuppressLint("ResourceType")
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun drawSchedule(schedule: ScheduleList){
         removeAllViews()
         val textView= TextView(context)
@@ -131,6 +137,10 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
                 if(paraLinearLayout!=null)
                     linearLayoutParas.addView(paraLinearLayout, layoutParams)
             }
+            if (linearLayoutParas.childCount==0){
+                println("wekkend")
+                linearLayoutParas.addView(getWeekEndLayout())
+            }
             val shape = GradientDrawable()
             shape.cornerRadius = 40f // радиус в dp
             shape.setColor(ContextCompat.getColor(context, R.color.test)) // устанавливаем цвет фона
@@ -171,6 +181,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
             if(paraLinearLayout!=null)
                 linearLayoutParas.addView(paraLinearLayout, layoutParams)
         }
+
         val shape = GradientDrawable()
         shape.cornerRadius = 40f // радиус в dp
         shape.setColor(ContextCompat.getColor(context, R.color.test)) // устанавливаем цвет фона
@@ -192,6 +203,34 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
 
 
 
+    }
+    private fun getWeekEndLayout():LinearLayout{
+        val lin=LinearLayout(context)
+        lin.orientation= VERTICAL
+        lin.setHorizontalGravity(Gravity.CENTER)
+        lin.setPadding(50)
+        val textView = TextView(context)
+
+        // Настройка TextView
+        textView.text = "Выходной"
+        textView.textSize = 30f // Размер текста
+        textView.setTextColor(ContextCompat.getColor(context, R.color.groupPrepClass)) // Цвет текста
+
+        // Добавление TextView в LinearLayout
+        lin.addView(textView)
+
+        // Дополнительная настройка (необязательно) - пример: добавление отступов
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(8, 8, 8, 8) // Левый, верхний, правый, нижний отступы (в пикселях)
+        textView.layoutParams = params
+        lin.setBackgroundResource(R.drawable.background_for_every_para)
+
+
+
+        return lin
     }
 
     @SuppressLint("ResourceAsColor")

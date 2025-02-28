@@ -17,7 +17,7 @@ class CreateScheduleFromParsed {
             val outputStreamWriter = OutputStreamWriter(fileOutputStream)
             val bufferedWriter = BufferedWriter(outputStreamWriter)
 
-            if(schedule.days[7].paras.size>=1 && schedule.days[7].paras[0].numb!=8){
+            if(schedule.days[7].paras.size>=1){
 
                 bufferedWriter.write("h Вне")
                 bufferedWriter.newLine()
@@ -38,7 +38,7 @@ class CreateScheduleFromParsed {
                 }
             }
             for (i in 0..5) {
-                if(schedule.days[i].paras[0].numb!=8){
+
 
 
                     bufferedWriter.write("h "+DaysOfWeek.values().get(i).dayOfWeek)
@@ -75,7 +75,7 @@ class CreateScheduleFromParsed {
                             j++
 
                     }
-                }
+
             }
             bufferedWriter.write("d Показать расписание Очистить")
             bufferedWriter.newLine()

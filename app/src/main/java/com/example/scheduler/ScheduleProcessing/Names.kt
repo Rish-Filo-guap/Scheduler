@@ -12,8 +12,8 @@ enum class TypeOfSubject(val typeSub:String){
     No("Null")
 }
 enum class Times(val stTime:Array<String>){
-    StartTimes(arrayOf("9:30", "11:10", "13:00", "15:00", "16:40", "18:30","20:10", "с утра")),
-    EndTimes(arrayOf("11:00", "12:40", "14:30", "16:30", "18:10", "20:00","21:40", "до вечера"));
+    StartTimes(arrayOf("9:30", "11:10", "13:00", "15:00", "16:40", "18:30","20:10")),
+    EndTimes(arrayOf("11:00", "12:40", "14:30", "16:30", "18:10", "20:00","21:40"));
 
 
 

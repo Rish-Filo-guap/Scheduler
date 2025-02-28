@@ -189,7 +189,7 @@ class ParaEdit(val para: Para, val parent:InvaludateSchedule) : BottomSheetDialo
 
                 }
                 .setTextMaxLines(10)
-                .setBackgroundTint(if(res.first) Color.argb(80,20, 20, 20) else Color.argb(255,36, 8, 8))
+                .setBackgroundTint(if(res.first) Color.argb(200,20, 20, 20) else Color.argb(255,36, 8, 8))
                 .setTextColor(Color.WHITE)
                 .setActionTextColor(Color.WHITE)
 

@@ -2,7 +2,6 @@ package com.example.scheduler.ScheduleProcessing
 
 import android.util.Log
 import com.example.scheduler.EditSchedule
-import kotlin.properties.Delegates
 
 class ScheduleList: EditSchedule {
 
@@ -27,7 +26,7 @@ class ScheduleList: EditSchedule {
         else
             days[para.dayOfWeek].paras.remove(para)
 
-        if(days[para.dayOfWeek].paras.size==0) days[para.dayOfWeek].setEmty()
+
 
 
         para.dayOfWeek=dayOfWeek
@@ -141,17 +140,10 @@ class ScheduleList: EditSchedule {
 }
 class Day(var dayOfWeek: Int, var schedule:EditSchedule){
     var paras=ArrayList<Para>(0)
-    var isEmpty=true
 
 
-
-    init{
-        setEmty()
-    }
     fun addPara(para: Para){
-        if(isEmpty)
-            paras.clear()
-        isEmpty=false
+
         para.dayOfWeek=dayOfWeek
         para.schedule=schedule
         if(dayOfWeek==7) para.isOutside=true
@@ -164,10 +156,7 @@ class Day(var dayOfWeek: Int, var schedule:EditSchedule){
         paras.last().dayOfWeek=dayOfWeek
 
     }
-    public fun setEmty(){
-        paras.add(Para("","","Выходной", "", "",0 ,8) )
-        isEmpty=true
-    }
+
 
 }
 
@@ -194,8 +183,8 @@ class Para (
         return Times.EndTimes.stTime[numb-1]
     }
     fun getNumbStr():String{
-        if(numb==8) return ""
-        else return numb.toString()
+
+        return numb.toString()
     }
     fun SaveChanges(dayOfWeek: Int, weekType: Int, numb: Int, isOutside:Boolean, classRoom: String):Pair<Boolean,String>{
         return schedule.tryToSave(dayOfWeek, weekType,numb, isOutside, this, classRoom)
