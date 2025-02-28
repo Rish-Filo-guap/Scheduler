@@ -13,7 +13,6 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.RadioGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scheduler.ScheduleProcessing.GrPrCl
@@ -21,7 +20,7 @@ import com.example.scheduler.ScheduleProcessing.Para
 import com.google.android.material.snackbar.Snackbar
 
 
-class ParaEdit(val para: Para, val parent:InvaludateSchedule) : BottomSheetDialogFragment() {
+class ParaEdit(private val para: Para,private val parent:InvaludateSchedule) : BottomSheetDialogFragment() {
 
   private lateinit var linearLayout: LinearLayout
   private lateinit var searchView: SearchView
@@ -45,7 +44,7 @@ class ParaEdit(val para: Para, val parent:InvaludateSchedule) : BottomSheetDialo
         super.onCreate(savedInstanceState)
 
         linearLayout=view.findViewById(R.id.paraedit_linearLayout)
-        ChangeParaMenu(para,view)
+        changeParaMenu(para,view)
         linearLayout.invalidate()
 
 
@@ -53,10 +52,10 @@ class ParaEdit(val para: Para, val parent:InvaludateSchedule) : BottomSheetDialo
 
     }
     @SuppressLint("ResourceAsColor")
-    private fun ChangeParaMenu(para: Para, view: View){
-        var selectedOutsude=false
+    private fun changeParaMenu(para: Para, view: View){
+        var selectedOutside=false
         
-        if(para.dayOfWeek==8) selectedOutsude=true
+        if(para.dayOfWeek==8) selectedOutside=true
 
         var selectedDay=para.dayOfWeek
         var selectedWeek:Int=para.weekType
@@ -120,15 +119,9 @@ class ParaEdit(val para: Para, val parent:InvaludateSchedule) : BottomSheetDialo
                 selectedDay=index
             }
         }
-        checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                // Функция включена
-                selectedOutsude=true
-                // Здесь можно выполнить код для включения функции
-            } else {
-                // Функция выключена
-                selectedOutsude=false
-            }
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+                selectedOutside=isChecked
+
         }
         
         
@@ -146,7 +139,7 @@ class ParaEdit(val para: Para, val parent:InvaludateSchedule) : BottomSheetDialo
 
             // parent.groupChanged(selectedSuggestion)
             searchView.setQuery(selectedSuggestion,true)
-            searchView.clearFocus();
+            searchView.clearFocus()
             selectedClass=selectedSuggestion
             suggestionsRecyclerView.visibility = View.GONE
             //dismiss()
@@ -180,7 +173,7 @@ class ParaEdit(val para: Para, val parent:InvaludateSchedule) : BottomSheetDialo
 
         val saveBtn:Button=view.findViewById(R.id.buttonSaveLesson)
         saveBtn.setOnClickListener {
-               val res= para.SaveChanges(selectedDay, selectedWeek, selectedNumb, selectedOutsude, selectedClass)
+               val res= para.SaveChanges(selectedDay, selectedWeek, selectedNumb, selectedOutside, selectedClass)
 
             Log.d("ew", "${res.first} !! ${res.second}")
             val snackbar = Snackbar.make(it, res.second, if(res.first) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_INDEFINITE)
