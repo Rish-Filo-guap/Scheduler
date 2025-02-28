@@ -15,6 +15,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.time.LocalDate
+import java.time.LocalDate.now
 
 class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
     private lateinit var viewPagerAdapter: ViewPagerAdapter
@@ -24,17 +26,21 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
     private lateinit var prefs: SharedPreferences
     private lateinit var mainSchedulePageFragment:MainSchedulePageFragment
     private lateinit var secSchedulePageFragment:MainSchedulePageFragment
+    private var currentDate:Int=0
 
     private lateinit var groupNames:Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        currentDate= now().dayOfYear
+
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.black)) //настройка цвета там, где у телефона часы, ну короч сверху
 
         setContentView(R.layout.activity_main)
 
         viewPager = findViewById(R.id.viewpager)
         tabLayout = findViewById(R.id.tab_layout)
+
 
 
 
@@ -110,5 +116,15 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
         CreateScheduleFromParsed().SaveSchedule(fileOutputStream,mainSchedulePageFragment.scheduleLayout.schedule)
 
     }
+
+    override fun onRestart() {
+        super.onRestart()
+        var cd= now().dayOfYear
+        if (cd!=currentDate) mainSchedulePageFragment.invalidateSchedule()
+
+        Log.d("ew","$cd $currentDate")
+
+    }
+
 
 }

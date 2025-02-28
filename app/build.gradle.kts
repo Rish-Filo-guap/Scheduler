@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.scheduler"
-        minSdk = 24
+        minSdk = 26
         //noinspection ExpiredTargetSdkVersion
         targetSdk = 34
         versionCode = 4

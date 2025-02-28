@@ -43,12 +43,12 @@ class MainSchedulePageFragment(var group:String?, var scheduleList: ScheduleList
         scheduleLayout= ScheduleLayout(view.context, this)
         if(group!=null){
 
-        if(scheduleList==null){
-            scheduleLayout.downloadSchedule(group!!)
-            Log.d("ew", "sssssss")
-        }else{
-            scheduleLayout.downloadSchedule(scheduleList,group!!)
-        }
+            if(scheduleList==null){
+                scheduleLayout.downloadSchedule(group!!)
+                Log.d("ew", "sssssss")
+            }else{
+                scheduleLayout.downloadSchedule(scheduleList,group!!)
+            }
         }
 
         mainLinearLayout= view.findViewById(R.id.main_schedule_page_linearLayout)
