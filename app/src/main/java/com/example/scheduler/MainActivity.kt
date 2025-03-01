@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
         }catch (e:Exception){
             mainSchedulePageFragment=MainSchedulePageFragment(prefs.getString("maingroup",null),null)
             Log.d("ew", "file not finded")
-            Toast.makeText(this, "загружено версия расписания с сайта", Toast.LENGTH_LONG).show()
+                //Toast.makeText(this, "загружено версия расписания с сайта", Toast.LENGTH_LONG).show()
             //mainSchedulePageFragment.showMessageTypeSchedule(false)
         }
 

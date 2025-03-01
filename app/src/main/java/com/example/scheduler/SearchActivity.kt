@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scheduler.ScheduleProcessing.GrPrCl
@@ -68,9 +69,16 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                parent.groupChanged(query.toString())
-                dismiss()
-                return true
+                if(allSuggestions.contains(query.toString())){
+                    parent.groupChanged(query.toString())
+                    dismiss()
+                    return true
+
+                }else{
+                    Toast.makeText(context,"Ничего не найдено", Toast.LENGTH_SHORT).show()
+
+                    return true
+                }
             }
         })
     }
