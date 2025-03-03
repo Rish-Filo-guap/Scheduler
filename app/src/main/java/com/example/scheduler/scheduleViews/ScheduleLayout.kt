@@ -3,14 +3,10 @@ package com.example.scheduler.scheduleViews
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
-import android.os.Build
-import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.example.scheduler.R
@@ -20,7 +16,6 @@ import com.example.scheduler.ScheduleProcessing.GetInfoFromEther
 import com.example.scheduler.ScheduleProcessing.GrPrCl
 import com.example.scheduler.ScheduleProcessing.Para
 import com.example.scheduler.ScheduleProcessing.ScheduleList
-import com.example.scheduler.ScheduleProcessing.TypeOfSubject
 import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +30,6 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
         LayoutParams.MATCH_PARENT,
         LayoutParams.WRAP_CONTENT
     )
-    
     init {
         orientation = VERTICAL
         setBackgroundColor(Color.BLACK)
@@ -91,13 +85,9 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
         drawSchedule(schedule)
     }
     @SuppressLint("ResourceType")
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun drawSchedule(schedule: ScheduleList){
         removeAllViews()
         val textView= TextView(context)
-
-
-
 
         addView(textView)
         // Получаем текущую дату
@@ -111,126 +101,59 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
 
         for (i in 0 until 30) {
             // Создаем TextView для отображения дня недели и даты
-            val textView = TextView(context)
-
-            // Получаем день недели и форматируем дату
-            val weekNumb=((currentDate.minusDays(0)).format(DateTimeFormatter.ofPattern("w") ).toInt()+1)%2
+            val dateTextView = TextView(context)
 
             val formattedDate = currentDate.format(dateFormatter)
 
+
+            val weekNumb=((currentDate.minusDays(0)).format(DateTimeFormatter.ofPattern("w") ).toInt()+1)%2
             val dayOfWeekNumb =((currentDate.minusDays(2)).format(DateTimeFormatter.ofPattern("F") )).toInt()-1
             val dayOfWeek= DaysOfWeek.values()[dayOfWeekNumb].dayOfWeek
-            // Устанавливаем текст TextView
-            textView.text = "$dayOfWeek $formattedDate"
-            textView.textSize=20f
 
-            // Устанавливаем отступы (опционально)
-            textView.setPadding(100, 40, 16, 16)
+            dateTextView.text = "$dayOfWeek $formattedDate"
+            dateTextView.textSize=20f
+            dateTextView.setPadding(100, 40, 16, 16)
+            addView(dateTextView, layoutParams)
 
-            addView(textView, layoutParams)
             val linearLayoutParas=LinearLayout(context)
             linearLayoutParas.orientation=VERTICAL
 
 
+            //основное расписание
             for (j in 0..schedule.days[dayOfWeekNumb].paras.size-1){
                 val paraLinearLayout=GenParaSchedule(schedule.days[dayOfWeekNumb].paras[j], weekNumb)
                 if(paraLinearLayout!=null)
                     linearLayoutParas.addView(paraLinearLayout, layoutParams)
             }
+
             if (linearLayoutParas.childCount==0){
                 println("wekkend")
-                linearLayoutParas.addView(getWeekEndLayout())
+                linearLayoutParas.addView(WeekendLinearLayoutCreator(context).getLinearLayout()!!)
             }
-            val shape = GradientDrawable()
-            shape.cornerRadius = 40f // радиус в dp
-            shape.setColor(ContextCompat.getColor(context, R.color.test)) // устанавливаем цвет фона
-
-            // Установите фон для LinearLayout
-            //linearLayoutParas.background = shape
-            setPadding(20,0,20,0)
-
             addView(linearLayoutParas,layoutParams)
-            // Переходим к следующему дню
+
             currentDate = currentDate.plusDays(1)
         }
 
-
-
-
-
-
-
         val textViewOutside = TextView(context)
-
-        // Получаем день недели и форматируем дату
-
-
-
         textViewOutside.text = DaysOfWeek.values()[7].dayOfWeek
         textViewOutside.textSize=20f
-
-        // Устанавливаем отступы (опционально)
         textViewOutside.setPadding(100, 40, 16, 16)
 
         addView(textViewOutside, layoutParams)
         val linearLayoutParas=LinearLayout(context)
         linearLayoutParas.orientation=VERTICAL
 
+        //вне сетки расписания
         for (j in 0..schedule.days[7].paras.size-1){
             val paraLinearLayout=GenParaSchedule(schedule.days[7].paras[j],0)
             if(paraLinearLayout!=null)
                 linearLayoutParas.addView(paraLinearLayout, layoutParams)
         }
 
-        val shape = GradientDrawable()
-        shape.cornerRadius = 40f // радиус в dp
-        shape.setColor(ContextCompat.getColor(context, R.color.test)) // устанавливаем цвет фона
-
         setPadding(20,0,20,0)
-
         addView(linearLayoutParas,layoutParams)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
-    private fun getWeekEndLayout():LinearLayout{
-        val lin=LinearLayout(context)
-        lin.orientation= VERTICAL
-        lin.setHorizontalGravity(Gravity.CENTER)
-        lin.setPadding(50)
-        val textView = TextView(context)
-
-        // Настройка TextView
-        textView.text = "Выходной"
-        textView.textSize = 30f // Размер текста
-        textView.setTextColor(ContextCompat.getColor(context, R.color.groupPrep)) // Цвет текста
-
-        // Добавление TextView в LinearLayout
-        lin.addView(textView)
-
-        // Дополнительная настройка (необязательно) - пример: добавление отступов
-        val params = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        params.setMargins(8, 8, 8, 8) // Левый, верхний, правый, нижний отступы (в пикселях)
-        textView.layoutParams = params
-        lin.setBackgroundResource(R.drawable.background_for_every_para)
-
-
-
-        return lin
     }
 
     @SuppressLint("ResourceAsColor")
@@ -238,145 +161,9 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
         if(para.weekType!=weekNumb+1 && para.weekType!=0) return null
         else{
 
-
-
-        // Создаем TextView для номера урока
-        val lessonNumberTextView = TextView(context)
-        lessonNumberTextView.id = TextView.generateViewId()
-        lessonNumberTextView.text = "${para.getNumbStr()}" // Пример: Номер урока 1
-        lessonNumberTextView.setTextColor(Color.argb(255,130, 130, 130))
-        lessonNumberTextView.textSize=29f
-        lessonNumberTextView.gravity=Gravity.CENTER
-
-        // Создаем TextView для времени начала занятия
-        val timeStartTextView = TextView(context)
-
-        timeStartTextView.text = para.getStartTime() // Пример текста
-        timeStartTextView.setTextColor(ContextCompat.getColor(context, android.R.color.white)) // Цвет текста
-        timeStartTextView.gravity=Gravity.CENTER
-        // Создаем TextView для времени  окончания занятия
-        val timeEndTextView = TextView(context)
-
-        timeEndTextView.text = para.getEndTime() // Пример текста
-        timeEndTextView.setTextColor(ContextCompat.getColor(context, android.R.color.white)) // Цвет текста
-        timeEndTextView.gravity= Gravity.CENTER
-        // Создаем TextView для типа занятия
-        val typeSubjectTextView = TextView(context)
-
-        typeSubjectTextView.text = para.typeOfSubject // Пример текста
-        when(para.typeOfSubject){
-            TypeOfSubject.Lab.typeSub -> typeSubjectTextView.setTextColor(Color.argb(255,66, 151, 212))
-            TypeOfSubject.Lek.typeSub -> typeSubjectTextView.setTextColor(Color.argb(255,122, 66, 212))
-            TypeOfSubject.Pra.typeSub -> typeSubjectTextView.setTextColor(Color.argb(255,212, 163, 66))
-        }
-
-        // Создаем TextView для названия предмета
-        val subjectTextView = TextView(context)
-
-        subjectTextView.text = para.sub // Пример текста
-        subjectTextView.setTextColor(ContextCompat.getColor(context, android.R.color.white))
-
-
-        // Создаем TextView для имени преподавателя
-        val teacherTextView = TextView(context)
-
-        teacherTextView.text = para.prepod.substringBefore(",") // Пример текста
-        teacherTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrep))
-        teacherTextView.maxLines=1
-        teacherTextView.ellipsize=TextUtils.TruncateAt.END
-
-        val groupsTextView = TextView(context)
-
-        groupsTextView.text = para.groups // Пример текста
-        groupsTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrep))
-
-
-
-
-
-
-        // Создаем TextView для аудитории
-        val classroomTextView = TextView(context)
-        var cls=para.classRoom.substringAfter("(")
-        var temp=""
-
-        when(cls[0])
-        {
-            'Б'->temp="БМ"
-            'Г'->temp="Гаст"
-            'Л'->temp="Ленс"
-
-        }
-        classroomTextView.text = para.classRoom.substringBefore(" ")+" "+temp // Пример текста
-        classroomTextView.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
-
-        val layoutParams = LayoutParams(
-
-            LayoutParams.WRAP_CONTENT,
-            LayoutParams.MATCH_PARENT,
-
-            )
-        val linearLayout=LinearLayout(context)
-        linearLayout.setOnClickListener {
-            if(para.numb!=8)
-                parent.showParaInfo(para)
-
-        }
-        linearLayout.setOnLongClickListener {
-            if(para.numb!=8)
-                parent.editParaInfo(para)
-
-            true
-        }
-
-
-
-
-
-
-        val linearLayoutLeft=LinearLayout(context)
-        val linearLayoutRight=LinearLayout(context)
-
-        linearLayoutLeft.orientation=VERTICAL
-        linearLayoutLeft.addView(timeStartTextView)
-        linearLayoutLeft.addView(lessonNumberTextView)
-        linearLayoutLeft.addView(timeEndTextView)
-
-        linearLayoutLeft.gravity=Gravity.CENTER
-
-        linearLayoutRight.orientation=VERTICAL
-        linearLayoutRight.addView(typeSubjectTextView)
-        linearLayoutRight.addView(subjectTextView)
-        linearLayoutRight.addView(classroomTextView)
-        linearLayoutRight.addView(teacherTextView)
-        linearLayoutRight.addView(groupsTextView)
-
-
-
-
-        linearLayoutLeft.setPadding(50,10,50,10)
-        linearLayoutRight.setPadding(50,10,0,10)
-
-
-        linearLayout.orientation=HORIZONTAL
-        //linearLayout.addView(linearLayoutLeft,layoutParams)
-
-        //linearLayout.addView(linearLayoutRight,layoutParams)
-            when(para.weekType){
-
-                0->linearLayout.setBackgroundResource(R.drawable.background_for_every_para)
-                1->linearLayout.setBackgroundResource(R.drawable.background_for_down_para)
-                2->linearLayout.setBackgroundResource(R.drawable.background_for_up_para)
-            }
-
-            // 1. Создаем экземпляр MyLinearLayoutCreator
             val linearLayoutCreator = ParaLinearLayoutCreator(context ,para, parent)
 
-            // 2. Получаем созданный LinearLayout
             val paraLinearLayout: LinearLayout? = linearLayoutCreator.getLinearLayout()
-           // linearLayout.addView(myLinearLayout)
-
-
         return paraLinearLayout
         }
     }

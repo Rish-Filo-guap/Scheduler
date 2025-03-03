@@ -11,5 +11,10 @@
     <color name="labTextColor">#4297d4</color>
     <color name="lekTextColor">#7a42d4</color>
     <color name="praTextColor">#d4a342</color>
+
+    <color name="weekendTextColor">#616161</color>
+
+
+
     <color name="test">#333</color>
 </resources>
