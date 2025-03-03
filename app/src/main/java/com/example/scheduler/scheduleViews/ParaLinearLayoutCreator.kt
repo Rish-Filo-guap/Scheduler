@@ -2,6 +2,7 @@ package com.example.scheduler.scheduleViews
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -25,6 +26,7 @@ class ParaLinearLayoutCreator(
     private var classroomTextView: TextView? = null
     private var teacherTextView: TextView? = null
     private var groupTextView: TextView? = null
+    private var editImageButton: ImageButton? = null
 
 
     init {
@@ -43,6 +45,7 @@ class ParaLinearLayoutCreator(
         classroomTextView = linearLayout?.findViewById(R.id.classroom_text_view)
         teacherTextView = linearLayout?.findViewById(R.id.teacher_text_view)
         groupTextView = linearLayout?.findViewById(R.id.group_text_view)
+        editImageButton=linearLayout?.findViewById(R.id.edit_image_button)
 
         var cls = para.classRoom.substringAfter("(")
         var building = ""
@@ -104,6 +107,11 @@ class ParaLinearLayoutCreator(
                 parent.editParaInfo(para)
 
             true
+        }
+        editImageButton?.setOnClickListener {
+            if (para.numb != 8)
+                parent.editParaInfo(para)
+
         }
 
 
