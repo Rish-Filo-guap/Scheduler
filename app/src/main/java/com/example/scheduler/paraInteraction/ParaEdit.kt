@@ -1,4 +1,4 @@
-package com.example.scheduler
+package com.example.scheduler.paraInteraction
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -15,12 +15,15 @@ import android.widget.RadioGroup
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.scheduler.forAll.InvaludateSchedule
+import com.example.scheduler.R
 import com.example.scheduler.ScheduleProcessing.GrPrCl
 import com.example.scheduler.ScheduleProcessing.Para
+import com.example.scheduler.forAll.SuggestionAdapter
 import com.google.android.material.snackbar.Snackbar
 
 
-class ParaEdit(private val para: Para,private val parent:InvaludateSchedule) : BottomSheetDialogFragment() {
+class ParaEdit(private val para: Para,private val parent: InvaludateSchedule) : BottomSheetDialogFragment() {
 
   private lateinit var linearLayout: LinearLayout
   private lateinit var searchView: SearchView
@@ -68,7 +71,11 @@ class ParaEdit(private val para: Para,private val parent:InvaludateSchedule) : B
         val weekRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupWeekParity)
         val numbRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupNumbPara)
         val dayRadioGroup:RadioGroup=view.findViewById(R.id.radioGroupDayPara)
-        val idesForWeek= arrayOf(R.id.radioButtonAllWeek, R.id.radioButtonDownWeek, R.id.radioButtonUpWeek)
+        val idesForWeek= arrayOf(
+            R.id.radioButtonAllWeek,
+            R.id.radioButtonDownWeek,
+            R.id.radioButtonUpWeek
+        )
         val checkBox:CheckBox=view.findViewById(R.id.para_edit_check_box)
         val idesForNumb= arrayOf(
             R.id.radioButtonPara1,

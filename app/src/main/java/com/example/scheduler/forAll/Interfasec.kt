@@ -1,4 +1,4 @@
-package com.example.scheduler
+package com.example.scheduler.forAll
 
 import com.example.scheduler.ScheduleProcessing.Para
 

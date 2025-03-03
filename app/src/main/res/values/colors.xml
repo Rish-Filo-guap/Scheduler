@@ -2,7 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="groupPrepClass">#616161</color>
+    <color name="timeStartEnd">#FFFFFFFF</color>
+    <color name="groupPrep">#616161</color>
+    <color name="classroom">#B3B3B3</color>
     <color name="paraBackGroundColor">#101010</color>
+    <color name="lessonTextColor">#828282</color>
+
+    <color name="labTextColor">#4297d4</color>
+    <color name="lekTextColor">#7a42d4</color>
+    <color name="praTextColor">#d4a342</color>
     <color name="test">#333</color>
 </resources>

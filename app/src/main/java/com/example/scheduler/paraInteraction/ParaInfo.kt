@@ -1,4 +1,4 @@
-package com.example.scheduler
+package com.example.scheduler.paraInteraction
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -13,6 +13,7 @@ import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.LayoutParams
 import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
+import com.example.scheduler.R
 import com.example.scheduler.ScheduleProcessing.Para
 import com.example.scheduler.ScheduleProcessing.TypeOfSubject
 

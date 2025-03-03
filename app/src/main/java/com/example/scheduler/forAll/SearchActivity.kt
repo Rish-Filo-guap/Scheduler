@@ -1,4 +1,4 @@
-package com.example.scheduler
+package com.example.scheduler.forAll
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,10 +8,9 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.scheduler.R
 import com.example.scheduler.ScheduleProcessing.GrPrCl
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-
 
 
 class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDialogFragment() {

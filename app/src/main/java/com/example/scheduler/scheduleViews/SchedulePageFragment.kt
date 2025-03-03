@@ -1,4 +1,4 @@
-package com.example.scheduler
+package com.example.scheduler.scheduleViews
 
 //import androidx.fragment.app.viewModels
 
@@ -10,14 +10,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
-import android.widget.Toast
+import com.example.scheduler.forAll.InvaludateSchedule
+import com.example.scheduler.R
 import com.example.scheduler.ScheduleProcessing.Para
 import com.example.scheduler.ScheduleProcessing.ScheduleList
+import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
+import com.example.scheduler.paraInteraction.ParaEdit
+import com.example.scheduler.paraInteraction.ParaInfo
 
-class MainSchedulePageFragment(var group:String?, var scheduleList: ScheduleList?) : Fragment(), ShowBottomFragmentDialogParaInfo,InvaludateSchedule {
+class SchedulePageFragment(var group:String?, var scheduleList: ScheduleList?) : Fragment(),
+    ShowBottomFragmentDialogParaInfo, InvaludateSchedule {
 
     
-    lateinit var scheduleLayout:ScheduleLayout
+    lateinit var scheduleLayout: ScheduleLayout
     lateinit var mainLinearLayout:LinearLayout
     lateinit var scrollView:ScrollView
 
@@ -66,12 +71,12 @@ class MainSchedulePageFragment(var group:String?, var scheduleList: ScheduleList
 
     override fun showParaInfo(para: Para) {
 
-        val paradialog=ParaInfo(para)
+        val paradialog= ParaInfo(para)
         paradialog.show(childFragmentManager, "ParaInfo")
     }
     override fun editParaInfo(para: Para) {
 
-        val paradialog=ParaEdit(para, this)
+        val paradialog= ParaEdit(para, this)
         paradialog.show(childFragmentManager, "ParaEdit")
 
     }

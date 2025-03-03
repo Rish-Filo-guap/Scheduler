@@ -1,10 +1,12 @@
-package com.example.scheduler
+package com.example.scheduler.forAll
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.scheduler.R
+
 class SuggestionAdapter(private var suggestions: List<String>, private val onItemClick: (String) -> Unit) :
     RecyclerView.Adapter<SuggestionAdapter.SuggestionViewHolder>() {
 

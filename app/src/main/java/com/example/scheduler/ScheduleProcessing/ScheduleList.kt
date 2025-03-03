@@ -1,7 +1,7 @@
 package com.example.scheduler.ScheduleProcessing
 
 import android.util.Log
-import com.example.scheduler.EditSchedule
+import com.example.scheduler.forAll.EditSchedule
 
 class ScheduleList: EditSchedule {
 
@@ -138,7 +138,7 @@ class ScheduleList: EditSchedule {
 
 
 }
-class Day(var dayOfWeek: Int, var schedule:EditSchedule){
+class Day(var dayOfWeek: Int, var schedule: EditSchedule){
     var paras=ArrayList<Para>(0)
 
 
@@ -174,7 +174,7 @@ class Para (
     public var dayOfWeek: Int=0
     public var isOutside=false
 
-    public lateinit var schedule:EditSchedule
+    public lateinit var schedule: EditSchedule
 
     public fun getStartTime():String{
         return Times.StartTimes.stTime[numb-1]

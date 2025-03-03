@@ -1,20 +1,19 @@
-package com.example.scheduler
+package com.example.scheduler.scheduleViews
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
-import android.text.Layout
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
+import com.example.scheduler.R
 import com.example.scheduler.ScheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.ScheduleProcessing.DaysOfWeek
 import com.example.scheduler.ScheduleProcessing.GetInfoFromEther
@@ -22,6 +21,7 @@ import com.example.scheduler.ScheduleProcessing.GrPrCl
 import com.example.scheduler.ScheduleProcessing.Para
 import com.example.scheduler.ScheduleProcessing.ScheduleList
 import com.example.scheduler.ScheduleProcessing.TypeOfSubject
+import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
-class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaInfo) : LinearLayout(context) {
+class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaInfo) : LinearLayout(context) {
     lateinit var schedule:ScheduleList
     val layoutParams = LayoutParams(
         LayoutParams.MATCH_PARENT,
@@ -214,7 +214,7 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         // Настройка TextView
         textView.text = "Выходной"
         textView.textSize = 30f // Размер текста
-        textView.setTextColor(ContextCompat.getColor(context, R.color.groupPrepClass)) // Цвет текста
+        textView.setTextColor(ContextCompat.getColor(context, R.color.groupPrep)) // Цвет текста
 
         // Добавление TextView в LinearLayout
         lin.addView(textView)
@@ -281,14 +281,14 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
         val teacherTextView = TextView(context)
 
         teacherTextView.text = para.prepod.substringBefore(",") // Пример текста
-        teacherTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrepClass))
+        teacherTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrep))
         teacherTextView.maxLines=1
         teacherTextView.ellipsize=TextUtils.TruncateAt.END
 
         val groupsTextView = TextView(context)
 
         groupsTextView.text = para.groups // Пример текста
-        groupsTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrepClass))
+        groupsTextView.setTextColor(ContextCompat.getColor(context, R.color.groupPrep))
 
 
 
@@ -359,9 +359,9 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
 
 
         linearLayout.orientation=HORIZONTAL
-        linearLayout.addView(linearLayoutLeft,layoutParams)
+        //linearLayout.addView(linearLayoutLeft,layoutParams)
 
-        linearLayout.addView(linearLayoutRight,layoutParams)
+        //linearLayout.addView(linearLayoutRight,layoutParams)
             when(para.weekType){
 
                 0->linearLayout.setBackgroundResource(R.drawable.background_for_every_para)
@@ -369,10 +369,15 @@ class ScheduleLayout(context: Context, val parent:ShowBottomFragmentDialogParaIn
                 2->linearLayout.setBackgroundResource(R.drawable.background_for_up_para)
             }
 
+            // 1. Создаем экземпляр MyLinearLayoutCreator
+            val linearLayoutCreator = ParaLinearLayoutCreator(context ,para, parent)
+
+            // 2. Получаем созданный LinearLayout
+            val paraLinearLayout: LinearLayout? = linearLayoutCreator.getLinearLayout()
+           // linearLayout.addView(myLinearLayout)
 
 
-
-        return linearLayout
+        return paraLinearLayout
         }
     }
 }
