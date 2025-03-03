@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scheduler.R
-import com.example.scheduler.ScheduleProcessing.GrPrCl
+import com.example.scheduler.scheduleProcessing.GrPrCl
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
@@ -50,6 +50,7 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
         }
 
         suggestionsRecyclerView.adapter = suggestionAdapter
+        suggestionAdapter.updateData(allSuggestions)
 
         searchView?.let {
             it.isIconified = false // Разворачиваем SearchView

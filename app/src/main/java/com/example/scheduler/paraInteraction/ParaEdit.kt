@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scheduler.forAll.InvaludateSchedule
 import com.example.scheduler.R
-import com.example.scheduler.ScheduleProcessing.GrPrCl
-import com.example.scheduler.ScheduleProcessing.Para
+import com.example.scheduler.scheduleProcessing.GrPrCl
+import com.example.scheduler.scheduleProcessing.Para
 import com.example.scheduler.forAll.SuggestionAdapter
 import com.google.android.material.snackbar.Snackbar
 

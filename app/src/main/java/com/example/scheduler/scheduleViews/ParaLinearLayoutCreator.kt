@@ -6,8 +6,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.scheduler.R
-import com.example.scheduler.ScheduleProcessing.Para
-import com.example.scheduler.ScheduleProcessing.TypeOfSubject
+import com.example.scheduler.scheduleProcessing.Para
+import com.example.scheduler.scheduleProcessing.TypeOfSubject
 import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
 
 class ParaLinearLayoutCreator(private val context: Context, para:Para,val parent: ShowBottomFragmentDialogParaInfo) {

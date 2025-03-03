@@ -1,6 +1,6 @@
 package com.example.scheduler.forAll
 
-import com.example.scheduler.ScheduleProcessing.Para
+import com.example.scheduler.scheduleProcessing.Para
 
 public interface ShowBottomFragmentDialogSearch{
     public fun groupChanged(newGroup:String)

@@ -12,8 +12,8 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import com.example.scheduler.forAll.InvaludateSchedule
 import com.example.scheduler.R
-import com.example.scheduler.ScheduleProcessing.Para
-import com.example.scheduler.ScheduleProcessing.ScheduleList
+import com.example.scheduler.scheduleProcessing.Para
+import com.example.scheduler.scheduleProcessing.ScheduleList
 import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
 import com.example.scheduler.paraInteraction.ParaEdit
 import com.example.scheduler.paraInteraction.ParaInfo

@@ -14,11 +14,11 @@ import android.widget.LinearLayout.LayoutParams
 import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
 import com.example.scheduler.R
-import com.example.scheduler.ScheduleProcessing.Para
-import com.example.scheduler.ScheduleProcessing.TypeOfSubject
+import com.example.scheduler.scheduleProcessing.Para
+import com.example.scheduler.scheduleProcessing.TypeOfSubject
 
 
-class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
+class ParaInfo(private val para: Para) : BottomSheetDialogFragment() {
 
     private lateinit var linearLayout: LinearLayout
 
@@ -39,14 +39,14 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
         linearLayout=view.findViewById(R.id.parainfo_linearLayout)
 
 
-        linearLayout.addView(GenParaSchedule(para))
+        linearLayout.addView(genParaSchedule(para))
 
     }
     @SuppressLint("ResourceAsColor")
-    private fun GenParaSchedule(para: Para): LinearLayout{
-        val params1 = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+    private fun genParaSchedule(para: Para): LinearLayout{
+        val params1 = LayoutParams(
+            LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT
         )
         params1.setMargins(0, 20, 0, 20) // Отступ 8dp со всех сторон
 
@@ -55,7 +55,7 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
 
 
         lessonNumberTextView.id = TextView.generateViewId()
-        lessonNumberTextView.text = "${para.getNumbStr()}" // Пример: Номер урока 1
+        lessonNumberTextView.text = para.getNumbStr() // Пример: Номер урока 1
         lessonNumberTextView.setTextColor(Color.argb(255,130, 130, 130))
         lessonNumberTextView.textSize=29f
         lessonNumberTextView.gravity=Gravity.CENTER
@@ -145,8 +145,8 @@ class ParaInfo(val para: Para) : BottomSheetDialogFragment() {
 
 
 
-        linearLayoutLeft.setPadding(50,20,100,20,)
-        linearLayoutRight.setPadding(0,20,0,20,)
+        linearLayoutLeft.setPadding(50,20,100,20)
+        linearLayoutRight.setPadding(0,20,0,20)
         linearLayout.orientation= HORIZONTAL
         linearLayout.addView(linearLayoutLeft,layoutParams)
         linearLayout.addView(linearLayoutRight,layoutParams)

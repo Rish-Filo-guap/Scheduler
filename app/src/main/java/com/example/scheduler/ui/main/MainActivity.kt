@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.scheduler.scheduleViews.SchedulePageFragment
 import com.example.scheduler.R
-import com.example.scheduler.ScheduleProcessing.CreateScheduleFromParsed
+import com.example.scheduler.scheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.forAll.SearchActivity
 import com.example.scheduler.forAll.ShowBottomFragmentDialogSearch
 import com.google.android.material.tabs.TabLayout
