@@ -4,11 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
-import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.view.setPadding
 import com.example.scheduler.R
 import com.example.scheduler.scheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.scheduleProcessing.DaysOfWeek
@@ -24,44 +21,48 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
-class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaInfo) : LinearLayout(context) {
-    lateinit var schedule:ScheduleList
+class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaInfo) :
+    LinearLayout(context) {
+    lateinit var schedule: ScheduleList
     val layoutParams = LayoutParams(
         LayoutParams.MATCH_PARENT,
         LayoutParams.WRAP_CONTENT
     )
+
     init {
         orientation = VERTICAL
         setBackgroundColor(Color.BLACK)
     }
-    fun downloadSchedule(scheduleList: ScheduleList?, group: String){
-        if(scheduleList==null){
+
+    fun downloadSchedule(scheduleList: ScheduleList?, group: String) {
+        if (scheduleList == null) {
             downloadSchedule(group)
-        }
-        else{
-            schedule=scheduleList
+        } else {
+            schedule = scheduleList
             drawSchedule(schedule)
             invalidate()
 
         }
 
 
-
     }
-    fun downloadSchedule(group:String?){
-        schedule= ScheduleList()
+
+    fun downloadSchedule(group: String?) {
+        schedule = ScheduleList()
         setBackgroundResource(R.color.paraBackGroundColor)
         invalidate()
-        if(group==null){return}
+        if (group == null) {
+            return
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
-            var newGroup:String
-            if(GrPrCl().groups.containsKey(group))
-                newGroup=GrPrCl().groups.get(group)!!
+            var newGroup: String
+            if (GrPrCl().groups.containsKey(group))
+                newGroup = GrPrCl().groups.get(group)!!
             else
-                newGroup=GrPrCl().prepods.get(group)!!
+                newGroup = GrPrCl().prepods.get(group)!!
 
-            val parsedInfo = GetInfoFromEther().Download("https://guap.ru/rasp/?"+ newGroup)
+            val parsedInfo = GetInfoFromEther().download("https://guap.ru/rasp/?" + newGroup)
 
             val createScheduleFromParsed = CreateScheduleFromParsed()
             try {
@@ -76,25 +77,24 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
                 invalidate()
 
 
-
             }
         }
     }
 
-    public fun drawSchedule(){
+    public fun drawSchedule() {
         drawSchedule(schedule)
     }
+
     @SuppressLint("ResourceType")
-    private fun drawSchedule(schedule: ScheduleList){
+    private fun drawSchedule(schedule: ScheduleList) {
         removeAllViews()
-        val textView= TextView(context)
+        val textView = TextView(context)
 
         addView(textView)
         // Получаем текущую дату
         var currentDate = now()
         // Форматируем дату
         val dateFormatter = DateTimeFormatter.ofPattern("dd.MM")
-
 
 
         // Добавляем дни недели в список (например, на 30 дней вперед)
@@ -106,65 +106,68 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
             val formattedDate = currentDate.format(dateFormatter)
 
 
-            val weekNumb=((currentDate.minusDays(0)).format(DateTimeFormatter.ofPattern("w") ).toInt()+1)%2
-            val dayOfWeekNumb =((currentDate.minusDays(2)).format(DateTimeFormatter.ofPattern("F") )).toInt()-1
-            val dayOfWeek= DaysOfWeek.values()[dayOfWeekNumb].dayOfWeek
+            val weekNumb = ((currentDate.minusDays(0)).format(DateTimeFormatter.ofPattern("w"))
+                .toInt() + 1) % 2
+            val dayOfWeekNumb =
+                ((currentDate.minusDays(2)).format(DateTimeFormatter.ofPattern("F"))).toInt() - 1
+            val dayOfWeek = DaysOfWeek.values()[dayOfWeekNumb].dayOfWeek
 
             dateTextView.text = "$dayOfWeek $formattedDate"
-            dateTextView.textSize=20f
+            dateTextView.textSize = 20f
             dateTextView.setPadding(100, 40, 16, 16)
             addView(dateTextView, layoutParams)
 
-            val linearLayoutParas=LinearLayout(context)
-            linearLayoutParas.orientation=VERTICAL
+            val linearLayoutParas = LinearLayout(context)
+            linearLayoutParas.orientation = VERTICAL
 
 
             //основное расписание
-            for (j in 0..schedule.days[dayOfWeekNumb].paras.size-1){
-                val paraLinearLayout=GenParaSchedule(schedule.days[dayOfWeekNumb].paras[j], weekNumb)
-                if(paraLinearLayout!=null)
+            for (j in 0..schedule.days[dayOfWeekNumb].paras.size - 1) {
+                val paraLinearLayout =
+                    GenParaSchedule(schedule.days[dayOfWeekNumb].paras[j], weekNumb)
+                if (paraLinearLayout != null)
                     linearLayoutParas.addView(paraLinearLayout, layoutParams)
             }
 
-            if (linearLayoutParas.childCount==0){
+            if (linearLayoutParas.childCount == 0) {
                 println("wekkend")
                 linearLayoutParas.addView(WeekendLinearLayoutCreator(context).getLinearLayout()!!)
             }
-            addView(linearLayoutParas,layoutParams)
+            addView(linearLayoutParas, layoutParams)
 
             currentDate = currentDate.plusDays(1)
         }
 
         val textViewOutside = TextView(context)
         textViewOutside.text = DaysOfWeek.values()[7].dayOfWeek
-        textViewOutside.textSize=20f
+        textViewOutside.textSize = 20f
         textViewOutside.setPadding(100, 40, 16, 16)
 
         addView(textViewOutside, layoutParams)
-        val linearLayoutParas=LinearLayout(context)
-        linearLayoutParas.orientation=VERTICAL
+        val linearLayoutParas = LinearLayout(context)
+        linearLayoutParas.orientation = VERTICAL
 
         //вне сетки расписания
-        for (j in 0..schedule.days[7].paras.size-1){
-            val paraLinearLayout=GenParaSchedule(schedule.days[7].paras[j],0)
-            if(paraLinearLayout!=null)
+        for (j in 0..schedule.days[7].paras.size - 1) {
+            val paraLinearLayout = GenParaSchedule(schedule.days[7].paras[j], 0)
+            if (paraLinearLayout != null)
                 linearLayoutParas.addView(paraLinearLayout, layoutParams)
         }
 
-        setPadding(20,0,20,0)
-        addView(linearLayoutParas,layoutParams)
+        setPadding(20, 0, 20, 0)
+        addView(linearLayoutParas, layoutParams)
 
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun GenParaSchedule(para: Para, weekNumb:Int): LinearLayout?{
-        if(para.weekType!=weekNumb+1 && para.weekType!=0) return null
-        else{
+    private fun GenParaSchedule(para: Para, weekNumb: Int): LinearLayout? {
+        if (para.weekType != weekNumb + 1 && para.weekType != 0) return null
+        else {
 
-            val linearLayoutCreator = ParaLinearLayoutCreator(context ,para, parent)
+            val linearLayoutCreator = ParaLinearLayoutCreator(context, para, parent)
 
             val paraLinearLayout: LinearLayout? = linearLayoutCreator.getLinearLayout()
-        return paraLinearLayout
+            return paraLinearLayout
         }
     }
 }

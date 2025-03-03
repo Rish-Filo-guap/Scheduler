@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/paraedit_linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rounded_shape"
 
-    android:orientation="vertical"
-    android:id="@+id/paraedit_linearLayout">
+    android:background="@drawable/rounded_shape"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:labelFor="@+id/searchViewTitle"
-            android:layout_marginTop="10dp"
             android:text="Аудитория"
             android:textSize="20sp" />
 
@@ -144,9 +143,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="Номер пары"
-            android:layout_marginTop="16dp"
             android:textSize="20sp" />
 
 
@@ -209,14 +208,14 @@
 
         </RadioGroup>
 
-       <CheckBox
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_gravity="center"
-           android:textSize="20sp"
-           android:gravity="center_vertical"
-           android:id="@+id/para_edit_check_box"
-           android:text="вне сетки"/>
+        <CheckBox
+            android:id="@+id/para_edit_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:text="вне сетки"
+            android:textSize="20sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -245,7 +244,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 
 </LinearLayout>

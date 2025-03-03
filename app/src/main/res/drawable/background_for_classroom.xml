@@ -6,23 +6,19 @@
     <gradient
         android:angle="0"
 
-        android:startColor="#4E4E4E"
         android:centerColor="#3A3A3A"
+        android:endColor="#383838"
 
-        android:endColor="#383838"/>
+        android:startColor="#4E4E4E" />
 
     <!-- shape property for the view based on the value particular view would be drawn -->
-    <corners
-        android:radius="20dp"
+    <corners android:radius="20dp"
 
         />
     <padding
         android:left="10dp"
-        android:right="10dp"
-        />
+        android:right="10dp" />
     <!--<stroke android:width="10dp" android:dashGap="10dp" android:dashWidth="10dp" android:color="@color/white" />-->
-
-
 
 
     <!--  stroke for defining a border for view -->

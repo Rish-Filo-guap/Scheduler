@@ -18,19 +18,19 @@ import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
 import com.example.scheduler.paraInteraction.ParaEdit
 import com.example.scheduler.paraInteraction.ParaInfo
 
-class SchedulePageFragment(var group:String?, var scheduleList: ScheduleList?) : Fragment(),
+class SchedulePageFragment(var group: String?, var scheduleList: ScheduleList?) : Fragment(),
     ShowBottomFragmentDialogParaInfo, InvaludateSchedule {
 
-    
+
     lateinit var scheduleLayout: ScheduleLayout
-    lateinit var mainLinearLayout:LinearLayout
-    lateinit var scrollView:ScrollView
+    lateinit var mainLinearLayout: LinearLayout
+    lateinit var scrollView: ScrollView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // TODO: Use the ViewModel
-        
+
     }
 
 
@@ -45,46 +45,47 @@ class SchedulePageFragment(var group:String?, var scheduleList: ScheduleList?) :
         super.onViewCreated(view, savedInstanceState)
 
         scrollView = ScrollView(view.context)
-        scheduleLayout= ScheduleLayout(view.context, this)
-        if(group!=null){
+        scheduleLayout = ScheduleLayout(view.context, this)
+        if (group != null) {
 
-            if(scheduleList==null){
+            if (scheduleList == null) {
                 scheduleLayout.downloadSchedule(group!!)
                 Log.d("ew", "sssssss")
-            }else{
-                scheduleLayout.downloadSchedule(scheduleList,group!!)
+            } else {
+                scheduleLayout.downloadSchedule(scheduleList, group!!)
             }
         }
 
-        mainLinearLayout= view.findViewById(R.id.main_schedule_page_linearLayout)
+        mainLinearLayout = view.findViewById(R.id.main_schedule_page_linearLayout)
 
         mainLinearLayout.addView(scrollView)
 
         scrollView.addView(scheduleLayout)
     }
+
     fun groupChanged(newGroup: String) {
 
         scheduleLayout.downloadSchedule(newGroup)
     }
 
 
-
     override fun showParaInfo(para: Para) {
 
-        val paradialog= ParaInfo(para)
+        val paradialog = ParaInfo(para)
         paradialog.show(childFragmentManager, "ParaInfo")
     }
+
     override fun editParaInfo(para: Para) {
 
-        val paradialog= ParaEdit(para, this)
+        val paradialog = ParaEdit(para, this)
         paradialog.show(childFragmentManager, "ParaEdit")
 
     }
 
     override fun invalidateSchedule() {
-        mainLinearLayout.post{
+        mainLinearLayout.post {
 
-        scheduleLayout.drawSchedule()
+            scheduleLayout.drawSchedule()
         }
         Log.d("rar", "invalid")
     }

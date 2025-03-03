@@ -28,15 +28,20 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
     private lateinit var prefs: SharedPreferences
     private lateinit var schedulePageFragment: SchedulePageFragment
     private lateinit var secSchedulePageFragment: SchedulePageFragment
-    private var currentDate:Int=0
+    private var currentDate: Int = 0
 
-    private lateinit var groupNames:Array<String>
+    private lateinit var groupNames: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        currentDate= now().dayOfYear
+        currentDate = now().dayOfYear
 
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.black)) //настройка цвета там, где у телефона часы, ну короч сверху
+        window.setStatusBarColor(
+            ContextCompat.getColor(
+                this,
+                R.color.black
+            )
+        ) //настройка цвета там, где у телефона часы, ну короч сверху
 
         setContentView(R.layout.activity_main)
 
@@ -44,13 +49,11 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
         tabLayout = findViewById(R.id.tab_layout)
 
 
-
-
         // Set up the adapter
         viewPagerAdapter = ViewPagerAdapter(this)
         prefs = getSharedPreferences("info", Context.MODE_PRIVATE)
 
-        searchBTN=findViewById(R.id.main_search_button)
+        searchBTN = findViewById(R.id.main_search_button)
         searchBTN.setOnClickListener {
             val searchDialogFragment = SearchActivity(this)
             searchDialogFragment.show(supportFragmentManager, "searchActivity")
@@ -58,24 +61,28 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
         try {
 
             val fileInputStream: FileInputStream = openFileInput("schedule.txt")
-            schedulePageFragment=
-                SchedulePageFragment(prefs.getString("maingroup",null),CreateScheduleFromParsed().ReadSchedule(fileInputStream))
+            schedulePageFragment =
+                SchedulePageFragment(
+                    prefs.getString("maingroup", null),
+                    CreateScheduleFromParsed().ReadSchedule(fileInputStream)
+                )
             Log.d("ew", "file finded")
             Toast.makeText(this, "загружена локальная версия расписания", Toast.LENGTH_SHORT).show()
             //mainSchedulePageFragment.showMessageTypeSchedule(true)
-        }catch (e:Exception){
-            schedulePageFragment=
-                SchedulePageFragment(prefs.getString("maingroup",null),null)
+        } catch (e: Exception) {
+            schedulePageFragment =
+                SchedulePageFragment(prefs.getString("maingroup", null), null)
             Log.d("ew", "file not finded")
-                //Toast.makeText(this, "загружено версия расписания с сайта", Toast.LENGTH_LONG).show()
+            //Toast.makeText(this, "загружено версия расписания с сайта", Toast.LENGTH_LONG).show()
             //mainSchedulePageFragment.showMessageTypeSchedule(false)
         }
 
         // Add the fragments
-        secSchedulePageFragment= SchedulePageFragment(prefs.getString("secgroup",null), null)
+        secSchedulePageFragment = SchedulePageFragment(prefs.getString("secgroup", null), null)
 
 
-        groupNames= arrayOf(prefs.getString("maingroup",":(")!!, prefs.getString("secgroup",":(")!! )
+        groupNames =
+            arrayOf(prefs.getString("maingroup", ":(")!!, prefs.getString("secgroup", ":(")!!)
         viewPagerAdapter.addFragment(schedulePageFragment, groupNames[0].substringBefore(" "))
         viewPagerAdapter.addFragment(secSchedulePageFragment, groupNames[1].substringBefore(" "))
 
@@ -90,43 +97,46 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
     }
 
 
-
     override fun groupChanged(newGroup: String) {
         val editor = prefs.edit()
-        when(viewPager.currentItem){
-            0->{
+        when (viewPager.currentItem) {
+            0 -> {
                 schedulePageFragment.groupChanged(newGroup)
                 editor.putString("maingroup", newGroup).apply()
             }
-            1->{
+
+            1 -> {
                 secSchedulePageFragment.groupChanged(newGroup)
                 editor.putString("secgroup", newGroup).apply()
 
             }
         }
 
-        groupNames[viewPager.currentItem]=newGroup
+        groupNames[viewPager.currentItem] = newGroup
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = groupNames[position].substringBefore(" ")
         }.attach()
-
 
 
     }
 
     override fun onPause() {
         super.onPause()
-        val fileOutputStream: FileOutputStream = openFileOutput("schedule.txt", Context.MODE_PRIVATE)
-        CreateScheduleFromParsed().SaveSchedule(fileOutputStream,schedulePageFragment.scheduleLayout.schedule)
+        val fileOutputStream: FileOutputStream =
+            openFileOutput("schedule.txt", Context.MODE_PRIVATE)
+        CreateScheduleFromParsed().SaveSchedule(
+            fileOutputStream,
+            schedulePageFragment.scheduleLayout.schedule
+        )
 
     }
 
     override fun onRestart() {
         super.onRestart()
-        var cd= now().dayOfYear
-        if (cd!=currentDate) schedulePageFragment.invalidateSchedule()
+        var cd = now().dayOfYear
+        if (cd != currentDate) schedulePageFragment.invalidateSchedule()
 
-        Log.d("ew","$cd $currentDate")
+        Log.d("ew", "$cd $currentDate")
 
     }
 

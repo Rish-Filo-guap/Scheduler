@@ -52,7 +52,7 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
         suggestionsRecyclerView.adapter = suggestionAdapter
         suggestionAdapter.updateData(allSuggestions)
 
-        searchView?.let {
+        searchView.let {
             it.isIconified = false // Разворачиваем SearchView
             it.requestFocusFromTouch() // Запрашиваем фокус (для эмуляторов/устройств без аппаратной клавиатуры)
 
