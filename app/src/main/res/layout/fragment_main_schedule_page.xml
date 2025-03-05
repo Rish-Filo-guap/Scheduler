@@ -12,6 +12,23 @@
         android:background="@color/black"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/weekendTextColor"
+            android:gravity="bottom"
+            android:textSize="20sp"
+            android:text="Для выбора группы воспользуйтесь поиском в верхнем левом углу"
+            android:textAlignment="center"
+            tools:ignore="RtlCompat" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
+
 
     </LinearLayout>
 

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import androidx.core.view.children
 import com.example.scheduler.forAll.InvaludateSchedule
 import com.example.scheduler.R
 import com.example.scheduler.scheduleProcessing.Para
@@ -44,26 +45,35 @@ class SchedulePageFragment(var group: String?, var scheduleList: ScheduleList?) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mainLinearLayout = view.findViewById(R.id.main_schedule_page_linearLayout)
         scrollView = ScrollView(view.context)
         scheduleLayout = ScheduleLayout(view.context, this)
         if (group != null) {
 
             if (scheduleList == null) {
                 scheduleLayout.downloadSchedule(group!!)
-                Log.d("ew", "sssssss")
             } else {
+
                 scheduleLayout.downloadSchedule(scheduleList, group!!)
+
             }
+            mainLinearLayout.removeAllViews()
+            mainLinearLayout.addView(scrollView)
+            scrollView.addView(scheduleLayout)
+        } else{
+            Log.d("ew", "noSchedule")
+
         }
 
-        mainLinearLayout = view.findViewById(R.id.main_schedule_page_linearLayout)
 
-        mainLinearLayout.addView(scrollView)
-
-        scrollView.addView(scheduleLayout)
     }
 
     fun groupChanged(newGroup: String) {
+       if (mainLinearLayout.childCount==2){
+            mainLinearLayout.removeAllViews()
+            mainLinearLayout.addView(scrollView)
+            scrollView.addView(scheduleLayout)
+        }
 
         scheduleLayout.downloadSchedule(newGroup)
     }
