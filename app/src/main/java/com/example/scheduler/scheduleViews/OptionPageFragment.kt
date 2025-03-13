@@ -53,10 +53,10 @@ class OptionPageFragment : Fragment() {
                 }
             }
 
-            val url = "https://schedule-server-filolio.cloudpub.ru/add_schedule/fil" //
+            val url = "https://schedule-server-filolio.cloudpub.ru/add_schedule/filik"
 
 
-                Log.d("ew", "start_upload")
+            Log.d("ew", "start_upload")
                 //makeRequest(url,"get")
                val res= makeRequest(url,"post")
 
