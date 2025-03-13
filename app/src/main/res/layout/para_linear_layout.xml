@@ -24,8 +24,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="10:30"
-            android:textSize="15sp"
-            android:textColor="@color/timeStartEnd" />
+            android:textColor="@color/timeStartEnd"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/lesson_numb_text_view"
@@ -42,8 +42,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="10:30"
-            android:textSize="15sp"
-            android:textColor="@color/timeStartEnd" />
+            android:textColor="@color/timeStartEnd"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -74,8 +74,8 @@
                 android:layout_width="wrap_content"
 
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
                 android:alpha="0.2"
+                android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
 
                 android:src="@android:drawable/ic_menu_edit" />
@@ -92,11 +92,11 @@
             android:id="@+id/classroom_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_for_classroom"
-
-            android:text="33-08"
             android:layout_marginTop="3dp"
+
             android:layout_marginBottom="1dp"
+            android:background="@drawable/background_for_classroom"
+            android:text="33-08"
 
             android:textColor="@color/classroom" />
 

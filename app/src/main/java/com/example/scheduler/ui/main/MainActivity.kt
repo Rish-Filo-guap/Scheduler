@@ -14,6 +14,7 @@ import com.example.scheduler.R
 import com.example.scheduler.scheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.forAll.SearchActivity
 import com.example.scheduler.forAll.ShowBottomFragmentDialogSearch
+import com.example.scheduler.scheduleViews.OptionPageFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.io.FileInputStream
@@ -26,8 +27,10 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
     private lateinit var tabLayout: TabLayout
     private lateinit var searchBTN: ImageButton
     private lateinit var prefs: SharedPreferences
+
     private lateinit var schedulePageFragment: SchedulePageFragment
     private lateinit var secSchedulePageFragment: SchedulePageFragment
+    private lateinit var optionPageFragment: OptionPageFragment
     private var currentDate: Int = 0
 
     private lateinit var groupNames: Array<String>
@@ -79,12 +82,15 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
 
         // Add the fragments
         secSchedulePageFragment = SchedulePageFragment(prefs.getString("secgroup", null), null)
+        optionPageFragment= OptionPageFragment()
+
 
 
         groupNames =
             arrayOf(prefs.getString("maingroup", ":(")!!, prefs.getString("secgroup", ":(")!!)
         viewPagerAdapter.addFragment(schedulePageFragment, groupNames[0].substringBefore(" "))
         viewPagerAdapter.addFragment(secSchedulePageFragment, groupNames[1].substringBefore(" "))
+        viewPagerAdapter.addFragment(optionPageFragment, "опции")
 
 
         // Set the adapter to the ViewPager2
