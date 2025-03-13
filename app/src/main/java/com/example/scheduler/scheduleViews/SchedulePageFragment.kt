@@ -18,8 +18,9 @@ import com.example.scheduler.scheduleProcessing.ScheduleList
 import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
 import com.example.scheduler.paraInteraction.ParaEdit
 import com.example.scheduler.paraInteraction.ParaInfo
+import java.io.FileInputStream
 
-class SchedulePageFragment(var group: String?, var scheduleList: ScheduleList?) : Fragment(),
+class SchedulePageFragment(var group: String?, var fileInputStream: FileInputStream?) : Fragment(),
     ShowBottomFragmentDialogParaInfo, InvaludateSchedule {
 
 
@@ -30,7 +31,7 @@ class SchedulePageFragment(var group: String?, var scheduleList: ScheduleList?) 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO: Use the ViewModel
+
 
     }
 
@@ -50,11 +51,11 @@ class SchedulePageFragment(var group: String?, var scheduleList: ScheduleList?) 
         scheduleLayout = ScheduleLayout(view.context, this)
         if (group != null) {
 
-            if (scheduleList == null) {
-                scheduleLayout.downloadSchedule(group!!)
+            if (fileInputStream == null) {
+                scheduleLayout.downloadSchedule(group)
             } else {
 
-                scheduleLayout.downloadSchedule(scheduleList, group!!)
+                scheduleLayout.downloadSchedule(fileInputStream!!, group!!)
 
             }
             mainLinearLayout.removeAllViews()

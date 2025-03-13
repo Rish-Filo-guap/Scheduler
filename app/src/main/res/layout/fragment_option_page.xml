@@ -6,9 +6,21 @@
     tools:context=".scheduleViews.OptionPageFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hello_blank_fragment" />
+
+        <Button
+            android:id="@+id/share_schedule_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="поделиться расписанием из первой вкладки" />
+    </LinearLayout>
 
 </FrameLayout>

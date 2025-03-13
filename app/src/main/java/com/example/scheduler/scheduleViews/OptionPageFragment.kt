@@ -1,60 +1,138 @@
 package com.example.scheduler.scheduleViews
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.example.scheduler.R
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import io.ktor.client.engine.cio.*
+import kotlinx.coroutines.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [OptionPageFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
+
+
+
+
 class OptionPageFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var client:HttpClient
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_option_page, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment OptionPageFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            OptionPageFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)= runBlocking {
+        super.onViewCreated(view, savedInstanceState)
+        val shareBtn: Button = view.findViewById(R.id.share_schedule_btn)
+        shareBtn.setOnClickListener {
+            client = HttpClient(CIO) {
+                install(io.ktor.client.plugins.HttpTimeout) {
+                    requestTimeoutMillis = 15000 // 15 секунд
+                    connectTimeoutMillis = 15000 // 15 секунд
+                    socketTimeoutMillis = 15000 // 15 секунд
                 }
             }
+
+            val url = "https://schedule-server-filolio.cloudpub.ru/add_schedule/fil" //
+
+
+                Log.d("ew", "start_upload")
+                //makeRequest(url,"get")
+               val res= makeRequest(url,"post")
+
+
+        }
+    }
+
+    private fun makeRequest(url: String, type:String):String? {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                var result:String?=null
+
+                when(type){
+                    "get" -> result=getSchedFromServ(url)
+                    "post"-> result=postSchedToServ(url)
+                }
+
+
+                if (result != null) {
+                    Log.d("OptionPage", "Результат $type-запроса: $result")
+                    
+                } else {
+                    Log.e("OptionPage", "Ошибка при выполнении $type-запроса: результат null")
+                    
+                }
+                withContext(Dispatchers.Main) {
+                    return@withContext result
+                }
+            } catch (e: Exception) {
+                Log.e("OptionPage", "Ошибка при выполнении $type-запроса: ${e.message}", e)
+                
+            }
+        }
+        return null
+    }
+    suspend fun getSchedFromServ(url: String): String? {
+
+        return try {
+
+
+            val response: HttpResponse = client.get(url)
+
+            if (response.status.value in 200..299) { // Проверка на успешный статус код
+                response.bodyAsText() // Получение тела ответа в виде строки
+            } else {
+                "Ошибка: ${response.status.value} ${response.status.description}" // Вернуть сообщение об ошибке
+            }
+
+        } catch (e: Exception) {
+            "Ошибка: ${e.message}" // Вернуть сообщение об ошибке
+        } finally {
+            client.close() // Закрыть клиент после завершения
+        }
+    }
+
+    suspend fun postSchedToServ(url: String): String? {
+
+        return try {
+
+            val response: HttpResponse = client.post(url){
+                contentType(ContentType.Text.Any)
+                setBody("qwuieuoqeuicudoisfuiosd")
+            }
+
+
+            if (response.status.value in 200..299) { // Проверка на успешный статус код
+                response.bodyAsText() // Получение тела ответа в виде строки
+            } else {
+                "Ошибка: ${response.status.value} ${response.status.description}" // Вернуть сообщение об ошибке
+            }
+
+        } catch (e: Exception) {
+            "Ошибка: ${e.message}" // Вернуть сообщение об ошибке
+        } finally {
+            client.close() // Закрыть клиент после завершения
+        }
     }
 }
+

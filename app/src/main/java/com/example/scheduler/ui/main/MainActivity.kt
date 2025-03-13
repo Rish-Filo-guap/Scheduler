@@ -63,11 +63,12 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
         }
         try {
 
-            val fileInputStream: FileInputStream = openFileInput("schedule.txt")
+
             schedulePageFragment =
                 SchedulePageFragment(
                     prefs.getString("maingroup", null),
-                    CreateScheduleFromParsed().ReadSchedule(fileInputStream)
+                    openFileInput("schedule.txt")
+
                 )
             Log.d("ew", "file finded")
             Toast.makeText(this, "загружена локальная версия расписания", Toast.LENGTH_SHORT).show()
@@ -87,7 +88,7 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
 
 
         groupNames =
-            arrayOf(prefs.getString("maingroup", ":(")!!, prefs.getString("secgroup", ":(")!!)
+            arrayOf(prefs.getString("maingroup", ":(")!!, prefs.getString("secgroup", ":(")!!, "опции")
         viewPagerAdapter.addFragment(schedulePageFragment, groupNames[0].substringBefore(" "))
         viewPagerAdapter.addFragment(secSchedulePageFragment, groupNames[1].substringBefore(" "))
         viewPagerAdapter.addFragment(optionPageFragment, "опции")

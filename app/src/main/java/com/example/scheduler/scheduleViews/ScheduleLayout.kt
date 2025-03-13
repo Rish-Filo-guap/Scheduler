@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.FileInputStream
 import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 
@@ -34,14 +35,21 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
         setBackgroundColor(Color.BLACK)
     }
 
-    fun downloadSchedule(scheduleList: ScheduleList?, group: String) {
-        if (scheduleList == null) {
-            downloadSchedule(group)
-        } else {
-            schedule = scheduleList
-            drawSchedule(schedule)
-            invalidate()
+    fun downloadSchedule(fileInputStream: FileInputStream, group: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val createdSchedule = CreateScheduleFromParsed().ReadSchedule(fileInputStream)
+            if (createdSchedule == null) {
+                downloadSchedule(group)
+            } else {
+                withContext(Dispatchers.Main) {
+                    schedule = createdSchedule
 
+                    drawSchedule(schedule)
+                    invalidate()
+
+                }
+
+            }
         }
 
 
@@ -130,7 +138,7 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
             }
 
             if (linearLayoutParas.childCount == 0) {
-                println("wekkend")
+
                 linearLayoutParas.addView(WeekendLinearLayoutCreator(context).getLinearLayout()!!)
             }
             addView(linearLayoutParas, layoutParams)

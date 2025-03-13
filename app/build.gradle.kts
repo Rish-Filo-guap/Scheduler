@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-
+    val ktor_version = "2.3.10"
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
    implementation(libs.material)
@@ -55,4 +55,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("org.jsoup:jsoup:1.17.2")
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version") // Или другой движок
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version") // Если нужно JSON
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2") // Укажите последнюю версию kotlinx-serialization-json
 }
