@@ -138,6 +138,7 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
             groupNames[tabNeedChangeGroup] = newGroup
             TabLayoutMediator (tabLayout, viewPager) { tab, position ->
                 tab.text = groupNames[position].substringBefore(" ")
+
             }.attach()
     }
 

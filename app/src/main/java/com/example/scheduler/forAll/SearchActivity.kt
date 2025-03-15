@@ -83,7 +83,7 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
                             Toast.makeText(context, "Ничего не найдено", Toast.LENGTH_SHORT).show()
                         else
                             Log.d("SearchActivity !!!!", query.toString())
-                            parent.codeChanged(query.toString())
+                        parent.codeChanged(query.toString())
                     }
                     dismiss()
                     return true
