@@ -11,6 +11,7 @@ import com.example.scheduler.R
 import com.example.scheduler.forAll.GetPostSchedule
 import com.example.scheduler.forAll.ServerRequest
 import com.example.scheduler.scheduleProcessing.GrPrCl
+import com.example.scheduler.scheduleProcessing.Urls
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.*
@@ -22,7 +23,7 @@ import kotlin.random.Random
 
 
 class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
-    private val serverUrl = "https://schedule-server-filolio.cloudpub.ru/"
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,54 +63,53 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
 
 
 
-                Log.d("ew", "start_upload")
-                //makeRequest(url,"get")
-                //val res = makeRequest(url, "post")
+
+
 
             }
         }
     }
 
     private suspend fun GenUrl(group: String): String? {
-        var gr=group.substringBefore("-")
-        gr=GrPrCl().groups.getOrDefault(gr,GrPrCl().prepods.getOrDefault(gr,"test1234")).substringAfter("=")
-        val list = ServerRequest().getRequest(serverUrl + "list_files")
-        var suffix=""
+        var gr = group.substringBefore("-")
+        gr = GrPrCl().groups.getOrDefault(gr, GrPrCl().prepods.getOrDefault(gr, "test1234"))
+            .substringAfter("=")
+        val suffixList = ServerRequest().getSuffixList()
+        var suffix = ""
 
-        if (list == null)
-            Log.d("optionPage", "list is null")
-        else{
-            val listArray = list.split("\n").toTypedArray()
-            var suffixlist=ArrayList<String>()
-            for (item in listArray){
-                if(item.substringBefore("-")==gr)
-                    suffixlist.add(item.substringAfter("-").substringBefore("\n"))
-            }
-            for (item in suffixlist)
+        if (suffixList == null)
+            Log.d("optionPage", "suffixList is null")
+        else {
+
+            for (item in suffixList)
                 Log.d("OptionPage", item)
-            suffix=genRandomString()
-            while (isContainSuffix(suffix, suffixlist)){
-                suffix=genRandomString()
-            }
+            suffix = genRandomString()
+            if (suffixList.size < 26 * 26 * 26 * 26)
+                while (isContainSuffix(suffix, suffixList)) {
+                    suffix = genRandomString()
+                }
 
         }
-        Log.d("OptionPage_url", "${serverUrl}add_schedule/${gr}-$suffix")
-        return "${serverUrl}add_schedule/${gr}-$suffix"
+        Log.d("OptionPage_url", "${Urls.ServerUrl.url}add_schedule/${gr}-$suffix")
+        return "${Urls.ServerUrl.url}add_schedule/${gr}-$suffix"
     }
+
+
     fun genRandomString(): String {
         val alphabet = "abcdefghijklmnopqrstuvwxyz"
         val stringBuilder = StringBuilder()
 
-        for (i in 0 until 3) {
+        for (i in 0 until 4) {
             val randomIndex = Random.nextInt(alphabet.length)
             stringBuilder.append(alphabet[randomIndex])
         }
 
         return stringBuilder.toString()
     }
-    fun isContainSuffix(suf:String, sufList:ArrayList<String>):Boolean{
-        for (item in sufList){
-            if (item==suf) return true
+
+    fun isContainSuffix(suf: String, sufList: ArrayList<String>): Boolean {
+        for (item in sufList) {
+            if (item == suf) return true
         }
         return false
     }

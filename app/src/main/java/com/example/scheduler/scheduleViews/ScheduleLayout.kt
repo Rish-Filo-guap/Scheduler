@@ -6,7 +6,10 @@ import android.graphics.Color
 import android.util.Log
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.example.scheduler.R
+import com.example.scheduler.forAll.ChangeTabByCode
+import com.example.scheduler.forAll.ServerRequest
 import com.example.scheduler.scheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.scheduleProcessing.DaysOfWeek
 import com.example.scheduler.scheduleProcessing.GetInfoFromEther
@@ -14,6 +17,8 @@ import com.example.scheduler.scheduleProcessing.GrPrCl
 import com.example.scheduler.scheduleProcessing.Para
 import com.example.scheduler.scheduleProcessing.ScheduleList
 import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
+import com.example.scheduler.scheduleProcessing.Urls
+import io.ktor.http.Url
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -56,9 +61,7 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
     }
 
     fun downloadSchedule(group: String?) {
-        schedule = ScheduleList()
-        setBackgroundResource(R.color.paraBackGroundColor)
-        invalidate()
+        startDownloading()
         if (group == null) {
             return
         }
@@ -72,9 +75,9 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
 
             val parsedInfo = GetInfoFromEther().download("https://guap.ru/rasp/?" + newGroup)
 
-            val createScheduleFromParsed = CreateScheduleFromParsed()
+
             try {
-                schedule = createScheduleFromParsed.CreateSchedule(parsedInfo!!)
+                schedule = CreateScheduleFromParsed().CreateSchedule(parsedInfo!!)
 
             } catch (e: Exception) {
                 Log.d("exer", e.message.toString())
@@ -87,6 +90,50 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
 
             }
         }
+    }
+
+    public fun downloadScheduleFromServ(newCode: String, parent: ChangeTabByCode) {
+        startDownloading()
+        CoroutineScope(Dispatchers.IO).launch {
+            val filename = ServerRequest().findFileBySuffix(newCode)
+            val groupName:String?
+            Log.d("ScheduleLayout", filename.toString())
+            if (filename == null) {
+                Toast.makeText(context, "Ничего не найдено", Toast.LENGTH_SHORT).show()
+            } else {
+
+                val result = ServerRequest().getRequest(Urls.ServerUrl.url+ "add_schedule/"+ filename)
+
+                if (result != null) {
+                    groupName=GrPrCl().getKeyByValue(filename.substringBefore("-"))
+
+                    val parsedInfo = ArrayList<String>()
+                    parsedInfo.addAll(result.split("\n").toTypedArray())
+                    parsedInfo.removeAt(parsedInfo.size-1)
+
+
+                    schedule = CreateScheduleFromParsed().CreateSchedule(parsedInfo)
+                    withContext(Dispatchers.Main) {
+                        drawSchedule(schedule)
+                        setBackgroundColor(Color.BLACK)
+
+                        parent.changeGroup(groupName ?: "()")
+                        invalidate()
+                    }
+
+
+                } else {
+                    Toast.makeText(context, "Не получилось скачать", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+    }
+
+    private fun startDownloading() {
+        schedule = ScheduleList()
+        setBackgroundResource(R.color.paraBackGroundColor)
+        invalidate()
     }
 
     public fun drawSchedule() {

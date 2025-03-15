@@ -1,6 +1,7 @@
 package com.example.scheduler.forAll
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +16,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDialogFragment() {
 
-    private lateinit var searchView: SearchView
+    private lateinit var groupSearchView: SearchView
+
     private lateinit var suggestionsRecyclerView: RecyclerView
     private lateinit var suggestionAdapter: SuggestionAdapter
 
     // Пример данных для поиска.  Замените его вашими данными
-    private val allSuggestions = GrPrCl().groups.keys.toList()+GrPrCl().prepods.keys.toList()
+    private val allSuggestions = GrPrCl().groups.keys.toList() + GrPrCl().prepods.keys.toList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +38,9 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
         super.onCreate(savedInstanceState)
 
 
-        searchView=view.findViewById(R.id.search_view)
+        groupSearchView = view.findViewById(R.id.group_search_view)
+
+
         suggestionsRecyclerView = view.findViewById(R.id.suggestions_recycler_view)
 
         // Настройка RecyclerView
@@ -45,6 +49,7 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
             // Обработка выбора подсказки. Например, заполнение EditText
 
             suggestionsRecyclerView.visibility = View.GONE
+
             parent.groupChanged(selectedSuggestion)
             dismiss()
         }
@@ -52,7 +57,8 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
         suggestionsRecyclerView.adapter = suggestionAdapter
         suggestionAdapter.updateData(allSuggestions)
 
-        searchView.let {
+
+        groupSearchView.let {
             it.isIconified = false // Разворачиваем SearchView
             it.requestFocusFromTouch() // Запрашиваем фокус (для эмуляторов/устройств без аппаратной клавиатуры)
 
@@ -60,7 +66,7 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
         }
 
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        groupSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
 
                 val filteredSuggestions = filterSuggestions(newText.toString())
@@ -69,16 +75,21 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if(allSuggestions.contains(query.toString())){
-                    parent.groupChanged(query.toString())
+                if (!query.isNullOrBlank()) {
+                    if (allSuggestions.contains(query.toString())) {
+                        parent.groupChanged(query.toString())
+                    } else {
+                        if (query.toString().length < 4 || (query.toString()[0].isDigit()))
+                            Toast.makeText(context, "Ничего не найдено", Toast.LENGTH_SHORT).show()
+                        else
+                            Log.d("SearchActivity !!!!", query.toString())
+                            parent.codeChanged(query.toString())
+                    }
                     dismiss()
                     return true
-
-                }else{
-                    Toast.makeText(context,"Ничего не найдено", Toast.LENGTH_SHORT).show()
-
-                    return true
                 }
+                return false
+
             }
         })
     }

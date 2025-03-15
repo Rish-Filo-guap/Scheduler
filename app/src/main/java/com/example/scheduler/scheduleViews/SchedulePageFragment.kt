@@ -13,6 +13,7 @@ import android.widget.ScrollView
 import androidx.core.view.children
 import com.example.scheduler.forAll.InvaludateSchedule
 import com.example.scheduler.R
+import com.example.scheduler.forAll.ChangeTabByCode
 import com.example.scheduler.scheduleProcessing.Para
 import com.example.scheduler.scheduleProcessing.ScheduleList
 import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
@@ -61,7 +62,7 @@ class SchedulePageFragment(var group: String?, var fileInputStream: FileInputStr
             mainLinearLayout.removeAllViews()
             mainLinearLayout.addView(scrollView)
             scrollView.addView(scheduleLayout)
-        } else{
+        } else {
             Log.d("ew", "noSchedule")
 
         }
@@ -70,13 +71,22 @@ class SchedulePageFragment(var group: String?, var fileInputStream: FileInputStr
     }
 
     fun groupChanged(newGroup: String) {
-       if (mainLinearLayout.childCount==2){
+
+        clearSchedule()
+        scheduleLayout.downloadSchedule(newGroup)
+    }
+
+    fun codeChanged(newCode: String, parent: ChangeTabByCode) {
+        clearSchedule()
+        scheduleLayout.downloadScheduleFromServ(newCode, parent)
+    }
+
+    private fun clearSchedule(){
+        if (mainLinearLayout.childCount == 2) {
             mainLinearLayout.removeAllViews()
             mainLinearLayout.addView(scrollView)
             scrollView.addView(scheduleLayout)
         }
-
-        scheduleLayout.downloadSchedule(newGroup)
     }
 
 

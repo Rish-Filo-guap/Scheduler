@@ -16,6 +16,10 @@ enum class Times(val stTime: Array<String>) {
 
 }
 
+enum class Urls(val url: String) {
+    ServerUrl("https://schedule-server-filolio.cloudpub.ru/");
+}
+
 enum class DaysOfWeek(val dayOfWeek: String) {
     Mon("Понедельник"),
     Tue("Вторник"),
@@ -28,6 +32,17 @@ enum class DaysOfWeek(val dayOfWeek: String) {
 }
 
 class GrPrCl() {
+    public fun getKeyByValue(value:String):String?{
+        val gr=groups.entries.find { it.value=="gr="+value }
+        if(gr!=null){
+            return gr.key
+        }else{
+            val pr=prepods.entries.find { it.value=="pr="+value }
+            if(pr!=null) return pr.key
+            else return null
+        }
+
+    }
     public val classes = mapOf(
         "11-01а (Б. Морская 67)" to "50",
         "11-01б (Б. Морская 67)" to "101",

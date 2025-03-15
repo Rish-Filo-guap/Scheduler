@@ -11,18 +11,20 @@ import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.scheduler.scheduleViews.SchedulePageFragment
 import com.example.scheduler.R
+import com.example.scheduler.forAll.ChangeTabByCode
 import com.example.scheduler.scheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.forAll.SearchActivity
 import com.example.scheduler.forAll.ShowBottomFragmentDialogSearch
 import com.example.scheduler.forAll.GetPostSchedule
 import com.example.scheduler.forAll.ServerRequest
+import com.example.scheduler.scheduleProcessing.GrPrCl
 import com.example.scheduler.scheduleViews.OptionPageFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.io.FileOutputStream
 import java.time.LocalDate.now
 
-class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPostSchedule {
+class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPostSchedule, ChangeTabByCode {
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
     private lateinit var secSchedulePageFragment: SchedulePageFragment
     private lateinit var optionPageFragment: OptionPageFragment
     private var currentDate: Int = 0
+    private var tabNeedChangeGroup = 0
 
     private lateinit var groupNames: Array<String>
 
@@ -97,12 +100,16 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
         }
 
 
-        optionPageFragment= OptionPageFragment(this)
+        optionPageFragment = OptionPageFragment(this)
 
 
 
         groupNames =
-            arrayOf(prefs.getString("maingroup", ":(")!!, prefs.getString("secgroup", ":(")!!, "опции")
+            arrayOf(
+                prefs.getString("maingroup", ":(")!!,
+                prefs.getString("secgroup", ":(")!!,
+                "опции"
+            )
         viewPagerAdapter.addFragment(schedulePageFragment, groupNames[0].substringBefore(" "))
         viewPagerAdapter.addFragment(secSchedulePageFragment, groupNames[1].substringBefore(" "))
         viewPagerAdapter.addFragment(optionPageFragment, "опции")
@@ -117,32 +124,63 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
         }.attach()
     }
 
-
-    override fun groupChanged(newGroup: String) {
+    override fun changeGroup(newGroup: String) {
         val editor = prefs.edit()
-        when (viewPager.currentItem) {
+        when (tabNeedChangeGroup) {
             0 -> {
-                schedulePageFragment.groupChanged(newGroup)
                 editor.putString("maingroup", newGroup).apply()
             }
 
             1 -> {
-                secSchedulePageFragment.groupChanged(newGroup)
                 editor.putString("secgroup", newGroup).apply()
+            }
+
+
+        }
+            groupNames[tabNeedChangeGroup] = newGroup
+            TabLayoutMediator (tabLayout, viewPager) { tab, position ->
+                tab.text = groupNames[position].substringBefore(" ")
+            }.attach()
+    }
+
+    override fun groupChanged(newGroup: String) {
+
+        when (viewPager.currentItem) {
+            0 -> {
+                schedulePageFragment.groupChanged(newGroup)
+                tabNeedChangeGroup = 0
+            }
+
+            1 -> {
+                secSchedulePageFragment.groupChanged(newGroup)
+                tabNeedChangeGroup = 1
 
             }
         }
 
-        groupNames[viewPager.currentItem] = newGroup
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = groupNames[position].substringBefore(" ")
-        }.attach()
+        changeGroup(newGroup)
+    }
+
+    override fun codeChanged(newCode: String) {
+        val editor = prefs.edit()
+        var newGroup = ""
+        when (viewPager.currentItem) {
+            0 -> {
+                schedulePageFragment.codeChanged(newCode, this)
+                tabNeedChangeGroup = 0
+            }
+
+            1 -> {
+                secSchedulePageFragment.codeChanged(newCode, this)
+                tabNeedChangeGroup = 1
+            }
+        }
 
 
     }
 
     override fun getGroup(pageNumb: Int): String? {
-        when(pageNumb) {
+        when (pageNumb) {
             0 -> {
                 return prefs.getString("maingroup", null)
             }
@@ -153,16 +191,19 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
         }
         return null
     }
-    override suspend fun postSchedule(url: String, pageNumb:Int) {
-        when(pageNumb){
-            0->{
-                val sched=CreateScheduleFromParsed().SaveSchedule(schedulePageFragment.scheduleLayout.schedule)
-                if(sched!=null)
+
+    override suspend fun postSchedule(url: String, pageNumb: Int) {
+        when (pageNumb) {
+            0 -> {
+                val sched =
+                    CreateScheduleFromParsed().SaveSchedule(schedulePageFragment.scheduleLayout.schedule)
+                if (sched != null)
                     ServerRequest().postRequest(url, sched)
                 else
                     Log.d("mainAct", "не удалось получить строку расписания")
             }
-            1->{}
+
+            1 -> {}
 
         }
 

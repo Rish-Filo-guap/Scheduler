@@ -1,6 +1,7 @@
 package com.example.scheduler.forAll
 
 import android.util.Log
+import com.example.scheduler.scheduleProcessing.Urls
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.get
@@ -8,6 +9,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentRange
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.CoroutineScope
@@ -62,9 +64,9 @@ class ServerRequest {
             result = getFromServ(url)
 
             if (result != null) {
-                Log.d("ServerRequest", "Результат get-запроса: $result")
+                //Log.d("ServerRequest", "Результат get-запроса: $result")
 
-                    return result
+                return result
 
 
             } else {
@@ -151,6 +153,48 @@ class ServerRequest {
         } finally {
             client.close() // Закрыть клиент после завершения
         }
+    }
+
+    suspend fun getSuffixList(): ArrayList<String>? {
+
+        val listArray = getFileList()
+        if (listArray != null) {
+
+            val suffixList = ArrayList<String>()
+            for (item in listArray) {
+                suffixList.add(getSuffixByFileName(item))
+            }
+            return suffixList
+        } else
+            return null
+    }
+
+    suspend fun getFileList(): Array<String>? {
+        val filesString = ServerRequest().getRequest(Urls.ServerUrl.url + "list_files")
+        if (filesString != null)
+            return filesString.split("\n").toTypedArray()
+        else {
+            Log.d("ServerRequest", "filesList is null")
+            return null
+
+        }
+    }
+
+    suspend fun findFileBySuffix(suffix: String): String? {
+        val listArray = getFileList()
+        if (listArray != null) {
+            for (item in listArray){
+                   // Log.d("ServerRequest !!!","("+getSuffixByFileName(item)+") ["+suffix+"]")
+                if (getSuffixByFileName(item)==suffix){
+
+                    return item
+                }
+            }
+        }
+        return null
+    }
+    fun getSuffixByFileName(filename:String):String{
+        return filename.substringAfter("-").substringBefore("\n")
     }
 
 
