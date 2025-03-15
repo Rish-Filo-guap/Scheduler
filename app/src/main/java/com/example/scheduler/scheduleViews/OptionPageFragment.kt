@@ -7,23 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import com.example.scheduler.R
 import com.example.scheduler.forAll.GetPostSchedule
 import com.example.scheduler.forAll.ServerRequest
 import com.example.scheduler.scheduleProcessing.GrPrCl
 import com.example.scheduler.scheduleProcessing.Urls
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.client.engine.cio.*
 import kotlinx.coroutines.*
 import kotlin.random.Random
 
 
 class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
 
+    private lateinit var codeTextView:TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,35 +32,37 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = runBlocking {
         super.onViewCreated(view, savedInstanceState)
         val shareBtn: Button = view.findViewById(R.id.share_schedule_btn)
+        val secShareBtn: Button = view.findViewById(R.id.share_sec_schedule_btn)
+        codeTextView=view.findViewById(R.id.code_text_view)
         shareBtn.setOnClickListener {
+            shareScheduleFromPage(0)
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val group = parent.getGroup(0)
-                var url: String?
-                if (group != null) {
-                    url = GenUrl(group)
-                    if (url != null) {
-                        parent.postSchedule(url, 0)
-                        Log.d("optionPage", "запрос отправлен")
-
-                    } else {
-                        Log.d("optionPage", "не получилось сделать ссылку")
-                    }
-                } else {
-                    Log.d("optionPage", "не указана группа")
-
-                }
-
-
-
-
-
-
-            }
+        }
+        secShareBtn.setOnClickListener{
+            shareScheduleFromPage(1)
         }
     }
+    private fun shareScheduleFromPage(pageNumb:Int){
+        CoroutineScope(Dispatchers.IO).launch {
+            val group = parent.getGroup(pageNumb)
+            var url: String?
+            if (group != null) {
+                url = genUrl(group)
+                if (url != null) {
+                    parent.postSchedule(url, pageNumb)
+                    Log.d("optionPage", "запрос отправлен")
 
-    private suspend fun GenUrl(group: String): String {
+                } else {
+                    Log.d("optionPage", "не получилось сделать ссылку")
+                }
+            } else {
+                Log.d("optionPage", "не указана группа")
+
+            }
+
+        }
+    }
+    private suspend fun genUrl(group: String): String {
         var gr = group.substringBefore("-")
         gr = GrPrCl().groups.getOrDefault(gr, GrPrCl().prepods.getOrDefault(gr, "test1234"))
             .substringAfter("=")
@@ -75,14 +73,17 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
             Log.d("optionPage", "suffixList is null")
         else {
 
-            for (item in suffixList)
-                Log.d("OptionPage", item)
+
             suffix = genRandomString()
             if (suffixList.size < 26 * 26 * 26 * 26)
                 while (isContainSuffix(suffix, suffixList)) {
                     suffix = genRandomString()
                 }
+            withContext(Dispatchers.Main) {
+                codeTextView.setText(suffix)
 
+                Log.d("optionPage", "код сгенерирован: $suffix")
+            }
         }
         Log.d("OptionPage_url", "${Urls.ServerUrl.url}add_schedule/${gr}-$suffix")
         return "${Urls.ServerUrl.url}add_schedule/${gr}-$suffix"
@@ -101,7 +102,7 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
         return stringBuilder.toString()
     }
 
-    fun isContainSuffix(suf: String, sufList: ArrayList<String>): Boolean {
+    private fun isContainSuffix(suf: String, sufList: ArrayList<String>): Boolean {
         for (item in sufList) {
             if (item == suf) return true
         }

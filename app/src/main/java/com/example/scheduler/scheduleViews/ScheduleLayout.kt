@@ -154,7 +154,7 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
 
         // Добавляем дни недели в список (например, на 30 дней вперед)
 
-        for (i in 0 until 30) {
+        for (i in 0 until 21) {
             // Создаем TextView для отображения дня недели и даты
             val dateTextView = TextView(context)
 

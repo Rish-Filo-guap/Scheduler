@@ -7,21 +7,42 @@
 
 
     <LinearLayout
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/hello_blank_fragment" />
+
 
         <Button
             android:id="@+id/share_schedule_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="поделиться расписанием из первой вкладки" />
+        <Button
+            android:id="@+id/share_sec_schedule_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="поделиться расписанием из второй вкладки" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Расписание можно будет найти по коду:"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/code_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shadowColor="#C55555"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="5"
+            android:text="qwer"
+            android:textAlignment="center"
+            android:textSize="48sp" />
     </LinearLayout>
 
 </FrameLayout>

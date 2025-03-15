@@ -2,7 +2,10 @@ package com.example.scheduler.ui.main
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.Toast
@@ -139,7 +142,9 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
             TabLayoutMediator (tabLayout, viewPager) { tab, position ->
                 tab.text = groupNames[position].substringBefore(" ")
 
+
             }.attach()
+
     }
 
     override fun groupChanged(newGroup: String) {
@@ -161,6 +166,7 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
     }
 
     override fun codeChanged(newCode: String) {
+        saveSchedule()
         val editor = prefs.edit()
         var newGroup = ""
         when (viewPager.currentItem) {
@@ -202,7 +208,14 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
                     Log.d("mainAct", "не удалось получить строку расписания")
             }
 
-            1 -> {}
+            1 -> {
+                val sched =
+                    CreateScheduleFromParsed().SaveSchedule(secSchedulePageFragment.scheduleLayout.schedule)
+                if (sched != null)
+                    ServerRequest().postRequest(url, sched)
+                else
+                    Log.d("mainAct", "не удалось получить строку расписания")
+            }
 
         }
 
@@ -210,6 +223,10 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
 
     override fun onPause() {
         super.onPause()
+       saveSchedule()
+
+    }
+    private fun saveSchedule(){
         val fileOutputStream: FileOutputStream =
             openFileOutput("schedule.txt", Context.MODE_PRIVATE)
         CreateScheduleFromParsed().SaveSchedule(
@@ -222,7 +239,6 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
             secfileOutputStream,
             secSchedulePageFragment.scheduleLayout.schedule
         )
-
     }
 
     override fun onRestart() {
