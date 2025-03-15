@@ -14,14 +14,15 @@ import com.example.scheduler.R
 import com.example.scheduler.scheduleProcessing.CreateScheduleFromParsed
 import com.example.scheduler.forAll.SearchActivity
 import com.example.scheduler.forAll.ShowBottomFragmentDialogSearch
+import com.example.scheduler.forAll.GetPostSchedule
+import com.example.scheduler.forAll.ServerRequest
 import com.example.scheduler.scheduleViews.OptionPageFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.time.LocalDate.now
 
-class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
+class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPostSchedule {
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
@@ -62,28 +63,41 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
             searchDialogFragment.show(supportFragmentManager, "searchActivity")
         }
         try {
-
-
             schedulePageFragment =
                 SchedulePageFragment(
                     prefs.getString("maingroup", null),
                     openFileInput("schedule.txt")
 
                 )
-            Log.d("ew", "file finded")
+            Log.d("ew", "fir file finded")
             Toast.makeText(this, "загружена локальная версия расписания", Toast.LENGTH_SHORT).show()
-            //mainSchedulePageFragment.showMessageTypeSchedule(true)
+
         } catch (e: Exception) {
             schedulePageFragment =
                 SchedulePageFragment(prefs.getString("maingroup", null), null)
-            Log.d("ew", "file not finded")
-            //Toast.makeText(this, "загружено версия расписания с сайта", Toast.LENGTH_LONG).show()
-            //mainSchedulePageFragment.showMessageTypeSchedule(false)
+            Log.d("ew", "fir file not finded")
+
         }
 
-        // Add the fragments
-        secSchedulePageFragment = SchedulePageFragment(prefs.getString("secgroup", null), null)
-        optionPageFragment= OptionPageFragment()
+        try {
+            secSchedulePageFragment =
+                SchedulePageFragment(
+                    prefs.getString("secgroup", null),
+                    openFileInput("secschedule.txt")
+
+                )
+            Log.d("ew", "sec file finded")
+            Toast.makeText(this, "загружена локальная версия расписания", Toast.LENGTH_SHORT).show()
+
+        } catch (e: Exception) {
+            secSchedulePageFragment =
+                SchedulePageFragment(prefs.getString("secgroup", null), null)
+            Log.d("ew", "sec file not finded")
+
+        }
+
+
+        optionPageFragment= OptionPageFragment(this)
 
 
 
@@ -127,6 +141,33 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
 
     }
 
+    override fun getGroup(pageNumb: Int): String? {
+        when(pageNumb) {
+            0 -> {
+                return prefs.getString("maingroup", null)
+            }
+
+            1 -> {
+                return prefs.getString("secgroup", null)
+            }
+        }
+        return null
+    }
+    override suspend fun postSchedule(url: String, pageNumb:Int) {
+        when(pageNumb){
+            0->{
+                val sched=CreateScheduleFromParsed().SaveSchedule(schedulePageFragment.scheduleLayout.schedule)
+                if(sched!=null)
+                    ServerRequest().postRequest(url, sched)
+                else
+                    Log.d("mainAct", "не удалось получить строку расписания")
+            }
+            1->{}
+
+        }
+
+    }
+
     override fun onPause() {
         super.onPause()
         val fileOutputStream: FileOutputStream =
@@ -134,6 +175,12 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch {
         CreateScheduleFromParsed().SaveSchedule(
             fileOutputStream,
             schedulePageFragment.scheduleLayout.schedule
+        )
+        val secfileOutputStream: FileOutputStream =
+            openFileOutput("secschedule.txt", Context.MODE_PRIVATE)
+        CreateScheduleFromParsed().SaveSchedule(
+            secfileOutputStream,
+            secSchedulePageFragment.scheduleLayout.schedule
         )
 
     }

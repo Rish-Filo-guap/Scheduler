@@ -4,6 +4,12 @@ import com.example.scheduler.scheduleProcessing.Para
 
 public interface ShowBottomFragmentDialogSearch{
     public fun groupChanged(newGroup:String)
+
+}
+public interface GetPostSchedule{
+    public suspend fun  postSchedule(url:String, pageNumb:Int)
+    public fun getGroup(pageNumb: Int):String?
+
 }
 public interface ShowBottomFragmentDialogParaInfo{
     public fun showParaInfo(para:Para)

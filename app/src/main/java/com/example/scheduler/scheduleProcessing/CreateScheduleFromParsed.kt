@@ -89,6 +89,81 @@ class CreateScheduleFromParsed {
 
     }
 
+    fun SaveSchedule( schedule: ScheduleList):String? {
+        try {
+
+            var scheduleString = ""
+
+
+            if (schedule.days[7].paras.size >= 1) {
+                scheduleString+="h Вне\n"
+
+                for (para in schedule.days[7].paras) {
+
+                    scheduleString+="d ${para.typeOfSubject} ${para.weekType}${para.dayOfWeek}${para.numb}\n"
+
+
+                    scheduleString+="d " + para.sub+"\n"
+
+                    if (para.classRoom != "null")
+                        scheduleString+="d ауд. " + para.classRoom
+                    if (para.prepod != "null")
+                        scheduleString+=" преп: " + para.prepod
+                    if (para.groups != "null")
+                        scheduleString+=" гр: " + para.groups
+                    scheduleString+="\n"
+                }
+            }
+            for (i in 0..5) {
+
+
+                scheduleString+="h " + DaysOfWeek.values().get(i).dayOfWeek+"\n"
+
+                var j = 0
+                for (para in schedule.days[i].paras) {
+
+                    if ((j > 0 && schedule.days[i].paras[j - 1].numb != para.numb) || j == 0) {
+
+                        scheduleString+="d " + para.numb+"\n"
+
+                    }
+                    if (para.weekType == 1) {
+                        scheduleString+="d " + '▼'+"\n"
+
+                    }
+                    if (para.weekType == 2) {
+                        scheduleString+="d " + '▲'+"\n"
+
+                    }
+                    scheduleString+="d " + para.typeOfSubject+"\n"
+
+
+                    scheduleString+="d " + para.sub+"\n"
+
+
+                    if (para.classRoom != "null")
+                        scheduleString+="d ауд. " + para.classRoom
+                    if (para.prepod != "null")
+                        scheduleString+=" преп: " + para.prepod
+                    if (para.groups != "null")
+                        scheduleString+=" гр: " + para.groups
+                    scheduleString+="\n"
+                    j++
+
+                }
+
+            }
+            scheduleString+="d Показать расписание Очистить\n"
+            Log.d("ew", "Массив успешно сохранен в строку")
+            return scheduleString
+        } catch (e: IOException) {
+            Log.d("ew", "Ошибка при сохранении массива в строку: ${e.message}")
+            e.printStackTrace()
+            return null
+        }
+
+    }
+
     fun ReadSchedule(fileInputStream: FileInputStream): ScheduleList? {
         try {
             Log.d("ew", "file opened to read")
