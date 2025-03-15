@@ -92,7 +92,7 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
         }
     }
 
-    public fun downloadScheduleFromServ(newCode: String, parent: ChangeTabByCode) {
+    fun downloadScheduleFromServ(newCode: String, parent: ChangeTabByCode) {
         startDownloading()
         CoroutineScope(Dispatchers.IO).launch {
             val filename = ServerRequest().findFileBySuffix(newCode)
@@ -136,7 +136,7 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
         invalidate()
     }
 
-    public fun drawSchedule() {
+    fun drawSchedule() {
         drawSchedule(schedule)
     }
 

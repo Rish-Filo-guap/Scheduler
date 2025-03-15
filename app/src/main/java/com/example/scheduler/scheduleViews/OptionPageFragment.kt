@@ -25,12 +25,6 @@ import kotlin.random.Random
 class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
 
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,7 +64,7 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
         }
     }
 
-    private suspend fun GenUrl(group: String): String? {
+    private suspend fun GenUrl(group: String): String {
         var gr = group.substringBefore("-")
         gr = GrPrCl().groups.getOrDefault(gr, GrPrCl().prepods.getOrDefault(gr, "test1234"))
             .substringAfter("=")

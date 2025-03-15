@@ -43,11 +43,9 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
         super.onCreate(savedInstanceState)
         currentDate = now().dayOfYear
 
-        window.setStatusBarColor(
-            ContextCompat.getColor(
-                this,
-                R.color.black
-            )
+        window.statusBarColor = ContextCompat.getColor(
+            this,
+            R.color.black
         ) //настройка цвета там, где у телефона часы, ну короч сверху
 
         setContentView(R.layout.activity_main)

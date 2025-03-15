@@ -198,7 +198,7 @@ class CreateScheduleFromParsed {
 
         var scheduleList = ScheduleList()
         var hCounter = 0
-        var i = 0;
+        var i = 0
 
         while (hCounter < 2) {
 

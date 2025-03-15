@@ -184,25 +184,25 @@ class Day(var dayOfWeek: Int, var schedule: EditSchedule) {
 
 class Para(
 
-    public val sub: String,
-    public val prepod: String,
-    public var classRoom: String,
-    public val typeOfSubject: String,
-    public val groups: String,
-    public var weekType: Int = 0,
-    public var numb: Int
+    val sub: String,
+    val prepod: String,
+    var classRoom: String,
+    val typeOfSubject: String,
+    val groups: String,
+    var weekType: Int = 0,
+    var numb: Int
 ) {
 
-    public var dayOfWeek: Int = 0
-    public var isOutside = false
+    var dayOfWeek: Int = 0
+    var isOutside = false
 
-    public lateinit var schedule: EditSchedule
+    lateinit var schedule: EditSchedule
 
-    public fun getStartTime(): String {
+    fun getStartTime(): String {
         return Times.StartTimes.stTime[numb - 1]
     }
 
-    public fun getEndTime(): String {
+    fun getEndTime(): String {
         return Times.EndTimes.stTime[numb - 1]
     }
 

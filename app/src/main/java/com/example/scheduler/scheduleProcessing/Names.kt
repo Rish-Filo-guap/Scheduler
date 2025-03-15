@@ -31,8 +31,8 @@ enum class DaysOfWeek(val dayOfWeek: String) {
     Outside("Вне сетки расписания")
 }
 
-class GrPrCl() {
-    public fun getKeyByValue(value:String):String?{
+class GrPrCl {
+    fun getKeyByValue(value:String):String?{
         val gr=groups.entries.find { it.value=="gr="+value }
         if(gr!=null){
             return gr.key
@@ -43,7 +43,7 @@ class GrPrCl() {
         }
 
     }
-    public val classes = mapOf(
+    val classes = mapOf(
         "11-01а (Б. Морская 67)" to "50",
         "11-01б (Б. Морская 67)" to "101",
         "11-02 (Б. Морская 67)" to "77",
@@ -296,7 +296,7 @@ class GrPrCl() {
 
         )
 
-    public val prepods = mapOf(
+    val prepods = mapOf(
         "Авраменко А.Я., ассистент" to "pr=3654",
         "Агаев Г.А.О., профессор, д-р юрид. наук, профессор" to "pr=38597",
         "Агапудов Д.В., старший преподаватель" to "pr=39790",
@@ -1066,7 +1066,7 @@ class GrPrCl() {
         "Яушкина М.Д., ассистент" to "pr=3626",
         "Яфаров А.З., доцент, канд. техн. наук" to "pr=2847",
     )
-    public val groups = mapOf(
+    val groups = mapOf(
         "1111" to "gr=5946",
         "1112" to "gr=6239",
         "1121" to "gr=5949",
