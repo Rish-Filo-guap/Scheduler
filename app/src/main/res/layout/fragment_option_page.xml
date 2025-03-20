@@ -40,7 +40,7 @@
             android:shadowDx="10"
             android:shadowDy="10"
             android:shadowRadius="5"
-            android:text="qwer"
+            android:text="Код:"
             android:textAlignment="center"
             android:textSize="48sp" />
     </LinearLayout>

@@ -27,7 +27,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import java.io.FileOutputStream
 import java.time.LocalDate.now
 
-class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPostSchedule, ChangeTabByCode {
+class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPostSchedule,
+    ChangeTabByCode {
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
@@ -138,12 +139,12 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
 
 
         }
-            groupNames[tabNeedChangeGroup] = newGroup
-            TabLayoutMediator (tabLayout, viewPager) { tab, position ->
-                tab.text = groupNames[position].substringBefore(" ")
+        groupNames[tabNeedChangeGroup] = newGroup
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = groupNames[position].substringBefore(" ")
 
 
-            }.attach()
+        }.attach()
 
     }
 
@@ -166,7 +167,7 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
     }
 
     override fun codeChanged(newCode: String) {
-        saveSchedule()
+        //saveSchedule()
         val editor = prefs.edit()
         var newGroup = ""
         when (viewPager.currentItem) {
@@ -223,22 +224,33 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
 
     override fun onPause() {
         super.onPause()
-       saveSchedule()
+        saveSchedule()
 
     }
-    private fun saveSchedule(){
-        val fileOutputStream: FileOutputStream =
-            openFileOutput("schedule.txt", Context.MODE_PRIVATE)
-        CreateScheduleFromParsed().SaveSchedule(
-            fileOutputStream,
-            schedulePageFragment.scheduleLayout.schedule
-        )
-        val secfileOutputStream: FileOutputStream =
-            openFileOutput("secschedule.txt", Context.MODE_PRIVATE)
-        CreateScheduleFromParsed().SaveSchedule(
-            secfileOutputStream,
-            secSchedulePageFragment.scheduleLayout.schedule
-        )
+
+    private fun saveSchedule() {
+        try {
+
+            val fileOutputStream: FileOutputStream =
+                openFileOutput("schedule.txt", Context.MODE_PRIVATE)
+            CreateScheduleFromParsed().SaveSchedule(
+                fileOutputStream,
+                schedulePageFragment.scheduleLayout.schedule
+            )
+        } catch (e: Exception) {
+            Log.d("mainActivity", "не получилось сохранить в память первое расписание")
+        }
+        try {
+
+            val secfileOutputStream: FileOutputStream =
+                openFileOutput("secschedule.txt", Context.MODE_PRIVATE)
+            CreateScheduleFromParsed().SaveSchedule(
+                secfileOutputStream,
+                secSchedulePageFragment.scheduleLayout.schedule
+            )
+        } catch (e: Exception) {
+            Log.d("mainActivity", "не получилось сохранить в память второе расписание")
+        }
     }
 
     override fun onRestart() {

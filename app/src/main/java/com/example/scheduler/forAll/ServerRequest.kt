@@ -20,38 +20,11 @@ import kotlinx.coroutines.withContext
 class ServerRequest {
     private lateinit var client: HttpClient
 
-    private fun makeRequest(url: String, type: String): String? {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                var result: String? = null
 
-                when (type) {
-                    "get" -> result = getFromServ(url)
-                    //"post" -> result = postSchedToServ(url)
-                }
-
-
-                if (result != null) {
-                    Log.d("ServerRequest", "Результат $type-запроса: $result")
-
-                } else {
-                    Log.e("ServerRequest", "Ошибка при выполнении $type-запроса: результат null")
-
-                }
-                withContext(Dispatchers.Main) {
-                    return@withContext result
-                }
-            } catch (e: Exception) {
-                Log.e("ServerRequest", "Ошибка при выполнении $type-запроса: ${e.message}", e)
-
-            }
-        }
-        return null
-    }
 
     suspend fun getRequest(url: String): String? {
 
-        var result: String? = null
+        val result: String?
         try {
             client = HttpClient(CIO) {
                 install(io.ktor.client.plugins.HttpTimeout) {
@@ -71,15 +44,15 @@ class ServerRequest {
 
             } else {
                 Log.e("ServerRequest", "Ошибка при выполнении get-запроса: результат null")
+                return null
 
             }
 
         } catch (e: Exception) {
             Log.e("ServerRequest", "Ошибка при выполнении get-запроса: ${e.message}", e)
-
+            return null
         }
 
-        return null
     }
 
     suspend fun getFromServ(url: String): String? {
@@ -90,15 +63,20 @@ class ServerRequest {
             val response: HttpResponse = client.get(url)
 
             if (response.status.value in 200..299) { // Проверка на успешный статус код
+                Log.d("ServerRequest", "Ответ: ${response.status.value} ${response.status.description}")
                 response.bodyAsText() // Получение тела ответа в виде строки
             } else {
-                "Ошибка: ${response.status.value} ${response.status.description}" // Вернуть сообщение об ошибке
+                Log.d("ServerRequest", "Ошибка12: ${response.status.value} ${response.status.description}")
+                 null
             }
 
         } catch (e: Exception) {
+
             "Ошибка: ${e.message}" // Вернуть сообщение об ошибке
+            return null
         } finally {
             client.close() // Закрыть клиент после завершения
+
         }
     }
 

@@ -80,7 +80,7 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
                 schedule = CreateScheduleFromParsed().CreateSchedule(parsedInfo!!)
 
             } catch (e: Exception) {
-                Log.d("exer", e.message.toString())
+                Log.d("ScheduleLayout", e.message.toString())
             }
             withContext(Dispatchers.Main) {
                 drawSchedule(schedule)
@@ -96,20 +96,24 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
         startDownloading()
         CoroutineScope(Dispatchers.IO).launch {
             val filename = ServerRequest().findFileBySuffix(newCode)
-            val groupName:String?
-            Log.d("ScheduleLayout", filename.toString())
+            val groupName: String?
             if (filename == null) {
-                Toast.makeText(context, "Ничего не найдено", Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) {
+                    setBackgroundColor(Color.BLACK)
+                    Toast.makeText(context, "Ничего не найдено или нет соединения", Toast.LENGTH_SHORT).show()
+                }
             } else {
+                Log.d("ScheduleLayout", filename.toString())
 
-                val result = ServerRequest().getRequest(Urls.ServerUrl.url+ "add_schedule/"+ filename)
+                val result =
+                    ServerRequest().getRequest(Urls.ServerUrl.url + "add_schedule/" + filename)
 
                 if (result != null) {
-                    groupName=GrPrCl().getKeyByValue(filename.substringBefore("-"))
+                    groupName = GrPrCl().getKeyByValue(filename.substringBefore("-"))
 
                     val parsedInfo = ArrayList<String>()
                     parsedInfo.addAll(result.split("\n").toTypedArray())
-                    parsedInfo.removeAt(parsedInfo.size-1)
+                    parsedInfo.removeAt(parsedInfo.size - 1)
 
 
                     schedule = CreateScheduleFromParsed().CreateSchedule(parsedInfo)
@@ -123,7 +127,11 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
 
 
                 } else {
-                    Toast.makeText(context, "Не получилось скачать", Toast.LENGTH_SHORT).show()
+                    withContext(Dispatchers.Main) {
+                        setBackgroundColor(Color.BLACK)
+                        Toast.makeText(context, "Не получилось скачать", Toast.LENGTH_SHORT).show()
+                    }
+
                 }
             }
         }

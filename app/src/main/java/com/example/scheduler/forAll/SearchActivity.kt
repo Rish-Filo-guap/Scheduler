@@ -81,9 +81,11 @@ class SearchActivity(var parent: ShowBottomFragmentDialogSearch) : BottomSheetDi
                     } else {
                         if (query.toString().length < 4 || (query.toString()[0].isDigit()))
                             Toast.makeText(context, "Ничего не найдено", Toast.LENGTH_SHORT).show()
-                        else
+                        else {
+
                             Log.d("SearchActivity !!!!", query.toString())
-                        parent.codeChanged(query.toString())
+                            parent.codeChanged(query.toString())
+                        }
                     }
                     dismiss()
                     return true

@@ -1,5 +1,8 @@
 package com.example.scheduler.scheduleViews
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import com.example.scheduler.R
 import com.example.scheduler.forAll.GetPostSchedule
 import com.example.scheduler.forAll.ServerRequest
@@ -19,7 +24,7 @@ import kotlin.random.Random
 
 class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
 
-    private lateinit var codeTextView:TextView
+    private lateinit var codeTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,19 +38,43 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val shareBtn: Button = view.findViewById(R.id.share_schedule_btn)
         val secShareBtn: Button = view.findViewById(R.id.share_sec_schedule_btn)
-        codeTextView=view.findViewById(R.id.code_text_view)
+        codeTextView = view.findViewById(R.id.code_text_view)
         shareBtn.setOnClickListener {
             shareScheduleFromPage(0)
 
         }
-        secShareBtn.setOnClickListener{
+        secShareBtn.setOnClickListener {
             shareScheduleFromPage(1)
         }
+        codeTextView.setOnClickListener {
+            val textToCopy = codeTextView.text.toString().substringAfter(": ")
+            if(textToCopy.isNotBlank()) {
+
+                // Получаем ClipboardManager (используем context!!)
+                val clipboardManager =
+                    requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+                // Создаем ClipData с текстом для копирования
+                val clipData = ClipData.newPlainText("Код", textToCopy)
+
+                // Устанавливаем ClipData в буфер обмена
+                clipboardManager.setPrimaryClip(clipData)
+
+
+                // Опционально: показываем Toast-сообщение об успешном копировании
+                Toast.makeText(
+                    requireContext(),
+                    "Код скопирован в буфер обмена",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
-    private fun shareScheduleFromPage(pageNumb:Int){
+
+    private fun shareScheduleFromPage(pageNumb: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             val group = parent.getGroup(pageNumb)
-            var url: String?
+            val url: String?
             if (group != null) {
                 url = genUrl(group)
                 if (url != null) {
@@ -53,25 +82,36 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
                     Log.d("optionPage", "запрос отправлен")
 
                 } else {
+                    withContext(Dispatchers.Main) {
+
+                        Toast.makeText(context, "Нет соединения", Toast.LENGTH_SHORT).show()
+                    }
+
                     Log.d("optionPage", "не получилось сделать ссылку")
                 }
             } else {
+                withContext(Dispatchers.Main) {
+
+                    Toast.makeText(context, "не указана группа", Toast.LENGTH_SHORT).show()
+                }
                 Log.d("optionPage", "не указана группа")
 
             }
 
         }
     }
-    private suspend fun genUrl(group: String): String {
+
+    private suspend fun genUrl(group: String): String? {
         var gr = group.substringBefore("-")
         gr = GrPrCl().groups.getOrDefault(gr, GrPrCl().prepods.getOrDefault(gr, "test1234"))
             .substringAfter("=")
         val suffixList = ServerRequest().getSuffixList()
         var suffix = ""
 
-        if (suffixList == null)
+        if (suffixList == null) {
             Log.d("optionPage", "suffixList is null")
-        else {
+            return null
+        } else {
 
 
             suffix = genRandomString()
@@ -80,7 +120,7 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
                     suffix = genRandomString()
                 }
             withContext(Dispatchers.Main) {
-                codeTextView.setText(suffix)
+                codeTextView.setText("Код: "+suffix)
 
                 Log.d("optionPage", "код сгенерирован: $suffix")
             }
