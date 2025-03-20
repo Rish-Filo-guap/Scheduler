@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
@@ -25,6 +26,7 @@ import kotlin.random.Random
 class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
 
     private lateinit var codeTextView: TextView
+    private lateinit var copyBtn: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +40,7 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val shareBtn: Button = view.findViewById(R.id.share_schedule_btn)
         val secShareBtn: Button = view.findViewById(R.id.share_sec_schedule_btn)
+        copyBtn = view.findViewById(R.id.copy_code_btn)
         codeTextView = view.findViewById(R.id.code_text_view)
         shareBtn.setOnClickListener {
             shareScheduleFromPage(0)
@@ -46,28 +49,42 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
         secShareBtn.setOnClickListener {
             shareScheduleFromPage(1)
         }
+        copyBtn.setOnClickListener {
+            copyCode()
+        }
         codeTextView.setOnClickListener {
-            val textToCopy = codeTextView.text.toString().substringAfter(": ")
-            if(textToCopy.isNotBlank()) {
+            copyCode()
+        }
+    }
 
-                // Получаем ClipboardManager (используем context!!)
-                val clipboardManager =
-                    requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    private fun copyCode() {
+        val textToCopy = codeTextView.text.toString().substringAfter(": ")
+        Log.d("OptionPage", "[" + textToCopy + "]")
+        if (textToCopy.isNotBlank()) {
 
-                // Создаем ClipData с текстом для копирования
-                val clipData = ClipData.newPlainText("Код", textToCopy)
+            // Получаем ClipboardManager (используем context!!)
+            val clipboardManager =
+                requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-                // Устанавливаем ClipData в буфер обмена
-                clipboardManager.setPrimaryClip(clipData)
+            // Создаем ClipData с текстом для копирования
+            val clipData = ClipData.newPlainText("Код", textToCopy)
+
+            // Устанавливаем ClipData в буфер обмена
+            clipboardManager.setPrimaryClip(clipData)
 
 
-                // Опционально: показываем Toast-сообщение об успешном копировании
-                Toast.makeText(
-                    requireContext(),
-                    "Код скопирован в буфер обмена",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            // Опционально: показываем Toast-сообщение об успешном копировании
+            Toast.makeText(
+                requireContext(),
+                "Код скопирован в буфер обмена",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "нет кода",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -120,7 +137,7 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
                     suffix = genRandomString()
                 }
             withContext(Dispatchers.Main) {
-                codeTextView.setText("Код: "+suffix)
+                codeTextView.setText("Код: " + suffix)
 
                 Log.d("optionPage", "код сгенерирован: $suffix")
             }

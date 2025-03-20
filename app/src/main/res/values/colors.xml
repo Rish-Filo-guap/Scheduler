@@ -7,6 +7,7 @@
     <color name="classroom">#B3B3B3</color>
     <color name="paraBackGroundColor">#101010</color>
     <color name="lessonTextColor">#828282</color>
+    <color name="copyBtnTint">#828282</color>
 
     <color name="labTextColor">#4297d4</color>
     <color name="lekTextColor">#7a42d4</color>
