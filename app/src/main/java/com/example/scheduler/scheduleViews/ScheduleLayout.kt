@@ -112,6 +112,8 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
                 ((currentDate.minusDays(2)).format(DateTimeFormatter.ofPattern("F"))).toInt() - 1
             val dayOfWeek = DaysOfWeek.values()[dayOfWeekNumb].dayOfWeek
 
+            Log.d("123", "qwe")
+
             dateTextView.text = "$dayOfWeek $formattedDate"
             dateTextView.textSize = 20f
             dateTextView.setPadding(100, 40, 16, 16)
