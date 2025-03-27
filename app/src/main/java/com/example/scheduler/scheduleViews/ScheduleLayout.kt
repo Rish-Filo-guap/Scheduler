@@ -168,11 +168,10 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
 
             val formattedDate = currentDate.format(dateFormatter)
 
-
-            val weekNumb = ((currentDate.minusDays(0)).format(DateTimeFormatter.ofPattern("w"))
+            val weekNumb = ((currentDate).format(DateTimeFormatter.ofPattern("w"))
                 .toInt() + 1) % 2
             val dayOfWeekNumb =
-                ((currentDate.minusDays(2)).format(DateTimeFormatter.ofPattern("F"))).toInt() - 1
+                ((currentDate.minusDays(1)).format(DateTimeFormatter.ofPattern("e"))).toInt() - 1
             val dayOfWeek = DaysOfWeek.values()[dayOfWeekNumb].dayOfWeek
 
             dateTextView.text = "$dayOfWeek $formattedDate"
