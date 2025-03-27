@@ -26,7 +26,11 @@ import kotlin.random.Random
 class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
 
     private lateinit var codeTextView: TextView
+    private lateinit var gitTextView: TextView
+    private lateinit var versionTextView: TextView
     private lateinit var copyBtn: ImageButton
+    private lateinit var shareBtn: Button
+    private lateinit var secShareBtn: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,15 +42,20 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = runBlocking {
         super.onViewCreated(view, savedInstanceState)
-        val shareBtn: Button = view.findViewById(R.id.share_schedule_btn)
-        val secShareBtn: Button = view.findViewById(R.id.share_sec_schedule_btn)
+        shareBtn = view.findViewById(R.id.share_schedule_btn)
+        secShareBtn = view.findViewById(R.id.share_sec_schedule_btn)
         copyBtn = view.findViewById(R.id.copy_code_btn)
         codeTextView = view.findViewById(R.id.code_text_view)
+        gitTextView = view.findViewById(R.id.git_pages_text_view)
+        versionTextView = view.findViewById(R.id.version_info_text_view)
+
         shareBtn.setOnClickListener {
+            enableBtn(false)
             shareScheduleFromPage(0)
 
         }
         secShareBtn.setOnClickListener {
+            enableBtn(false)
             shareScheduleFromPage(1)
         }
         copyBtn.setOnClickListener {
@@ -55,6 +64,24 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
         codeTextView.setOnClickListener {
             copyCode()
         }
+
+        val longText = "Очень длинный текст, который не помещается на экране.  " +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
+                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " +
+                "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
+                "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. " +
+                "Повторите много раз..."  +
+                "Очень длинный текст, который не помещается на экране.  " +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
+                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " +
+                "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
+                "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
+        gitTextView.text = longText
+        versionTextView.text=getString(R.string.text_version)+" "+getString(R.string.version)
+
     }
 
     private fun copyCode() {
@@ -115,7 +142,18 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
 
             }
 
+            withContext(Dispatchers.Main) {
+                enableBtn(true)
+            }
         }
+
+    }
+
+    private fun enableBtn(isEnable: Boolean) {
+
+        shareBtn.isEnabled = isEnable
+        secShareBtn.isEnabled = isEnable
+
     }
 
     private suspend fun genUrl(group: String): String? {

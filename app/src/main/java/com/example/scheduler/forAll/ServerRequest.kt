@@ -28,9 +28,9 @@ class ServerRequest {
         try {
             client = HttpClient(CIO) {
                 install(io.ktor.client.plugins.HttpTimeout) {
-                    requestTimeoutMillis = 15000 // 15 секунд
-                    connectTimeoutMillis = 15000 // 15 секунд
-                    socketTimeoutMillis = 15000 // 15 секунд
+                    requestTimeoutMillis = 10000 // 15 секунд
+                    connectTimeoutMillis = 10000 // 15 секунд
+                    socketTimeoutMillis = 10000 // 15 секунд
                 }
             }
 
@@ -86,9 +86,9 @@ class ServerRequest {
         try {
             client = HttpClient(CIO) {
                 install(io.ktor.client.plugins.HttpTimeout) {
-                    requestTimeoutMillis = 15000 // 15 секунд
-                    connectTimeoutMillis = 15000 // 15 секунд
-                    socketTimeoutMillis = 15000 // 15 секунд
+                    requestTimeoutMillis = 10000 // 15 секунд
+                    connectTimeoutMillis = 10000 // 15 секунд
+                    socketTimeoutMillis = 10000 // 15 секунд
                 }
             }
 

@@ -13,19 +13,29 @@
         android:orientation="vertical"
         android:padding="10dp"
         tools:ignore="UselessParent">
-
-
-        <Button
-            android:id="@+id/share_schedule_btn"
+        <TextView
+            android:paddingTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="поделиться расписанием из первой вкладки" />
+            android:id="@+id/version_info_text_view"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/versionTextColor"
+            />
 
-        <Button
-            android:id="@+id/share_sec_schedule_btn"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="поделиться расписанием из второй вкладки" />
+            android:layout_height="100dp"
+            android:background="#B83838">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/git_pages_text_view"/>
+
+        </ScrollView>
+
+
+
 
         <TextView
             android:layout_width="match_parent"
@@ -48,14 +58,27 @@
                 app:tint="@color/copyBtnTint" />
 
             <TextView
-               android:paddingLeft="10dp"
                 android:id="@+id/code_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
                 android:text="Код: "
                 android:textSize="35sp" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/share_schedule_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="поделиться расписанием из первой вкладки" />
+
+        <Button
+            android:id="@+id/share_sec_schedule_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="поделиться расписанием из второй вкладки" />
+
     </LinearLayout>
 
 </FrameLayout>
