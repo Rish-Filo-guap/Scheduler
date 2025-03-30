@@ -22,6 +22,8 @@ import com.example.scheduler.forAll.GetPostSchedule
 import com.example.scheduler.forAll.ServerRequest
 import com.example.scheduler.scheduleProcessing.GrPrCl
 import com.example.scheduler.scheduleViews.OptionPageFragment
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeDrawable.BadgeGravity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
@@ -109,9 +111,14 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
         optionPageFragment = OptionPageFragment(this)
         CoroutineScope(Dispatchers.IO).launch {
 
-        if(optionPageFragment.getInfoFromGitHub(getString(R.string.github_pages), getString(R.string.version)))
-            withContext(Dispatchers.Main) {
-            makeBadge()}
+            if (optionPageFragment.getInfoFromGitHub(
+                    getString(R.string.github_pages),
+                    getString(R.string.version)
+                )
+            )
+                withContext(Dispatchers.Main) {
+                    makeBadge()
+                }
         }
 
 
@@ -235,16 +242,18 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
         }
 
     }
-    override fun makeBadge(){
 
-        val tab =tabLayout.getTabAt(2)
-        if(tab!=null){
+    fun makeBadge() {
 
-        val badge = tab.getOrCreateBadge()
-        badge.text="*"
+        val tab = tabLayout.getTabAt(2)
+        if (tab != null) {
 
-        badge.badgeTextColor=getColor( R.color.black)
-        badge.backgroundColor=getColor( R.color.white)
+            val badge = tab.getOrCreateBadge()
+            badge.text = "*"
+
+
+            badge.badgeTextColor = getColor(R.color.badgeTextColor)
+            badge.backgroundColor = getColor(R.color.badgeBackGroundColor)
         }
 
     }
