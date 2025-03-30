@@ -1,9 +1,11 @@
 package com.example.scheduler.scheduleViews
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.text.BoringLayout
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,8 +19,8 @@ import androidx.core.content.ContextCompat.getSystemService
 import com.example.scheduler.R
 import com.example.scheduler.forAll.GetPostSchedule
 import com.example.scheduler.forAll.ServerRequest
+import com.example.scheduler.scheduleProcessing.GetInfoFromEther
 import com.example.scheduler.scheduleProcessing.GrPrCl
-import com.example.scheduler.scheduleProcessing.Urls
 import kotlinx.coroutines.*
 import kotlin.random.Random
 
@@ -32,6 +34,10 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
     private lateinit var shareBtn: Button
     private lateinit var secShareBtn: Button
 
+    private var versionInfo: ArrayList<String>? = null
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,12 +48,14 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = runBlocking {
         super.onViewCreated(view, savedInstanceState)
-        shareBtn = view.findViewById(R.id.share_schedule_btn)
+
+        shareBtn = view.findViewById(R.id.share_schedule_btnr)
         secShareBtn = view.findViewById(R.id.share_sec_schedule_btn)
         copyBtn = view.findViewById(R.id.copy_code_btn)
         codeTextView = view.findViewById(R.id.code_text_view)
         gitTextView = view.findViewById(R.id.git_pages_text_view)
         versionTextView = view.findViewById(R.id.version_info_text_view)
+
 
         shareBtn.setOnClickListener {
             enableBtn(false)
@@ -65,23 +73,58 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
             copyCode()
         }
 
-        val longText = "Очень длинный текст, который не помещается на экране.  " +
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-                "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
-                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " +
-                "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
-                "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. " +
-                "Повторите много раз..."  +
-                "Очень длинный текст, который не помещается на экране.  " +
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-                "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
-                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " +
-                "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
-                "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 
-        gitTextView.text = longText
-        versionTextView.text=getString(R.string.text_version)+" "+getString(R.string.version)
+        versionTextView.text =
+            getString(R.string.text_local_version) + " " + getString(R.string.version)
+        fillInfoFromGitHub()
+    }
 
+    @SuppressLint("SetTextI18n")
+    private fun fillInfoFromGitHub() {
+        try {
+            if (versionInfo != null) {
+
+                gitTextView.text = versionInfo!![1].substringAfter(" ").replace("^", "\n")
+                if (versionInfo!![0].substringAfter(" ") != getString(R.string.version)) {
+
+                    versionTextView.text =
+                        getString(R.string.text_new_version) + " " + versionInfo!![0].substringAfter(
+                            " "
+                        ) + "\n" +
+                                getString(R.string.text_local_version) + " " + getString(R.string.version)
+
+                } else {
+                    versionTextView.text =
+                        getString(R.string.text_local_version) + " " + getString(R.string.version)
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.d("OptionPage", "не получилось использовать буквы с гита")
+        }
+    }
+
+    public suspend fun getInfoFromGitHub(url: String, ver:String):Boolean {
+
+            versionInfo = GetInfoFromEther().downloadParse(url, "p")
+            if (versionInfo != null && versionInfo!!.size >= 1) {
+
+
+
+                    if (versionInfo!![0].substringAfter(" ") != ver) {
+
+                        return true
+
+
+
+                    }
+                    else{
+                        return false
+                    }
+
+            }
+
+        return false
     }
 
     private fun copyCode() {
@@ -160,7 +203,7 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
         var gr = group.substringBefore("-")
         gr = GrPrCl().groups.getOrDefault(gr, GrPrCl().prepods.getOrDefault(gr, "test1234"))
             .substringAfter("=")
-        val suffixList = ServerRequest().getSuffixList()
+        val suffixList = ServerRequest(getString(R.string.server)).getSuffixList()
         var suffix = ""
 
         if (suffixList == null) {
@@ -180,8 +223,8 @@ class OptionPageFragment(val parent: GetPostSchedule) : Fragment() {
                 Log.d("optionPage", "код сгенерирован: $suffix")
             }
         }
-        Log.d("OptionPage_url", "${Urls.ServerUrl.url}add_schedule/${gr}-$suffix")
-        return "${Urls.ServerUrl.url}add_schedule/${gr}-$suffix"
+        Log.d("OptionPage_url", "${getString(R.string.server)}add_schedule/${gr}-$suffix")
+        return "${getString(R.string.server)}add_schedule/${gr}-$suffix"
     }
 
 

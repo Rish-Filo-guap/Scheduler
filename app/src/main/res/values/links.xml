@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server">https://schedule-server-filolio.cloudpub.ru/</string>
+    <string name="suai_schedule">https://guap.ru/rasp/?</string>
+    <string name="github_pages">https://rish-filo-guap.github.io</string>
+</resources>

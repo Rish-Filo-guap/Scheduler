@@ -16,9 +16,7 @@ enum class Times(val stTime: Array<String>) {
 
 }
 
-enum class Urls(val url: String) {
-    ServerUrl("https://schedule-server-filolio.cloudpub.ru/");
-}
+
 
 enum class DaysOfWeek(val dayOfWeek: String) {
     Mon("Понедельник"),

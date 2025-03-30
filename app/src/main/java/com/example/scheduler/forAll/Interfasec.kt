@@ -16,6 +16,7 @@ interface ChangeTabByCode{
 interface GetPostSchedule {
     suspend fun postSchedule(url: String, pageNumb: Int)
     fun getGroup(pageNumb: Int): String?
+    fun makeBadge()
 
 }
 

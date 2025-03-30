@@ -37,6 +37,7 @@
                 app:tabGravity="fill"
 
 
+
                 app:tabMode="fixed"
 
                 app:tabTextAppearance="@style/TabLayoutTextStyle" />

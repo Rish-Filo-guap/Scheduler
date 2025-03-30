@@ -24,6 +24,10 @@ import com.example.scheduler.scheduleProcessing.GrPrCl
 import com.example.scheduler.scheduleViews.OptionPageFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.FileOutputStream
 import java.time.LocalDate.now
 
@@ -103,6 +107,12 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
 
 
         optionPageFragment = OptionPageFragment(this)
+        CoroutineScope(Dispatchers.IO).launch {
+
+        if(optionPageFragment.getInfoFromGitHub(getString(R.string.github_pages), getString(R.string.version)))
+            withContext(Dispatchers.Main) {
+            makeBadge()}
+        }
 
 
 
@@ -123,7 +133,10 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
         // Link the TabLayout and ViewPager2 using TabLayoutMediator
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = viewPagerAdapter.getPageTitle(position)
+
+
         }.attach()
+
     }
 
     override fun changeGroup(newGroup: String) {
@@ -199,12 +212,13 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
     }
 
     override suspend fun postSchedule(url: String, pageNumb: Int) {
+
         when (pageNumb) {
             0 -> {
                 val sched =
                     CreateScheduleFromParsed().SaveSchedule(schedulePageFragment.scheduleLayout.schedule)
                 if (sched != null)
-                    ServerRequest().postRequest(url, sched)
+                    ServerRequest(getString(R.string.server)).postRequest(url, sched)
                 else
                     Log.d("mainAct", "не удалось получить строку расписания")
             }
@@ -213,11 +227,24 @@ class MainActivity : AppCompatActivity(), ShowBottomFragmentDialogSearch, GetPos
                 val sched =
                     CreateScheduleFromParsed().SaveSchedule(secSchedulePageFragment.scheduleLayout.schedule)
                 if (sched != null)
-                    ServerRequest().postRequest(url, sched)
+                    ServerRequest(getString(R.string.server)).postRequest(url, sched)
                 else
                     Log.d("mainAct", "не удалось получить строку расписания")
             }
 
+        }
+
+    }
+    override fun makeBadge(){
+
+        val tab =tabLayout.getTabAt(2)
+        if(tab!=null){
+
+        val badge = tab.getOrCreateBadge()
+        badge.text="*"
+
+        badge.badgeTextColor=getColor( R.color.black)
+        badge.backgroundColor=getColor( R.color.white)
         }
 
     }

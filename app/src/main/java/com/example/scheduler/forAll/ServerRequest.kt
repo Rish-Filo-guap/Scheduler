@@ -1,7 +1,8 @@
 package com.example.scheduler.forAll
 
+import android.content.res.Resources
 import android.util.Log
-import com.example.scheduler.scheduleProcessing.Urls
+import com.example.scheduler.R
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.get
@@ -17,12 +18,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ServerRequest {
+class ServerRequest(private var url:String) {
     private lateinit var client: HttpClient
 
 
 
-    suspend fun getRequest(url: String): String? {
+    suspend fun getRequest(urlPath: String): String? {
+
 
         val result: String?
         try {
@@ -33,11 +35,11 @@ class ServerRequest {
                     socketTimeoutMillis = 10000 // 15 секунд
                 }
             }
-
-            result = getFromServ(url)
+            Log.d("ServerRequest38",url+urlPath)
+            result = getFromServ(url+urlPath)
 
             if (result != null) {
-                //Log.d("ServerRequest", "Результат get-запроса: $result")
+                Log.d("ServerRequest", "Результат get-запроса: $result")
 
                 return result
 
@@ -81,7 +83,7 @@ class ServerRequest {
     }
 
 
-    suspend fun postRequest(url: String, scheduleString: String) {
+    suspend fun postRequest(urlAll: String, scheduleString: String) {
 
         try {
             client = HttpClient(CIO) {
@@ -93,7 +95,7 @@ class ServerRequest {
             }
 
             var result: String? = null
-            result = postSchedToServ(url, scheduleString)
+            result = postSchedToServ(urlAll, scheduleString)
 
             if (result != null) {
                 Log.d("ServerRequest", "Результат post-запроса: $result")
@@ -148,7 +150,7 @@ class ServerRequest {
     }
 
     suspend fun getFileList(): Array<String>? {
-        val filesString = ServerRequest().getRequest(Urls.ServerUrl.url + "list_files")
+        val filesString = getRequest("list_files")
         if (filesString != null)
             return filesString.split("\n").toTypedArray()
         else {

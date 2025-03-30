@@ -17,7 +17,7 @@ import com.example.scheduler.scheduleProcessing.GrPrCl
 import com.example.scheduler.scheduleProcessing.Para
 import com.example.scheduler.scheduleProcessing.ScheduleList
 import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
-import com.example.scheduler.scheduleProcessing.Urls
+
 import io.ktor.http.Url
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +30,7 @@ import java.time.format.DateTimeFormatter
 class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaInfo) :
     LinearLayout(context) {
     lateinit var schedule: ScheduleList
+    val serverRequest=ServerRequest(context.getString(R.string.server))
     val layoutParams = LayoutParams(
         LayoutParams.MATCH_PARENT,
         LayoutParams.WRAP_CONTENT
@@ -76,6 +77,7 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
             val parsedInfo = GetInfoFromEther().download("https://guap.ru/rasp/?" + newGroup)
 
 
+
             try {
                 schedule = CreateScheduleFromParsed().CreateSchedule(parsedInfo!!)
 
@@ -95,7 +97,7 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
     fun downloadScheduleFromServ(newCode: String, parent: ChangeTabByCode) {
         startDownloading()
         CoroutineScope(Dispatchers.IO).launch {
-            val filename = ServerRequest().findFileBySuffix(newCode)
+            val filename = serverRequest.findFileBySuffix(newCode)
             val groupName: String?
             if (filename == null) {
                 withContext(Dispatchers.Main) {
@@ -106,7 +108,7 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
                 Log.d("ScheduleLayout", filename.toString())
 
                 val result =
-                    ServerRequest().getRequest(Urls.ServerUrl.url + "add_schedule/" + filename)
+                    serverRequest.getRequest("add_schedule/" + filename)
 
                 if (result != null) {
                     groupName = GrPrCl().getKeyByValue(filename.substringBefore("-"))

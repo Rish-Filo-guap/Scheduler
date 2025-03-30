@@ -43,18 +43,37 @@ class SchedulePageFragment(var group: String?, var fileInputStream: FileInputStr
         mainLinearLayout = view.findViewById(R.id.main_schedule_page_linearLayout)
         scrollView = ScrollView(view.context)
         scheduleLayout = ScheduleLayout(view.context, this)
+        var isRIghtSchedule = true
         if (group != null) {
 
             if (fileInputStream == null) {
-                scheduleLayout.downloadSchedule(group)
+                try {
+
+                    scheduleLayout.downloadSchedule(group)
+                } catch (e: Exception) {
+                    Log.d(
+                        "SchedulePageFragment",
+                        "Не получилось скачать (сайт) расписание: ${e.message}"
+                    )
+                    isRIghtSchedule = false
+                }
             } else {
-
-                scheduleLayout.downloadSchedule(fileInputStream!!, group!!)
-
+                try {
+                    scheduleLayout.downloadSchedule(fileInputStream!!, group!!)
+                } catch (e: Exception) {
+                    Log.d(
+                        "SchedulePageFragment",
+                        "Не получилось загрузить (файл) расписание: ${e.message}"
+                    )
+                    isRIghtSchedule = false
+                }
             }
-            mainLinearLayout.removeAllViews()
-            mainLinearLayout.addView(scrollView)
-            scrollView.addView(scheduleLayout)
+            if (isRIghtSchedule) {
+
+                mainLinearLayout.removeAllViews()
+                mainLinearLayout.addView(scrollView)
+                scrollView.addView(scheduleLayout)
+            }
         } else {
             Log.d("ew", "noSchedule")
 
@@ -74,7 +93,7 @@ class SchedulePageFragment(var group: String?, var fileInputStream: FileInputStr
         scheduleLayout.downloadScheduleFromServ(newCode, parent)
     }
 
-    private fun clearSchedule(){
+    private fun clearSchedule() {
         if (mainLinearLayout.childCount == 2) {
             mainLinearLayout.removeAllViews()
             mainLinearLayout.addView(scrollView)
