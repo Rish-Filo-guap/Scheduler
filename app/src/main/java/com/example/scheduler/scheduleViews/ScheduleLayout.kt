@@ -17,8 +17,6 @@ import com.example.scheduler.scheduleProcessing.GrPrCl
 import com.example.scheduler.scheduleProcessing.Para
 import com.example.scheduler.scheduleProcessing.ScheduleList
 import com.example.scheduler.forAll.ShowBottomFragmentDialogParaInfo
-
-import io.ktor.http.Url
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +24,7 @@ import kotlinx.coroutines.withContext
 import java.io.FileInputStream
 import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaInfo) :
     LinearLayout(context) {
@@ -158,8 +157,10 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
         addView(textView)
         // Получаем текущую дату
         var currentDate = now()
+        Log.d("ScheduleLayout", currentDate.toString())
         // Форматируем дату
         val dateFormatter = DateTimeFormatter.ofPattern("dd.MM")
+        val dateDayWeekFormatter = DateTimeFormatter.ofPattern("e", Locale.US)
 
 
         // Добавляем дни недели в список (например, на 30 дней вперед)
@@ -173,8 +174,12 @@ class ScheduleLayout(context: Context, val parent: ShowBottomFragmentDialogParaI
             val weekNumb = ((currentDate).format(DateTimeFormatter.ofPattern("w"))
                 .toInt() + 1) % 2
             val dayOfWeekNumb =
-                ((currentDate.minusDays(1)).format(DateTimeFormatter.ofPattern("e"))).toInt() - 1
+                ((currentDate.minusDays(1)).format(dateDayWeekFormatter)).toInt()-1
             val dayOfWeek = DaysOfWeek.values()[dayOfWeekNumb].dayOfWeek
+
+
+
+           // Log.d("ScheduleLayout", (currentDate.format(dateDayWeekFormatter).toString()))
 
             dateTextView.text = "$dayOfWeek $formattedDate"
             dateTextView.textSize = 20f
